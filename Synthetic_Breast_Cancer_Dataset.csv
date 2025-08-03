@@ -1,0 +1,1001 @@
+age,visit_reason,breast_symptoms_present,symptom_type,symptom_duration_days,symptom_location,previous_breast_conditions,previous_imaging_done,recent_weight_loss,fatigue,age_first_period,menopause_status,hormone_therapy,num_pregnancies,breastfeeding_months,family_history_breast_cancer,relative_diagnosis_age,smoker,alcohol_use,physical_activity_level,diet_type,emotional_stress_level,support_system,diagnosis
+63,Lump,TRUE,Lump,93,Right,TRUE,FALSE,FALSE,FALSE,12,Postmenopause,FALSE,4,20,FALSE,0,TRUE,TRUE,High,High-fat,High,FALSE,Positive
+63,Lump,TRUE,Lump,122,Right,TRUE,FALSE,TRUE,FALSE,12,Postmenopause,TRUE,2,10,FALSE,0,TRUE,FALSE,High,Processed,Low,FALSE,Negative
+48,Pain,TRUE,Pain,117,Both,FALSE,FALSE,FALSE,TRUE,13,Premenopause,TRUE,2,21,FALSE,0,TRUE,FALSE,Medium,Processed,High,TRUE,Negative
+77,Pain,TRUE,Pain,2,None,FALSE,TRUE,TRUE,FALSE,13,Postmenopause,TRUE,5,37,TRUE,31,FALSE,TRUE,Medium,Healthy,Low,TRUE,Positive
+45,Lump,TRUE,Lump,161,Left,TRUE,TRUE,FALSE,FALSE,13,Premenopause,TRUE,1,21,FALSE,0,TRUE,FALSE,High,Processed,Medium,FALSE,Negative
+68,Nipple discharge,TRUE,Nipple discharge,89,None,FALSE,FALSE,FALSE,FALSE,10,Postmenopause,FALSE,2,41,TRUE,57,FALSE,FALSE,High,Healthy,Medium,TRUE,Negative
+40,Pain,TRUE,Pain,15,Both,TRUE,TRUE,FALSE,FALSE,15,Premenopause,FALSE,5,46,TRUE,32,FALSE,TRUE,Medium,Healthy,Medium,TRUE,Positive
+61,Lump,TRUE,Lump,51,Both,FALSE,FALSE,TRUE,FALSE,14,Postmenopause,FALSE,0,38,FALSE,0,TRUE,FALSE,Low,High-fat,Medium,FALSE,Negative
+42,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,13,Premenopause,FALSE,0,13,TRUE,38,FALSE,FALSE,Medium,Processed,High,FALSE,Positive
+50,Lump,TRUE,Lump,53,Left,TRUE,TRUE,TRUE,FALSE,11,Premenopause,FALSE,3,27,FALSE,0,TRUE,TRUE,High,High-fat,Low,FALSE,Positive
+71,Nipple discharge,TRUE,Nipple discharge,172,None,FALSE,TRUE,TRUE,TRUE,14,Postmenopause,FALSE,2,13,TRUE,46,FALSE,FALSE,Low,Processed,Medium,FALSE,Positive
+60,Pain,TRUE,Pain,50,None,FALSE,FALSE,FALSE,TRUE,13,Postmenopause,TRUE,1,5,FALSE,0,FALSE,FALSE,High,Healthy,Low,FALSE,Negative
+78,Lump,TRUE,Lump,106,Both,FALSE,TRUE,FALSE,TRUE,13,Postmenopause,FALSE,5,28,FALSE,0,FALSE,FALSE,Low,High-fat,High,TRUE,Positive
+42,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,11,Premenopause,FALSE,3,33,FALSE,0,FALSE,TRUE,High,Processed,High,FALSE,Negative
+34,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,15,Premenopause,TRUE,3,13,TRUE,60,TRUE,TRUE,Medium,Processed,Medium,TRUE,Negative
+72,Lump,TRUE,Lump,15,None,TRUE,TRUE,FALSE,FALSE,15,Postmenopause,TRUE,3,39,TRUE,50,TRUE,TRUE,Low,High-fat,High,FALSE,Positive
+40,Lump,TRUE,Lump,82,Both,FALSE,TRUE,TRUE,TRUE,14,Premenopause,FALSE,1,24,FALSE,0,TRUE,FALSE,Medium,High-fat,High,FALSE,Positive
+69,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,TRUE,10,Postmenopause,TRUE,4,14,FALSE,0,TRUE,FALSE,Low,High-fat,Medium,TRUE,Negative
+69,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,10,Postmenopause,TRUE,0,6,FALSE,0,TRUE,FALSE,Medium,Healthy,Medium,FALSE,Negative
+33,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,10,Premenopause,TRUE,3,7,FALSE,0,FALSE,FALSE,Medium,High-fat,Medium,TRUE,Negative
+48,Nipple discharge,TRUE,Nipple discharge,63,None,FALSE,TRUE,TRUE,TRUE,12,Premenopause,TRUE,2,16,FALSE,0,FALSE,TRUE,Medium,High-fat,Medium,TRUE,Positive
+32,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,12,Premenopause,TRUE,2,32,TRUE,34,TRUE,FALSE,High,Processed,Low,FALSE,Negative
+66,Nipple discharge,TRUE,Nipple discharge,41,Both,TRUE,FALSE,FALSE,TRUE,13,Postmenopause,TRUE,0,7,TRUE,41,FALSE,TRUE,Medium,Processed,Medium,FALSE,Positive
+58,Nipple discharge,TRUE,Nipple discharge,33,Left,TRUE,FALSE,FALSE,FALSE,15,Postmenopause,TRUE,4,34,TRUE,69,FALSE,FALSE,Medium,High-fat,Low,TRUE,Positive
+46,Pain,TRUE,Pain,35,Both,FALSE,FALSE,TRUE,TRUE,10,Premenopause,FALSE,2,36,TRUE,43,TRUE,FALSE,High,Processed,Medium,FALSE,Positive
+27,Nipple discharge,TRUE,Nipple discharge,1,None,FALSE,TRUE,TRUE,TRUE,14,Premenopause,TRUE,1,13,FALSE,0,TRUE,FALSE,High,Healthy,Low,FALSE,Negative
+63,Pain,TRUE,Pain,27,Left,TRUE,TRUE,FALSE,TRUE,10,Postmenopause,FALSE,1,41,FALSE,0,FALSE,FALSE,Low,High-fat,High,TRUE,Positive
+37,Pain,TRUE,Pain,179,None,FALSE,FALSE,FALSE,FALSE,10,Premenopause,TRUE,3,31,FALSE,0,TRUE,TRUE,Medium,Processed,Medium,TRUE,Negative
+28,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,15,Premenopause,TRUE,4,22,TRUE,68,TRUE,FALSE,Medium,Healthy,Low,FALSE,Negative
+69,Lump,TRUE,Lump,143,None,FALSE,TRUE,TRUE,FALSE,12,Postmenopause,TRUE,4,35,FALSE,0,TRUE,TRUE,Low,Processed,Medium,FALSE,Negative
+37,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,TRUE,12,Premenopause,TRUE,2,21,TRUE,57,FALSE,FALSE,High,Processed,Low,TRUE,Negative
+26,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,11,Premenopause,FALSE,4,5,TRUE,57,TRUE,FALSE,Medium,Processed,High,TRUE,Negative
+52,Pain,TRUE,Pain,108,Left,TRUE,TRUE,TRUE,FALSE,13,Postmenopause,TRUE,3,29,FALSE,0,TRUE,FALSE,Low,High-fat,Medium,TRUE,Positive
+35,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,11,Premenopause,FALSE,3,24,FALSE,0,TRUE,TRUE,Medium,High-fat,High,FALSE,Negative
+63,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,15,Postmenopause,FALSE,0,0,FALSE,0,TRUE,FALSE,Medium,Processed,High,FALSE,Negative
+51,Nipple discharge,TRUE,Nipple discharge,121,Right,TRUE,TRUE,FALSE,TRUE,13,Postmenopause,FALSE,4,40,TRUE,32,FALSE,TRUE,Medium,Healthy,High,FALSE,Positive
+63,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,15,Postmenopause,TRUE,2,8,TRUE,66,FALSE,TRUE,Medium,Healthy,Medium,FALSE,Negative
+57,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,FALSE,12,Postmenopause,TRUE,1,43,FALSE,0,FALSE,FALSE,Low,High-fat,Low,FALSE,Negative
+48,Pain,TRUE,Pain,59,None,FALSE,FALSE,TRUE,FALSE,15,Premenopause,TRUE,0,11,TRUE,68,FALSE,FALSE,Low,Processed,High,FALSE,Positive
+26,Pain,TRUE,Pain,131,Left,FALSE,FALSE,FALSE,TRUE,10,Premenopause,FALSE,4,16,TRUE,31,FALSE,FALSE,Low,High-fat,High,TRUE,Positive
+26,Lump,TRUE,Lump,54,Both,FALSE,TRUE,TRUE,FALSE,14,Premenopause,FALSE,0,0,TRUE,48,TRUE,TRUE,Medium,Processed,Low,FALSE,Positive
+26,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,FALSE,14,Premenopause,FALSE,3,25,FALSE,0,TRUE,FALSE,Medium,Processed,Medium,FALSE,Negative
+56,Pain,TRUE,Pain,160,Both,TRUE,TRUE,TRUE,TRUE,13,Postmenopause,FALSE,2,16,FALSE,0,TRUE,TRUE,Low,Processed,High,FALSE,Positive
+62,Pain,TRUE,Pain,24,Both,TRUE,TRUE,TRUE,TRUE,14,Postmenopause,TRUE,3,33,FALSE,0,TRUE,FALSE,High,High-fat,Medium,FALSE,Positive
+30,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,15,Premenopause,TRUE,2,47,FALSE,0,TRUE,FALSE,High,Processed,High,FALSE,Positive
+40,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,TRUE,10,Premenopause,TRUE,0,5,TRUE,45,FALSE,FALSE,Medium,High-fat,High,FALSE,Positive
+53,Nipple discharge,TRUE,Nipple discharge,3,Both,FALSE,TRUE,TRUE,FALSE,13,Postmenopause,FALSE,3,35,FALSE,0,FALSE,FALSE,Medium,High-fat,High,FALSE,Positive
+43,Nipple discharge,TRUE,Nipple discharge,90,Left,TRUE,FALSE,TRUE,TRUE,12,Premenopause,FALSE,2,19,TRUE,61,TRUE,TRUE,Medium,Processed,Medium,FALSE,Positive
+31,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,13,Premenopause,TRUE,0,32,TRUE,69,TRUE,FALSE,Medium,Healthy,Medium,TRUE,Negative
+63,Pain,TRUE,Pain,82,Both,FALSE,TRUE,FALSE,TRUE,10,Postmenopause,FALSE,2,27,TRUE,54,TRUE,TRUE,Low,Processed,Medium,TRUE,Positive
+74,Pain,TRUE,Pain,151,Left,FALSE,TRUE,FALSE,FALSE,15,Postmenopause,FALSE,1,34,FALSE,0,FALSE,FALSE,Medium,Processed,Medium,TRUE,Negative
+31,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,13,Premenopause,TRUE,1,47,TRUE,31,TRUE,FALSE,High,Healthy,Low,TRUE,Negative
+25,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,TRUE,15,Premenopause,FALSE,3,4,TRUE,66,TRUE,FALSE,High,Healthy,High,FALSE,Positive
+56,Nipple discharge,TRUE,Nipple discharge,9,Right,TRUE,TRUE,TRUE,TRUE,10,Postmenopause,FALSE,2,18,FALSE,0,FALSE,TRUE,High,Healthy,Medium,TRUE,Positive
+72,Pain,TRUE,Pain,131,Right,TRUE,TRUE,FALSE,FALSE,13,Postmenopause,TRUE,5,32,TRUE,53,TRUE,TRUE,Low,High-fat,Medium,FALSE,Positive
+76,Nipple discharge,TRUE,Nipple discharge,75,Left,FALSE,FALSE,TRUE,TRUE,10,Postmenopause,TRUE,3,37,FALSE,0,FALSE,TRUE,Low,High-fat,Medium,FALSE,Positive
+64,Pain,TRUE,Pain,84,Both,TRUE,TRUE,TRUE,FALSE,15,Postmenopause,TRUE,2,47,FALSE,0,FALSE,FALSE,Medium,Processed,Medium,TRUE,Negative
+49,Pain,TRUE,Pain,99,Right,TRUE,FALSE,TRUE,FALSE,10,Premenopause,TRUE,4,17,TRUE,47,TRUE,FALSE,High,High-fat,High,FALSE,Positive
+26,Pain,TRUE,Pain,54,Both,FALSE,FALSE,TRUE,TRUE,12,Premenopause,TRUE,4,40,TRUE,65,TRUE,FALSE,Medium,Processed,Low,FALSE,Positive
+57,Nipple discharge,TRUE,Nipple discharge,68,Both,FALSE,FALSE,FALSE,FALSE,10,Postmenopause,FALSE,5,20,FALSE,0,TRUE,TRUE,Low,Processed,Low,FALSE,Negative
+72,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,13,Postmenopause,FALSE,2,16,TRUE,62,TRUE,TRUE,High,Healthy,Medium,TRUE,Negative
+72,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,13,Postmenopause,TRUE,2,21,FALSE,0,FALSE,TRUE,High,Processed,Low,FALSE,Negative
+79,Nipple discharge,TRUE,Nipple discharge,22,Both,TRUE,FALSE,FALSE,FALSE,15,Postmenopause,TRUE,5,37,FALSE,0,TRUE,FALSE,Medium,Processed,High,TRUE,Negative
+62,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,14,Postmenopause,TRUE,2,7,FALSE,0,FALSE,TRUE,High,Healthy,Medium,FALSE,Negative
+51,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,FALSE,12,Postmenopause,TRUE,1,20,FALSE,0,FALSE,TRUE,High,Processed,High,TRUE,Negative
+54,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,TRUE,10,Postmenopause,TRUE,3,46,TRUE,62,FALSE,FALSE,High,Healthy,Medium,TRUE,Negative
+29,Nipple discharge,TRUE,Nipple discharge,61,Both,FALSE,FALSE,FALSE,FALSE,12,Premenopause,TRUE,3,34,TRUE,46,TRUE,FALSE,Low,Healthy,Low,TRUE,Negative
+68,Lump,TRUE,Lump,158,Both,FALSE,FALSE,TRUE,FALSE,14,Postmenopause,TRUE,5,5,FALSE,0,FALSE,FALSE,High,High-fat,High,FALSE,Positive
+59,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,TRUE,13,Postmenopause,TRUE,0,36,FALSE,0,TRUE,TRUE,High,Processed,High,TRUE,Negative
+48,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,14,Premenopause,TRUE,0,45,FALSE,0,TRUE,TRUE,High,Processed,Low,TRUE,Negative
+77,Nipple discharge,TRUE,Nipple discharge,95,Right,TRUE,FALSE,FALSE,FALSE,12,Postmenopause,TRUE,3,32,FALSE,0,FALSE,TRUE,Medium,Processed,High,TRUE,Negative
+76,Nipple discharge,TRUE,Nipple discharge,160,Right,FALSE,TRUE,FALSE,TRUE,10,Postmenopause,TRUE,2,17,FALSE,0,FALSE,FALSE,Low,Processed,Medium,FALSE,Negative
+49,Lump,TRUE,Lump,54,Left,FALSE,FALSE,TRUE,FALSE,11,Premenopause,FALSE,2,39,FALSE,0,FALSE,TRUE,High,Healthy,High,TRUE,Negative
+70,Pain,TRUE,Pain,24,Left,TRUE,TRUE,FALSE,FALSE,11,Postmenopause,FALSE,5,22,TRUE,31,TRUE,TRUE,Medium,High-fat,High,FALSE,Positive
+51,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,11,Postmenopause,TRUE,1,25,TRUE,46,FALSE,FALSE,Low,Processed,Low,TRUE,Negative
+64,Nipple discharge,TRUE,Nipple discharge,161,None,FALSE,FALSE,TRUE,TRUE,10,Postmenopause,FALSE,2,47,FALSE,0,FALSE,TRUE,Low,High-fat,Low,TRUE,Positive
+63,Pain,TRUE,Pain,170,Left,FALSE,FALSE,TRUE,TRUE,11,Postmenopause,TRUE,2,24,TRUE,53,TRUE,FALSE,Low,High-fat,Low,TRUE,Positive
+37,Lump,TRUE,Lump,60,Right,FALSE,FALSE,TRUE,TRUE,11,Premenopause,TRUE,0,35,TRUE,49,FALSE,FALSE,Low,Healthy,Low,TRUE,Positive
+25,Nipple discharge,TRUE,Nipple discharge,8,Both,FALSE,TRUE,FALSE,TRUE,15,Premenopause,TRUE,5,11,FALSE,0,FALSE,TRUE,High,Healthy,High,FALSE,Negative
+75,Nipple discharge,TRUE,Nipple discharge,143,None,FALSE,FALSE,TRUE,FALSE,13,Postmenopause,TRUE,1,1,FALSE,0,TRUE,FALSE,Low,Healthy,Medium,TRUE,Negative
+56,Lump,TRUE,Lump,86,Right,TRUE,FALSE,TRUE,TRUE,12,Postmenopause,FALSE,0,21,FALSE,0,TRUE,FALSE,Low,Processed,Low,TRUE,Positive
+46,Nipple discharge,TRUE,Nipple discharge,49,Left,TRUE,FALSE,FALSE,FALSE,13,Premenopause,FALSE,1,5,TRUE,44,FALSE,TRUE,Medium,Processed,Medium,TRUE,Positive
+78,Pain,TRUE,Pain,101,None,TRUE,FALSE,FALSE,TRUE,10,Postmenopause,FALSE,4,43,TRUE,34,TRUE,FALSE,Low,Processed,High,TRUE,Positive
+63,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,13,Postmenopause,TRUE,5,44,TRUE,61,FALSE,TRUE,Low,Healthy,Low,TRUE,Negative
+76,Lump,TRUE,Lump,94,Right,FALSE,FALSE,TRUE,TRUE,12,Postmenopause,TRUE,3,15,TRUE,42,TRUE,TRUE,Low,Healthy,High,FALSE,Positive
+74,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,13,Postmenopause,TRUE,1,29,TRUE,48,TRUE,TRUE,Medium,Healthy,Low,TRUE,Negative
+41,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,12,Premenopause,TRUE,3,25,FALSE,0,TRUE,TRUE,High,Processed,Medium,TRUE,Negative
+61,Nipple discharge,TRUE,Nipple discharge,117,Left,FALSE,FALSE,TRUE,TRUE,15,Postmenopause,TRUE,0,11,FALSE,0,FALSE,FALSE,High,Healthy,Low,FALSE,Negative
+77,Pain,TRUE,Pain,129,Right,TRUE,FALSE,FALSE,TRUE,11,Postmenopause,FALSE,1,0,FALSE,0,TRUE,FALSE,High,Processed,High,TRUE,Positive
+71,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,TRUE,11,Postmenopause,TRUE,5,47,TRUE,54,FALSE,FALSE,High,High-fat,High,FALSE,Positive
+64,Nipple discharge,TRUE,Nipple discharge,117,Left,FALSE,TRUE,TRUE,FALSE,10,Postmenopause,FALSE,4,38,TRUE,34,TRUE,TRUE,Medium,High-fat,Medium,FALSE,Positive
+46,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,TRUE,14,Premenopause,FALSE,2,11,TRUE,55,TRUE,TRUE,Low,High-fat,Medium,TRUE,Positive
+40,Nipple discharge,TRUE,Nipple discharge,179,Right,TRUE,TRUE,TRUE,TRUE,14,Premenopause,FALSE,5,28,TRUE,43,TRUE,FALSE,High,Healthy,High,TRUE,Positive
+52,Lump,TRUE,Lump,69,Right,FALSE,FALSE,TRUE,TRUE,10,Postmenopause,TRUE,5,45,TRUE,34,FALSE,FALSE,Low,Processed,High,TRUE,Positive
+36,Pain,TRUE,Pain,144,Left,TRUE,TRUE,FALSE,TRUE,11,Premenopause,FALSE,1,47,TRUE,50,TRUE,FALSE,Low,Healthy,Low,TRUE,Positive
+63,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,13,Postmenopause,FALSE,0,29,FALSE,0,TRUE,FALSE,Low,Processed,Medium,FALSE,Negative
+61,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,FALSE,11,Postmenopause,FALSE,1,4,FALSE,0,FALSE,TRUE,Medium,High-fat,Medium,FALSE,Negative
+60,Nipple discharge,TRUE,Nipple discharge,34,Right,TRUE,TRUE,FALSE,FALSE,13,Postmenopause,TRUE,1,18,FALSE,0,FALSE,TRUE,Low,Healthy,Medium,FALSE,Negative
+56,Pain,TRUE,Pain,1,Right,TRUE,TRUE,FALSE,TRUE,14,Postmenopause,TRUE,4,3,TRUE,45,FALSE,FALSE,Low,High-fat,Low,FALSE,Positive
+48,Nipple discharge,TRUE,Nipple discharge,80,None,FALSE,FALSE,TRUE,TRUE,11,Premenopause,TRUE,0,27,TRUE,61,TRUE,FALSE,Medium,Processed,Medium,TRUE,Positive
+51,Pain,TRUE,Pain,84,None,TRUE,TRUE,FALSE,FALSE,13,Postmenopause,TRUE,1,34,FALSE,0,FALSE,FALSE,Low,Processed,High,FALSE,Negative
+57,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,TRUE,10,Postmenopause,FALSE,4,42,FALSE,0,FALSE,FALSE,Low,Healthy,Low,FALSE,Negative
+61,Pain,TRUE,Pain,12,Right,FALSE,FALSE,FALSE,TRUE,12,Postmenopause,FALSE,0,32,FALSE,0,TRUE,FALSE,High,High-fat,Low,FALSE,Negative
+64,Nipple discharge,TRUE,Nipple discharge,74,None,FALSE,TRUE,TRUE,TRUE,12,Postmenopause,FALSE,3,28,FALSE,0,TRUE,FALSE,Medium,Healthy,Low,TRUE,Negative
+37,Lump,TRUE,Lump,12,Both,FALSE,FALSE,TRUE,TRUE,15,Premenopause,FALSE,1,34,FALSE,0,TRUE,TRUE,High,Healthy,High,TRUE,Positive
+47,Nipple discharge,TRUE,Nipple discharge,81,Both,FALSE,FALSE,FALSE,FALSE,11,Premenopause,TRUE,4,25,TRUE,39,TRUE,FALSE,Medium,Healthy,Low,TRUE,Negative
+50,Pain,TRUE,Pain,162,Right,FALSE,FALSE,TRUE,TRUE,12,Premenopause,FALSE,0,6,TRUE,33,FALSE,FALSE,Medium,Healthy,Medium,FALSE,Positive
+77,Lump,TRUE,Lump,114,Both,TRUE,FALSE,FALSE,FALSE,14,Postmenopause,FALSE,2,28,FALSE,0,FALSE,TRUE,Medium,High-fat,Medium,TRUE,Negative
+60,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,10,Postmenopause,FALSE,4,35,TRUE,39,FALSE,FALSE,High,Processed,High,FALSE,Positive
+61,Nipple discharge,TRUE,Nipple discharge,152,Right,FALSE,FALSE,FALSE,FALSE,12,Postmenopause,FALSE,0,34,FALSE,0,FALSE,TRUE,Medium,High-fat,Low,TRUE,Negative
+72,Pain,TRUE,Pain,36,Both,TRUE,FALSE,TRUE,FALSE,11,Postmenopause,FALSE,0,38,FALSE,0,TRUE,TRUE,Low,Processed,High,FALSE,Positive
+56,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,15,Postmenopause,TRUE,4,11,TRUE,42,FALSE,FALSE,Medium,Healthy,Low,TRUE,Negative
+47,Lump,TRUE,Lump,99,Left,FALSE,TRUE,FALSE,TRUE,10,Premenopause,TRUE,5,16,FALSE,0,FALSE,FALSE,Low,Healthy,High,TRUE,Negative
+73,Nipple discharge,TRUE,Nipple discharge,62,Right,FALSE,TRUE,FALSE,FALSE,13,Postmenopause,FALSE,0,21,FALSE,0,TRUE,FALSE,Medium,High-fat,Low,FALSE,Negative
+37,Pain,TRUE,Pain,19,Right,FALSE,FALSE,TRUE,FALSE,10,Premenopause,FALSE,3,11,TRUE,48,TRUE,TRUE,Low,Processed,Low,FALSE,Positive
+36,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,TRUE,10,Premenopause,FALSE,3,13,TRUE,60,FALSE,TRUE,Low,High-fat,Medium,TRUE,Positive
+76,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,12,Postmenopause,TRUE,1,46,TRUE,45,TRUE,FALSE,High,Healthy,High,FALSE,Positive
+77,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,14,Postmenopause,TRUE,2,11,FALSE,0,FALSE,FALSE,Medium,Healthy,High,TRUE,Negative
+49,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,TRUE,13,Premenopause,TRUE,2,20,FALSE,0,TRUE,FALSE,Medium,High-fat,High,TRUE,Negative
+60,Nipple discharge,TRUE,Nipple discharge,53,Both,FALSE,TRUE,FALSE,FALSE,10,Postmenopause,FALSE,4,41,TRUE,68,TRUE,TRUE,High,Processed,Medium,FALSE,Negative
+38,Nipple discharge,TRUE,Nipple discharge,122,Both,FALSE,TRUE,FALSE,TRUE,14,Premenopause,TRUE,2,22,TRUE,58,TRUE,FALSE,Low,High-fat,High,FALSE,Positive
+67,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,12,Postmenopause,FALSE,1,46,TRUE,41,TRUE,TRUE,High,Processed,Medium,TRUE,Negative
+33,Nipple discharge,TRUE,Nipple discharge,74,Left,FALSE,TRUE,TRUE,TRUE,11,Premenopause,FALSE,3,16,FALSE,0,TRUE,TRUE,Medium,Processed,High,TRUE,Positive
+62,Nipple discharge,TRUE,Nipple discharge,7,Right,TRUE,FALSE,TRUE,FALSE,15,Postmenopause,FALSE,4,39,FALSE,0,FALSE,FALSE,High,Healthy,Low,TRUE,Negative
+66,Lump,TRUE,Lump,137,None,TRUE,TRUE,FALSE,FALSE,11,Postmenopause,FALSE,2,1,FALSE,0,FALSE,FALSE,High,Healthy,Low,TRUE,Negative
+29,Pain,TRUE,Pain,29,None,TRUE,FALSE,TRUE,TRUE,14,Premenopause,FALSE,5,18,TRUE,37,TRUE,TRUE,High,Healthy,High,TRUE,Positive
+72,Nipple discharge,TRUE,Nipple discharge,109,Right,FALSE,FALSE,FALSE,TRUE,10,Postmenopause,FALSE,5,16,FALSE,0,TRUE,TRUE,Low,Healthy,Medium,FALSE,Negative
+31,Nipple discharge,TRUE,Nipple discharge,45,None,FALSE,TRUE,FALSE,FALSE,13,Premenopause,FALSE,3,5,FALSE,0,FALSE,FALSE,Medium,High-fat,Medium,FALSE,Negative
+55,Pain,TRUE,Pain,19,Left,TRUE,TRUE,FALSE,FALSE,14,Postmenopause,FALSE,3,38,FALSE,0,FALSE,FALSE,Low,Processed,Low,TRUE,Negative
+51,Nipple discharge,TRUE,Nipple discharge,90,Left,FALSE,FALSE,TRUE,FALSE,12,Postmenopause,TRUE,5,2,FALSE,0,TRUE,TRUE,High,Processed,Medium,TRUE,Negative
+69,Nipple discharge,TRUE,Nipple discharge,141,None,TRUE,TRUE,FALSE,TRUE,11,Postmenopause,TRUE,3,19,TRUE,57,TRUE,FALSE,Medium,High-fat,Medium,FALSE,Positive
+32,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,14,Premenopause,FALSE,0,38,TRUE,30,TRUE,TRUE,Low,Healthy,High,TRUE,Negative
+27,Pain,TRUE,Pain,92,None,TRUE,FALSE,FALSE,TRUE,15,Premenopause,TRUE,0,24,TRUE,62,FALSE,TRUE,High,Healthy,High,TRUE,Positive
+62,Pain,TRUE,Pain,117,None,TRUE,TRUE,TRUE,FALSE,15,Postmenopause,TRUE,1,43,TRUE,61,TRUE,TRUE,High,Healthy,Medium,TRUE,Positive
+69,Pain,TRUE,Pain,61,Right,TRUE,FALSE,FALSE,TRUE,14,Postmenopause,TRUE,5,20,TRUE,40,TRUE,FALSE,Low,Healthy,High,FALSE,Positive
+61,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,13,Postmenopause,FALSE,2,18,FALSE,0,FALSE,FALSE,Medium,Healthy,Low,FALSE,Negative
+44,Lump,TRUE,Lump,146,Right,TRUE,FALSE,FALSE,FALSE,10,Premenopause,FALSE,0,13,FALSE,0,TRUE,FALSE,Medium,Healthy,Low,FALSE,Negative
+39,Pain,TRUE,Pain,159,Right,FALSE,FALSE,TRUE,FALSE,10,Premenopause,FALSE,4,2,TRUE,45,TRUE,TRUE,High,High-fat,Low,FALSE,Positive
+47,Lump,TRUE,Lump,12,Left,TRUE,TRUE,TRUE,FALSE,11,Premenopause,FALSE,5,11,FALSE,0,TRUE,FALSE,High,Healthy,High,FALSE,Positive
+48,Nipple discharge,TRUE,Nipple discharge,156,Both,TRUE,FALSE,TRUE,FALSE,14,Premenopause,FALSE,1,27,TRUE,65,TRUE,TRUE,Medium,Processed,Low,FALSE,Positive
+50,Pain,TRUE,Pain,136,None,FALSE,TRUE,FALSE,TRUE,11,Premenopause,TRUE,3,27,TRUE,57,TRUE,TRUE,Medium,Healthy,Medium,TRUE,Positive
+61,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,10,Postmenopause,TRUE,3,26,FALSE,0,TRUE,FALSE,Low,High-fat,High,FALSE,Negative
+78,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,10,Postmenopause,FALSE,0,32,FALSE,0,FALSE,FALSE,Low,Healthy,Low,TRUE,Negative
+77,Lump,TRUE,Lump,157,Left,FALSE,TRUE,FALSE,TRUE,14,Postmenopause,TRUE,5,34,TRUE,35,TRUE,FALSE,High,High-fat,Medium,TRUE,Positive
+42,Lump,TRUE,Lump,115,Left,FALSE,FALSE,FALSE,TRUE,14,Premenopause,TRUE,0,1,FALSE,0,TRUE,TRUE,Medium,Healthy,Medium,FALSE,Negative
+34,Pain,TRUE,Pain,56,Left,TRUE,TRUE,TRUE,TRUE,15,Premenopause,TRUE,1,44,FALSE,0,TRUE,FALSE,Low,Processed,Low,FALSE,Positive
+29,Lump,TRUE,Lump,119,None,TRUE,TRUE,TRUE,TRUE,10,Premenopause,TRUE,5,0,TRUE,47,TRUE,TRUE,High,High-fat,High,FALSE,Positive
+56,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,10,Postmenopause,FALSE,2,20,TRUE,55,TRUE,TRUE,Medium,Healthy,Low,FALSE,Negative
+49,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,FALSE,15,Premenopause,FALSE,2,26,FALSE,0,FALSE,FALSE,Medium,High-fat,Medium,FALSE,Negative
+73,Nipple discharge,TRUE,Nipple discharge,161,None,TRUE,TRUE,TRUE,TRUE,11,Postmenopause,FALSE,0,34,TRUE,30,FALSE,FALSE,Low,Healthy,Low,TRUE,Positive
+45,Pain,TRUE,Pain,55,Both,FALSE,TRUE,TRUE,FALSE,15,Premenopause,FALSE,3,16,TRUE,34,TRUE,TRUE,Low,High-fat,High,TRUE,Positive
+55,Lump,TRUE,Lump,133,Left,TRUE,TRUE,FALSE,FALSE,15,Postmenopause,TRUE,2,22,TRUE,66,FALSE,FALSE,Medium,High-fat,Medium,FALSE,Positive
+77,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,14,Postmenopause,FALSE,1,9,TRUE,48,TRUE,TRUE,Low,High-fat,Low,FALSE,Positive
+41,Nipple discharge,TRUE,Nipple discharge,85,None,TRUE,FALSE,TRUE,TRUE,15,Premenopause,FALSE,0,45,TRUE,30,FALSE,TRUE,Low,High-fat,Low,FALSE,Positive
+75,Pain,TRUE,Pain,173,Left,TRUE,FALSE,TRUE,TRUE,14,Postmenopause,FALSE,3,0,FALSE,0,FALSE,TRUE,High,Processed,Low,TRUE,Positive
+73,Pain,TRUE,Pain,32,Right,TRUE,FALSE,FALSE,TRUE,11,Postmenopause,TRUE,3,30,FALSE,0,TRUE,TRUE,Low,Processed,Low,FALSE,Negative
+32,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,11,Premenopause,FALSE,1,33,TRUE,32,TRUE,FALSE,Low,High-fat,Medium,TRUE,Negative
+74,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,13,Postmenopause,FALSE,0,43,FALSE,0,TRUE,FALSE,High,Healthy,Low,TRUE,Negative
+29,Nipple discharge,TRUE,Nipple discharge,57,Both,FALSE,TRUE,FALSE,TRUE,10,Premenopause,TRUE,4,20,FALSE,0,TRUE,FALSE,Low,Processed,Medium,FALSE,Negative
+38,Pain,TRUE,Pain,66,Left,FALSE,FALSE,TRUE,TRUE,12,Premenopause,FALSE,2,38,TRUE,67,TRUE,FALSE,Low,Healthy,Medium,FALSE,Positive
+58,Lump,TRUE,Lump,38,Both,TRUE,FALSE,FALSE,TRUE,11,Postmenopause,TRUE,1,17,TRUE,59,FALSE,TRUE,High,High-fat,High,FALSE,Positive
+39,Lump,TRUE,Lump,91,Right,FALSE,TRUE,TRUE,TRUE,12,Premenopause,TRUE,1,37,FALSE,0,FALSE,FALSE,Medium,Healthy,Medium,FALSE,Negative
+57,Lump,TRUE,Lump,79,None,TRUE,TRUE,TRUE,TRUE,13,Postmenopause,TRUE,5,41,FALSE,0,TRUE,FALSE,High,Processed,Medium,FALSE,Positive
+75,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,10,Postmenopause,FALSE,4,28,TRUE,33,FALSE,FALSE,High,Healthy,Medium,FALSE,Positive
+34,Lump,TRUE,Lump,145,None,FALSE,TRUE,TRUE,TRUE,11,Premenopause,FALSE,0,19,FALSE,0,FALSE,TRUE,High,Processed,Low,TRUE,Negative
+48,Pain,TRUE,Pain,69,None,TRUE,TRUE,FALSE,FALSE,11,Premenopause,TRUE,5,1,TRUE,42,FALSE,TRUE,Low,Processed,High,TRUE,Positive
+67,Lump,TRUE,Lump,43,None,FALSE,FALSE,FALSE,FALSE,12,Postmenopause,FALSE,2,46,FALSE,0,FALSE,FALSE,Medium,Processed,High,TRUE,Negative
+47,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,12,Premenopause,FALSE,5,15,FALSE,0,TRUE,FALSE,High,High-fat,Low,FALSE,Negative
+32,Nipple discharge,TRUE,Nipple discharge,132,Right,FALSE,TRUE,TRUE,TRUE,13,Premenopause,FALSE,0,2,TRUE,61,TRUE,TRUE,Low,Healthy,High,FALSE,Positive
+27,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,12,Premenopause,TRUE,4,31,TRUE,48,FALSE,TRUE,High,High-fat,Medium,FALSE,Positive
+45,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,14,Premenopause,FALSE,1,27,TRUE,51,FALSE,FALSE,Medium,Healthy,Medium,TRUE,Negative
+45,Nipple discharge,TRUE,Nipple discharge,70,Left,FALSE,TRUE,FALSE,FALSE,10,Premenopause,FALSE,4,40,TRUE,41,FALSE,TRUE,Medium,Healthy,High,TRUE,Negative
+50,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,15,Premenopause,FALSE,1,13,TRUE,55,TRUE,TRUE,Medium,High-fat,High,FALSE,Positive
+69,Lump,TRUE,Lump,155,Left,TRUE,TRUE,TRUE,TRUE,10,Postmenopause,FALSE,1,46,TRUE,51,FALSE,FALSE,High,Healthy,High,FALSE,Positive
+71,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,15,Postmenopause,FALSE,2,47,TRUE,46,FALSE,FALSE,Low,High-fat,Low,TRUE,Negative
+50,Lump,TRUE,Lump,36,Left,FALSE,FALSE,TRUE,FALSE,10,Premenopause,FALSE,0,34,FALSE,0,FALSE,FALSE,Low,High-fat,Medium,TRUE,Negative
+76,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,TRUE,15,Postmenopause,FALSE,5,25,FALSE,0,TRUE,FALSE,Medium,Processed,High,TRUE,Negative
+52,Lump,TRUE,Lump,78,Left,TRUE,FALSE,TRUE,FALSE,11,Postmenopause,FALSE,4,25,TRUE,43,TRUE,TRUE,Medium,Healthy,High,TRUE,Positive
+75,Pain,TRUE,Pain,7,Both,TRUE,FALSE,TRUE,FALSE,12,Postmenopause,FALSE,5,42,TRUE,47,TRUE,FALSE,Medium,Healthy,Low,TRUE,Positive
+62,Lump,TRUE,Lump,115,None,FALSE,TRUE,FALSE,TRUE,10,Postmenopause,TRUE,4,27,FALSE,0,FALSE,TRUE,Low,Processed,High,FALSE,Negative
+34,Nipple discharge,TRUE,Nipple discharge,39,None,FALSE,FALSE,TRUE,TRUE,10,Premenopause,FALSE,0,38,TRUE,51,FALSE,FALSE,Medium,Healthy,Low,FALSE,Positive
+50,Nipple discharge,TRUE,Nipple discharge,126,None,FALSE,FALSE,FALSE,TRUE,13,Premenopause,TRUE,0,16,FALSE,0,FALSE,TRUE,Low,High-fat,Low,TRUE,Negative
+37,Lump,TRUE,Lump,25,Both,FALSE,FALSE,FALSE,TRUE,13,Premenopause,TRUE,1,2,TRUE,47,FALSE,TRUE,High,Processed,Medium,TRUE,Positive
+71,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,TRUE,13,Postmenopause,FALSE,5,33,FALSE,0,TRUE,FALSE,High,Processed,High,FALSE,Negative
+71,Lump,TRUE,Lump,8,Left,TRUE,TRUE,FALSE,FALSE,10,Postmenopause,FALSE,3,18,TRUE,66,TRUE,TRUE,High,Processed,High,FALSE,Positive
+30,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,13,Premenopause,FALSE,1,33,FALSE,0,TRUE,FALSE,Medium,High-fat,Medium,FALSE,Negative
+69,Lump,TRUE,Lump,121,Right,FALSE,FALSE,FALSE,FALSE,10,Postmenopause,TRUE,4,21,TRUE,50,FALSE,TRUE,Low,Healthy,High,FALSE,Negative
+30,Pain,TRUE,Pain,70,None,TRUE,FALSE,FALSE,TRUE,13,Premenopause,TRUE,5,10,TRUE,59,FALSE,TRUE,High,Healthy,Low,TRUE,Positive
+55,Lump,TRUE,Lump,152,None,TRUE,TRUE,TRUE,FALSE,10,Postmenopause,TRUE,2,30,FALSE,0,TRUE,FALSE,High,Healthy,High,FALSE,Positive
+64,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,14,Postmenopause,TRUE,3,23,TRUE,60,FALSE,FALSE,Low,Healthy,High,FALSE,Negative
+30,Lump,TRUE,Lump,66,Right,TRUE,FALSE,TRUE,TRUE,13,Premenopause,FALSE,3,10,FALSE,0,FALSE,TRUE,High,Healthy,Low,TRUE,Positive
+28,Nipple discharge,TRUE,Nipple discharge,79,Left,TRUE,TRUE,TRUE,TRUE,15,Premenopause,TRUE,5,29,FALSE,0,TRUE,FALSE,High,Healthy,Low,TRUE,Positive
+62,Lump,TRUE,Lump,179,None,FALSE,TRUE,TRUE,TRUE,15,Postmenopause,TRUE,0,1,TRUE,44,FALSE,TRUE,Low,Processed,Medium,TRUE,Positive
+35,Lump,TRUE,Lump,136,Right,FALSE,FALSE,FALSE,TRUE,11,Premenopause,TRUE,2,44,FALSE,0,FALSE,TRUE,Medium,Healthy,High,FALSE,Negative
+68,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,14,Postmenopause,FALSE,5,25,FALSE,0,FALSE,FALSE,High,Healthy,Low,FALSE,Negative
+78,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,TRUE,13,Postmenopause,FALSE,2,19,TRUE,62,FALSE,FALSE,Low,Healthy,Medium,FALSE,Negative
+44,Nipple discharge,TRUE,Nipple discharge,113,Both,FALSE,FALSE,FALSE,FALSE,13,Premenopause,TRUE,0,25,TRUE,43,FALSE,FALSE,High,Healthy,Low,FALSE,Negative
+62,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,14,Postmenopause,TRUE,5,10,FALSE,0,FALSE,FALSE,Low,Processed,Medium,TRUE,Negative
+60,Pain,TRUE,Pain,77,Both,TRUE,FALSE,TRUE,FALSE,12,Postmenopause,FALSE,2,32,TRUE,35,TRUE,TRUE,Low,Healthy,Low,TRUE,Positive
+74,Nipple discharge,TRUE,Nipple discharge,10,Both,TRUE,TRUE,FALSE,TRUE,14,Postmenopause,FALSE,1,43,FALSE,0,TRUE,FALSE,Medium,High-fat,Medium,FALSE,Positive
+26,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,FALSE,14,Premenopause,FALSE,1,19,FALSE,0,FALSE,TRUE,High,Healthy,Medium,TRUE,Negative
+25,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,14,Premenopause,TRUE,0,16,FALSE,0,FALSE,TRUE,High,Processed,High,FALSE,Positive
+33,Pain,TRUE,Pain,143,Left,FALSE,FALSE,FALSE,TRUE,15,Premenopause,FALSE,2,29,FALSE,0,TRUE,TRUE,Medium,High-fat,Low,TRUE,Negative
+55,Pain,TRUE,Pain,49,Right,FALSE,TRUE,FALSE,TRUE,14,Postmenopause,TRUE,5,43,FALSE,0,TRUE,FALSE,Medium,Processed,Medium,TRUE,Negative
+74,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,15,Postmenopause,TRUE,4,10,TRUE,38,FALSE,TRUE,High,Processed,Medium,TRUE,Negative
+58,Lump,TRUE,Lump,76,Left,FALSE,FALSE,FALSE,TRUE,12,Postmenopause,TRUE,2,0,FALSE,0,FALSE,TRUE,High,Healthy,Low,TRUE,Negative
+64,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,15,Postmenopause,FALSE,3,28,TRUE,37,TRUE,FALSE,Low,Processed,Medium,FALSE,Negative
+35,Pain,TRUE,Pain,105,Both,FALSE,FALSE,FALSE,TRUE,14,Premenopause,FALSE,5,29,FALSE,0,TRUE,FALSE,Medium,High-fat,Low,TRUE,Negative
+59,Lump,TRUE,Lump,165,Both,TRUE,FALSE,TRUE,FALSE,14,Postmenopause,FALSE,2,13,FALSE,0,FALSE,FALSE,Low,Processed,Medium,TRUE,Negative
+50,Pain,TRUE,Pain,62,Both,FALSE,FALSE,TRUE,FALSE,13,Premenopause,FALSE,0,44,TRUE,54,FALSE,TRUE,High,Processed,Low,TRUE,Positive
+42,Pain,TRUE,Pain,40,Right,FALSE,FALSE,FALSE,FALSE,15,Premenopause,TRUE,2,37,FALSE,0,TRUE,FALSE,Low,Healthy,Low,FALSE,Negative
+57,Pain,TRUE,Pain,23,Right,FALSE,FALSE,TRUE,FALSE,10,Postmenopause,TRUE,0,16,TRUE,62,TRUE,TRUE,High,Healthy,Low,TRUE,Positive
+71,Pain,TRUE,Pain,53,Left,FALSE,TRUE,FALSE,FALSE,12,Postmenopause,TRUE,2,5,FALSE,0,TRUE,FALSE,Medium,High-fat,High,TRUE,Negative
+30,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,12,Premenopause,FALSE,2,7,TRUE,44,FALSE,FALSE,High,Processed,High,TRUE,Positive
+71,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,14,Postmenopause,FALSE,0,29,FALSE,0,TRUE,FALSE,Medium,Healthy,Medium,FALSE,Negative
+63,Pain,TRUE,Pain,155,Left,TRUE,FALSE,FALSE,FALSE,13,Postmenopause,FALSE,4,37,TRUE,62,FALSE,FALSE,Medium,Healthy,Medium,TRUE,Positive
+61,Pain,TRUE,Pain,155,Both,TRUE,FALSE,FALSE,TRUE,10,Postmenopause,TRUE,5,3,TRUE,51,FALSE,FALSE,Low,Processed,Medium,TRUE,Positive
+26,Nipple discharge,TRUE,Nipple discharge,10,None,TRUE,FALSE,TRUE,TRUE,14,Premenopause,TRUE,2,9,FALSE,0,TRUE,TRUE,Medium,Processed,High,TRUE,Positive
+57,Nipple discharge,TRUE,Nipple discharge,118,Both,TRUE,TRUE,TRUE,TRUE,15,Postmenopause,TRUE,4,30,FALSE,0,TRUE,TRUE,Low,Healthy,Medium,FALSE,Positive
+71,Nipple discharge,TRUE,Nipple discharge,109,Right,FALSE,FALSE,FALSE,TRUE,13,Postmenopause,TRUE,4,7,TRUE,34,FALSE,FALSE,High,High-fat,High,TRUE,Positive
+53,Pain,TRUE,Pain,47,None,FALSE,TRUE,TRUE,FALSE,13,Postmenopause,FALSE,3,44,TRUE,31,TRUE,TRUE,High,Processed,Low,TRUE,Positive
+51,Nipple discharge,TRUE,Nipple discharge,95,Both,FALSE,TRUE,TRUE,FALSE,12,Postmenopause,FALSE,2,35,TRUE,65,FALSE,FALSE,Medium,Healthy,Low,TRUE,Positive
+50,Lump,TRUE,Lump,43,Left,TRUE,FALSE,TRUE,TRUE,12,Premenopause,FALSE,4,19,FALSE,0,FALSE,TRUE,High,High-fat,Low,TRUE,Positive
+35,Lump,TRUE,Lump,74,Both,FALSE,TRUE,FALSE,FALSE,15,Premenopause,FALSE,5,7,TRUE,52,TRUE,FALSE,Medium,High-fat,Low,TRUE,Negative
+71,Lump,TRUE,Lump,90,None,TRUE,FALSE,FALSE,FALSE,15,Postmenopause,TRUE,2,11,TRUE,55,FALSE,TRUE,Medium,Healthy,Low,TRUE,Positive
+37,Nipple discharge,TRUE,Nipple discharge,104,Right,TRUE,FALSE,FALSE,FALSE,15,Premenopause,TRUE,1,24,TRUE,62,FALSE,FALSE,Medium,High-fat,Low,TRUE,Positive
+71,Pain,TRUE,Pain,104,Both,TRUE,FALSE,FALSE,FALSE,13,Postmenopause,TRUE,2,11,TRUE,65,TRUE,TRUE,Low,Healthy,High,FALSE,Positive
+72,Lump,TRUE,Lump,68,None,TRUE,TRUE,FALSE,FALSE,14,Postmenopause,FALSE,4,7,FALSE,0,FALSE,FALSE,Medium,Processed,High,TRUE,Negative
+66,Pain,TRUE,Pain,92,Right,FALSE,FALSE,FALSE,TRUE,11,Postmenopause,FALSE,0,28,FALSE,0,FALSE,FALSE,Low,Healthy,Low,TRUE,Negative
+38,Pain,TRUE,Pain,40,None,FALSE,FALSE,TRUE,FALSE,10,Premenopause,TRUE,5,10,TRUE,52,FALSE,TRUE,Medium,Healthy,High,TRUE,Positive
+25,Lump,TRUE,Lump,46,None,TRUE,FALSE,TRUE,TRUE,14,Premenopause,TRUE,4,25,FALSE,0,FALSE,FALSE,High,Healthy,Medium,FALSE,Positive
+70,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,13,Postmenopause,TRUE,5,22,FALSE,0,FALSE,TRUE,High,Processed,High,FALSE,Negative
+25,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,15,Premenopause,TRUE,2,39,TRUE,44,TRUE,TRUE,High,Processed,Low,TRUE,Negative
+45,Nipple discharge,TRUE,Nipple discharge,175,None,TRUE,FALSE,TRUE,FALSE,10,Premenopause,FALSE,4,8,FALSE,0,FALSE,TRUE,Low,Healthy,High,TRUE,Positive
+34,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,FALSE,13,Premenopause,FALSE,0,25,FALSE,0,FALSE,FALSE,High,Processed,Low,TRUE,Negative
+65,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,12,Postmenopause,FALSE,3,24,FALSE,0,FALSE,TRUE,Medium,High-fat,Medium,FALSE,Negative
+50,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,12,Premenopause,FALSE,5,1,TRUE,36,TRUE,FALSE,Low,High-fat,High,FALSE,Positive
+42,Lump,TRUE,Lump,162,Both,TRUE,FALSE,FALSE,FALSE,12,Premenopause,TRUE,0,42,TRUE,53,TRUE,TRUE,Low,High-fat,Medium,TRUE,Positive
+49,Nipple discharge,TRUE,Nipple discharge,88,Left,TRUE,FALSE,TRUE,TRUE,10,Premenopause,FALSE,0,28,FALSE,0,FALSE,FALSE,Medium,High-fat,Medium,FALSE,Positive
+67,Lump,TRUE,Lump,150,Both,FALSE,FALSE,FALSE,FALSE,11,Postmenopause,TRUE,3,20,FALSE,0,FALSE,FALSE,Low,Healthy,Medium,FALSE,Negative
+73,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,10,Postmenopause,TRUE,3,40,FALSE,0,FALSE,FALSE,Low,High-fat,Low,FALSE,Positive
+73,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,13,Postmenopause,TRUE,5,21,FALSE,0,FALSE,FALSE,High,Processed,Low,TRUE,Negative
+52,Pain,TRUE,Pain,63,Left,FALSE,TRUE,TRUE,TRUE,14,Postmenopause,TRUE,0,6,TRUE,30,TRUE,FALSE,Medium,Processed,Medium,FALSE,Positive
+56,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,14,Postmenopause,FALSE,5,22,TRUE,48,TRUE,FALSE,Medium,Healthy,Medium,TRUE,Positive
+56,Nipple discharge,TRUE,Nipple discharge,158,Right,FALSE,FALSE,TRUE,TRUE,14,Postmenopause,FALSE,0,44,FALSE,0,TRUE,FALSE,Low,High-fat,Low,TRUE,Positive
+53,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,TRUE,15,Postmenopause,FALSE,2,17,FALSE,0,TRUE,FALSE,Medium,Healthy,Medium,TRUE,Negative
+25,Nipple discharge,TRUE,Nipple discharge,78,None,FALSE,TRUE,FALSE,FALSE,12,Premenopause,FALSE,1,1,FALSE,0,FALSE,FALSE,Low,Healthy,Low,FALSE,Negative
+78,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,13,Postmenopause,FALSE,0,29,TRUE,67,TRUE,TRUE,Low,Healthy,Low,FALSE,Negative
+75,Nipple discharge,TRUE,Nipple discharge,63,Right,FALSE,TRUE,TRUE,TRUE,13,Postmenopause,TRUE,0,7,TRUE,58,FALSE,TRUE,Low,Healthy,High,FALSE,Positive
+79,Lump,TRUE,Lump,103,Both,TRUE,FALSE,FALSE,TRUE,12,Postmenopause,FALSE,1,9,TRUE,48,TRUE,TRUE,Low,Processed,Medium,TRUE,Positive
+70,Lump,TRUE,Lump,162,None,TRUE,TRUE,TRUE,TRUE,13,Postmenopause,TRUE,0,22,TRUE,57,TRUE,TRUE,Low,High-fat,High,FALSE,Positive
+56,Lump,TRUE,Lump,178,Both,FALSE,TRUE,FALSE,FALSE,14,Postmenopause,FALSE,0,2,TRUE,53,FALSE,FALSE,Low,Healthy,High,TRUE,Negative
+47,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,12,Premenopause,FALSE,4,7,FALSE,0,TRUE,FALSE,Low,High-fat,Medium,TRUE,Positive
+78,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,10,Postmenopause,TRUE,4,2,TRUE,62,FALSE,TRUE,Low,High-fat,High,FALSE,Positive
+52,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,11,Postmenopause,FALSE,2,31,TRUE,53,FALSE,TRUE,High,Healthy,High,FALSE,Positive
+38,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,15,Premenopause,FALSE,2,15,FALSE,0,FALSE,TRUE,Low,Processed,Medium,TRUE,Negative
+28,Nipple discharge,TRUE,Nipple discharge,165,Both,TRUE,TRUE,TRUE,TRUE,15,Premenopause,FALSE,4,13,TRUE,60,FALSE,TRUE,Medium,High-fat,High,FALSE,Positive
+79,Nipple discharge,TRUE,Nipple discharge,176,Right,TRUE,TRUE,FALSE,FALSE,11,Postmenopause,TRUE,1,6,FALSE,0,FALSE,FALSE,Medium,Processed,Low,FALSE,Negative
+57,Lump,TRUE,Lump,151,Left,TRUE,FALSE,TRUE,TRUE,14,Postmenopause,FALSE,2,47,FALSE,0,TRUE,TRUE,Low,Healthy,Medium,FALSE,Positive
+43,Nipple discharge,TRUE,Nipple discharge,36,None,FALSE,FALSE,FALSE,TRUE,14,Premenopause,FALSE,3,17,TRUE,31,FALSE,FALSE,Low,Healthy,Medium,TRUE,Positive
+25,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,TRUE,14,Premenopause,TRUE,3,10,FALSE,0,FALSE,FALSE,Low,Processed,High,TRUE,Negative
+66,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,11,Postmenopause,TRUE,2,22,TRUE,41,FALSE,FALSE,Medium,Healthy,Medium,FALSE,Negative
+44,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,14,Premenopause,TRUE,4,37,TRUE,59,TRUE,TRUE,High,High-fat,High,FALSE,Positive
+33,Lump,TRUE,Lump,53,Left,FALSE,TRUE,TRUE,FALSE,13,Premenopause,FALSE,2,21,FALSE,0,FALSE,FALSE,Medium,Healthy,High,TRUE,Negative
+68,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,10,Postmenopause,FALSE,1,29,FALSE,0,TRUE,FALSE,Low,Healthy,Low,TRUE,Negative
+70,Pain,TRUE,Pain,128,Both,FALSE,TRUE,TRUE,TRUE,10,Postmenopause,TRUE,1,16,FALSE,0,FALSE,FALSE,Medium,Processed,Low,TRUE,Negative
+38,Nipple discharge,TRUE,Nipple discharge,9,Both,FALSE,TRUE,FALSE,FALSE,11,Premenopause,FALSE,4,24,TRUE,68,FALSE,FALSE,Medium,Processed,High,FALSE,Negative
+33,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,15,Premenopause,TRUE,5,42,FALSE,0,TRUE,TRUE,High,Healthy,Low,TRUE,Negative
+70,Pain,TRUE,Pain,4,Left,TRUE,TRUE,TRUE,FALSE,11,Postmenopause,FALSE,1,28,FALSE,0,FALSE,FALSE,Medium,High-fat,High,FALSE,Positive
+69,Lump,TRUE,Lump,98,Left,FALSE,FALSE,TRUE,FALSE,14,Postmenopause,TRUE,2,5,FALSE,0,TRUE,FALSE,Medium,High-fat,High,FALSE,Positive
+42,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,TRUE,14,Premenopause,TRUE,1,35,TRUE,67,FALSE,FALSE,Medium,High-fat,High,TRUE,Positive
+58,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,10,Postmenopause,FALSE,4,24,TRUE,67,TRUE,FALSE,Medium,High-fat,Low,FALSE,Positive
+36,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,14,Premenopause,FALSE,1,21,TRUE,50,TRUE,TRUE,Low,Processed,Low,FALSE,Negative
+51,Nipple discharge,TRUE,Nipple discharge,57,Left,TRUE,TRUE,FALSE,TRUE,15,Postmenopause,FALSE,2,39,TRUE,63,FALSE,TRUE,Low,Healthy,Medium,TRUE,Positive
+36,Nipple discharge,TRUE,Nipple discharge,53,Both,TRUE,FALSE,FALSE,TRUE,11,Premenopause,TRUE,4,16,FALSE,0,FALSE,FALSE,Low,Healthy,Low,TRUE,Negative
+50,Lump,TRUE,Lump,122,Both,TRUE,FALSE,FALSE,FALSE,15,Premenopause,FALSE,1,42,FALSE,0,TRUE,FALSE,High,Healthy,High,FALSE,Negative
+25,Pain,TRUE,Pain,51,Left,TRUE,TRUE,FALSE,TRUE,14,Premenopause,FALSE,3,25,TRUE,58,FALSE,TRUE,Low,Processed,Low,TRUE,Positive
+45,Pain,TRUE,Pain,11,Both,FALSE,TRUE,TRUE,FALSE,12,Premenopause,TRUE,3,38,TRUE,69,FALSE,TRUE,Low,High-fat,High,TRUE,Positive
+59,Nipple discharge,TRUE,Nipple discharge,54,Right,TRUE,TRUE,FALSE,TRUE,11,Postmenopause,FALSE,5,21,FALSE,0,TRUE,FALSE,Medium,Processed,Medium,TRUE,Negative
+29,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,10,Premenopause,TRUE,1,35,TRUE,49,TRUE,TRUE,High,High-fat,Low,FALSE,Positive
+43,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,TRUE,12,Premenopause,FALSE,3,42,FALSE,0,TRUE,FALSE,High,Healthy,Medium,TRUE,Negative
+41,Lump,TRUE,Lump,109,Right,FALSE,TRUE,TRUE,FALSE,12,Premenopause,FALSE,1,8,FALSE,0,FALSE,TRUE,Medium,High-fat,High,FALSE,Positive
+50,Nipple discharge,TRUE,Nipple discharge,73,Right,FALSE,FALSE,TRUE,TRUE,10,Premenopause,TRUE,0,0,TRUE,54,TRUE,TRUE,Medium,High-fat,Medium,TRUE,Positive
+67,Pain,TRUE,Pain,104,Both,FALSE,TRUE,TRUE,FALSE,11,Postmenopause,FALSE,0,38,TRUE,64,TRUE,FALSE,Medium,High-fat,Medium,TRUE,Positive
+27,Lump,TRUE,Lump,108,Both,FALSE,TRUE,FALSE,FALSE,13,Premenopause,FALSE,2,29,TRUE,67,FALSE,TRUE,High,High-fat,High,FALSE,Positive
+58,Nipple discharge,TRUE,Nipple discharge,12,Right,FALSE,TRUE,TRUE,FALSE,12,Postmenopause,TRUE,4,43,TRUE,46,FALSE,FALSE,Medium,Healthy,Medium,TRUE,Positive
+34,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,10,Premenopause,TRUE,0,46,FALSE,0,TRUE,TRUE,Medium,High-fat,Low,TRUE,Negative
+36,Lump,TRUE,Lump,62,None,FALSE,FALSE,FALSE,TRUE,12,Premenopause,TRUE,4,16,TRUE,52,FALSE,TRUE,Medium,Processed,High,FALSE,Positive
+61,Lump,TRUE,Lump,118,None,TRUE,FALSE,TRUE,TRUE,15,Postmenopause,FALSE,0,17,FALSE,0,FALSE,FALSE,Medium,Processed,Low,TRUE,Positive
+49,Pain,TRUE,Pain,12,Both,TRUE,TRUE,FALSE,FALSE,12,Premenopause,TRUE,1,40,TRUE,55,FALSE,FALSE,High,Processed,Low,TRUE,Positive
+71,Lump,TRUE,Lump,32,Left,FALSE,FALSE,FALSE,TRUE,11,Postmenopause,TRUE,0,22,FALSE,0,FALSE,TRUE,Low,Healthy,Low,TRUE,Negative
+50,Pain,TRUE,Pain,86,Left,TRUE,TRUE,FALSE,FALSE,11,Premenopause,TRUE,5,14,FALSE,0,TRUE,TRUE,Low,Processed,High,FALSE,Negative
+77,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,10,Postmenopause,TRUE,2,47,FALSE,0,TRUE,FALSE,Medium,Healthy,High,TRUE,Positive
+32,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,11,Premenopause,TRUE,2,22,FALSE,0,TRUE,FALSE,Medium,Processed,High,FALSE,Negative
+53,Nipple discharge,TRUE,Nipple discharge,82,Left,TRUE,FALSE,FALSE,FALSE,15,Postmenopause,FALSE,3,38,TRUE,64,FALSE,FALSE,High,Healthy,Low,TRUE,Positive
+42,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,TRUE,12,Premenopause,FALSE,1,38,TRUE,46,TRUE,FALSE,Medium,High-fat,High,FALSE,Positive
+38,Lump,TRUE,Lump,159,Left,FALSE,TRUE,TRUE,FALSE,12,Premenopause,TRUE,3,44,FALSE,0,FALSE,TRUE,High,Processed,Low,FALSE,Negative
+58,Lump,TRUE,Lump,131,Both,TRUE,TRUE,TRUE,FALSE,14,Postmenopause,TRUE,2,39,TRUE,55,TRUE,FALSE,High,Processed,Medium,FALSE,Positive
+79,Pain,TRUE,Pain,108,Both,FALSE,TRUE,TRUE,FALSE,10,Postmenopause,TRUE,3,28,FALSE,0,TRUE,TRUE,High,Healthy,Medium,FALSE,Negative
+46,Pain,TRUE,Pain,153,None,FALSE,TRUE,FALSE,FALSE,14,Premenopause,TRUE,1,32,TRUE,45,FALSE,FALSE,Medium,High-fat,High,FALSE,Positive
+69,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,11,Postmenopause,TRUE,3,1,TRUE,64,TRUE,TRUE,High,High-fat,Medium,TRUE,Positive
+66,Pain,TRUE,Pain,34,Right,TRUE,TRUE,FALSE,TRUE,15,Postmenopause,FALSE,2,12,FALSE,0,FALSE,TRUE,Low,Processed,High,FALSE,Positive
+37,Nipple discharge,TRUE,Nipple discharge,18,Right,FALSE,FALSE,FALSE,TRUE,12,Premenopause,FALSE,2,38,TRUE,58,FALSE,TRUE,High,High-fat,High,FALSE,Positive
+73,Lump,TRUE,Lump,62,Both,TRUE,FALSE,TRUE,FALSE,14,Postmenopause,FALSE,3,15,TRUE,39,TRUE,FALSE,High,Healthy,Medium,TRUE,Positive
+54,Lump,TRUE,Lump,153,Left,TRUE,FALSE,TRUE,FALSE,13,Postmenopause,FALSE,4,0,TRUE,59,TRUE,TRUE,Medium,High-fat,Medium,FALSE,Positive
+73,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,TRUE,12,Postmenopause,TRUE,4,13,FALSE,0,FALSE,FALSE,High,High-fat,Low,FALSE,Negative
+54,Nipple discharge,TRUE,Nipple discharge,68,Both,TRUE,TRUE,FALSE,FALSE,11,Postmenopause,FALSE,5,36,TRUE,54,FALSE,TRUE,High,High-fat,Medium,TRUE,Positive
+72,Lump,TRUE,Lump,73,Right,TRUE,TRUE,FALSE,FALSE,10,Postmenopause,TRUE,0,23,FALSE,0,FALSE,TRUE,High,Healthy,Medium,FALSE,Negative
+28,Lump,TRUE,Lump,140,Right,TRUE,TRUE,TRUE,FALSE,12,Premenopause,TRUE,1,36,TRUE,66,TRUE,FALSE,High,Healthy,Low,FALSE,Positive
+67,Nipple discharge,TRUE,Nipple discharge,124,Left,TRUE,TRUE,FALSE,FALSE,15,Postmenopause,FALSE,5,23,FALSE,0,TRUE,TRUE,Medium,High-fat,Low,TRUE,Negative
+35,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,15,Premenopause,TRUE,4,33,TRUE,54,FALSE,FALSE,Low,High-fat,Medium,FALSE,Positive
+31,Lump,TRUE,Lump,52,Left,FALSE,FALSE,TRUE,TRUE,13,Premenopause,TRUE,2,7,FALSE,0,TRUE,FALSE,High,Processed,High,FALSE,Positive
+44,Lump,TRUE,Lump,93,Right,FALSE,TRUE,FALSE,TRUE,15,Premenopause,TRUE,4,44,TRUE,39,FALSE,TRUE,Low,Healthy,High,FALSE,Positive
+67,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,11,Postmenopause,TRUE,0,25,FALSE,0,FALSE,TRUE,High,High-fat,High,TRUE,Negative
+65,Lump,TRUE,Lump,3,Right,TRUE,FALSE,TRUE,FALSE,15,Postmenopause,FALSE,4,4,FALSE,0,FALSE,TRUE,Medium,Healthy,High,FALSE,Positive
+78,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,10,Postmenopause,FALSE,0,34,TRUE,49,FALSE,FALSE,High,High-fat,Low,TRUE,Negative
+73,Lump,TRUE,Lump,61,Right,TRUE,TRUE,TRUE,TRUE,12,Postmenopause,TRUE,1,34,TRUE,47,FALSE,TRUE,High,High-fat,High,FALSE,Positive
+41,Lump,TRUE,Lump,3,Right,FALSE,TRUE,TRUE,TRUE,12,Premenopause,TRUE,5,12,TRUE,54,FALSE,FALSE,Medium,Healthy,Medium,TRUE,Positive
+33,Pain,TRUE,Pain,68,None,TRUE,TRUE,FALSE,FALSE,15,Premenopause,FALSE,4,33,TRUE,40,FALSE,FALSE,Low,Processed,Low,TRUE,Positive
+65,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,12,Postmenopause,TRUE,2,27,FALSE,0,TRUE,FALSE,Medium,High-fat,Low,FALSE,Negative
+53,Lump,TRUE,Lump,137,Both,TRUE,FALSE,TRUE,FALSE,12,Postmenopause,FALSE,0,33,FALSE,0,TRUE,TRUE,Low,Healthy,High,FALSE,Positive
+36,Nipple discharge,TRUE,Nipple discharge,170,Right,TRUE,FALSE,TRUE,TRUE,10,Premenopause,FALSE,0,4,TRUE,40,TRUE,FALSE,High,Healthy,Medium,TRUE,Positive
+58,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,FALSE,13,Postmenopause,FALSE,5,7,FALSE,0,TRUE,FALSE,Low,Healthy,Medium,FALSE,Negative
+29,Lump,TRUE,Lump,176,Right,FALSE,TRUE,TRUE,FALSE,11,Premenopause,FALSE,1,5,FALSE,0,FALSE,FALSE,Low,High-fat,Low,TRUE,Negative
+61,Lump,TRUE,Lump,60,None,TRUE,TRUE,TRUE,TRUE,14,Postmenopause,FALSE,3,4,TRUE,42,FALSE,FALSE,Low,Processed,High,FALSE,Positive
+41,Pain,TRUE,Pain,114,Both,TRUE,FALSE,FALSE,TRUE,14,Premenopause,FALSE,5,28,FALSE,0,FALSE,FALSE,Low,Processed,Low,TRUE,Negative
+75,Lump,TRUE,Lump,67,Left,TRUE,FALSE,TRUE,FALSE,11,Postmenopause,TRUE,2,12,TRUE,62,FALSE,FALSE,Low,High-fat,Low,FALSE,Positive
+30,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,12,Premenopause,TRUE,3,32,FALSE,0,TRUE,TRUE,Medium,Healthy,High,TRUE,Negative
+72,Lump,TRUE,Lump,169,None,FALSE,TRUE,TRUE,FALSE,14,Postmenopause,TRUE,2,44,TRUE,54,FALSE,TRUE,High,Processed,Medium,FALSE,Positive
+77,Lump,TRUE,Lump,170,None,TRUE,FALSE,FALSE,FALSE,13,Postmenopause,FALSE,2,37,FALSE,0,FALSE,FALSE,Low,High-fat,Medium,FALSE,Negative
+31,Nipple discharge,TRUE,Nipple discharge,133,Left,TRUE,TRUE,TRUE,FALSE,12,Premenopause,FALSE,4,30,FALSE,0,TRUE,FALSE,Low,High-fat,Low,FALSE,Positive
+47,Nipple discharge,TRUE,Nipple discharge,170,Left,TRUE,FALSE,TRUE,FALSE,11,Premenopause,TRUE,2,29,FALSE,0,TRUE,FALSE,High,High-fat,Low,FALSE,Positive
+63,Nipple discharge,TRUE,Nipple discharge,159,Right,TRUE,FALSE,FALSE,FALSE,11,Postmenopause,FALSE,3,1,TRUE,43,FALSE,TRUE,High,Healthy,Low,TRUE,Positive
+37,Nipple discharge,TRUE,Nipple discharge,12,None,TRUE,FALSE,TRUE,FALSE,11,Premenopause,FALSE,4,45,TRUE,56,TRUE,FALSE,Low,High-fat,High,TRUE,Positive
+73,Nipple discharge,TRUE,Nipple discharge,17,Both,FALSE,FALSE,TRUE,FALSE,11,Postmenopause,FALSE,3,23,TRUE,64,FALSE,TRUE,Low,High-fat,Low,TRUE,Positive
+72,Nipple discharge,TRUE,Nipple discharge,70,None,FALSE,FALSE,FALSE,FALSE,12,Postmenopause,FALSE,5,6,TRUE,39,TRUE,FALSE,High,Healthy,Medium,FALSE,Negative
+65,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,11,Postmenopause,TRUE,3,14,FALSE,0,TRUE,TRUE,Low,Processed,Medium,FALSE,Negative
+54,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,14,Postmenopause,TRUE,4,21,TRUE,33,TRUE,TRUE,Low,High-fat,Medium,TRUE,Positive
+44,Lump,TRUE,Lump,96,Left,FALSE,TRUE,FALSE,TRUE,13,Premenopause,FALSE,1,3,FALSE,0,TRUE,FALSE,Medium,High-fat,Low,TRUE,Negative
+51,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,10,Postmenopause,TRUE,3,21,FALSE,0,TRUE,TRUE,Low,High-fat,High,TRUE,Negative
+41,Pain,TRUE,Pain,138,Left,FALSE,TRUE,TRUE,FALSE,15,Premenopause,TRUE,0,21,FALSE,0,TRUE,FALSE,High,High-fat,Medium,TRUE,Negative
+50,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,TRUE,12,Premenopause,FALSE,1,13,FALSE,0,TRUE,FALSE,Low,Processed,High,TRUE,Negative
+71,Pain,TRUE,Pain,29,Both,FALSE,TRUE,TRUE,FALSE,13,Postmenopause,FALSE,3,34,TRUE,41,FALSE,FALSE,High,Healthy,Low,FALSE,Positive
+31,Lump,TRUE,Lump,29,None,FALSE,TRUE,TRUE,TRUE,12,Premenopause,FALSE,0,5,TRUE,44,TRUE,FALSE,High,High-fat,High,FALSE,Positive
+56,Pain,TRUE,Pain,179,None,FALSE,FALSE,TRUE,FALSE,12,Postmenopause,FALSE,1,22,TRUE,55,FALSE,TRUE,Low,Processed,Low,TRUE,Positive
+58,Pain,TRUE,Pain,174,None,TRUE,TRUE,FALSE,FALSE,11,Postmenopause,TRUE,4,3,FALSE,0,TRUE,FALSE,Medium,Processed,Low,FALSE,Negative
+41,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,TRUE,12,Premenopause,FALSE,4,40,TRUE,68,TRUE,TRUE,Low,Processed,High,FALSE,Positive
+39,Nipple discharge,TRUE,Nipple discharge,119,Left,TRUE,TRUE,FALSE,FALSE,14,Premenopause,TRUE,4,10,TRUE,61,FALSE,TRUE,Medium,Healthy,Low,TRUE,Positive
+26,Lump,TRUE,Lump,175,Left,FALSE,TRUE,FALSE,TRUE,15,Premenopause,TRUE,3,21,FALSE,0,TRUE,TRUE,High,High-fat,High,TRUE,Positive
+35,Pain,TRUE,Pain,27,Right,FALSE,TRUE,FALSE,TRUE,12,Premenopause,FALSE,0,43,TRUE,57,FALSE,TRUE,High,Processed,Medium,TRUE,Positive
+53,Pain,TRUE,Pain,21,Both,TRUE,FALSE,TRUE,FALSE,14,Postmenopause,TRUE,2,19,FALSE,0,TRUE,FALSE,High,High-fat,Medium,FALSE,Positive
+30,Pain,TRUE,Pain,147,Right,FALSE,FALSE,TRUE,FALSE,10,Premenopause,TRUE,4,2,TRUE,30,FALSE,TRUE,High,Healthy,Medium,FALSE,Positive
+62,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,TRUE,11,Postmenopause,TRUE,4,34,TRUE,54,TRUE,FALSE,Medium,Healthy,High,FALSE,Positive
+48,Nipple discharge,TRUE,Nipple discharge,12,None,TRUE,FALSE,TRUE,FALSE,11,Premenopause,TRUE,3,15,TRUE,56,TRUE,FALSE,Low,High-fat,High,FALSE,Positive
+32,Lump,TRUE,Lump,60,Both,TRUE,FALSE,TRUE,FALSE,15,Premenopause,FALSE,0,16,FALSE,0,TRUE,TRUE,Low,Processed,Medium,TRUE,Negative
+53,Nipple discharge,TRUE,Nipple discharge,53,None,FALSE,FALSE,TRUE,TRUE,12,Postmenopause,FALSE,5,6,FALSE,0,FALSE,FALSE,Medium,High-fat,Medium,FALSE,Positive
+27,Lump,TRUE,Lump,93,Both,FALSE,TRUE,TRUE,FALSE,13,Premenopause,TRUE,4,23,TRUE,32,TRUE,TRUE,Medium,High-fat,High,TRUE,Positive
+44,Pain,TRUE,Pain,46,Left,FALSE,FALSE,FALSE,FALSE,10,Premenopause,FALSE,5,13,FALSE,0,TRUE,FALSE,Low,Healthy,High,FALSE,Negative
+31,Pain,TRUE,Pain,17,Left,TRUE,FALSE,FALSE,TRUE,15,Premenopause,FALSE,3,19,FALSE,0,TRUE,FALSE,Low,Healthy,Low,FALSE,Negative
+60,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,TRUE,10,Postmenopause,FALSE,5,47,FALSE,0,FALSE,FALSE,Low,Healthy,Low,TRUE,Negative
+46,Nipple discharge,TRUE,Nipple discharge,117,Both,TRUE,FALSE,TRUE,TRUE,11,Premenopause,FALSE,2,12,FALSE,0,FALSE,TRUE,Medium,High-fat,Medium,FALSE,Positive
+41,Lump,TRUE,Lump,72,Left,TRUE,TRUE,TRUE,TRUE,14,Premenopause,FALSE,1,29,FALSE,0,FALSE,FALSE,High,High-fat,Low,FALSE,Positive
+42,Lump,TRUE,Lump,110,Right,FALSE,TRUE,TRUE,TRUE,15,Premenopause,TRUE,2,44,FALSE,0,FALSE,FALSE,Medium,Processed,Low,TRUE,Negative
+49,Nipple discharge,TRUE,Nipple discharge,33,None,FALSE,TRUE,TRUE,FALSE,13,Premenopause,FALSE,5,40,FALSE,0,TRUE,TRUE,High,Healthy,High,TRUE,Negative
+32,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,TRUE,12,Premenopause,TRUE,5,23,TRUE,46,TRUE,FALSE,Low,Processed,High,FALSE,Positive
+36,Pain,TRUE,Pain,121,None,TRUE,FALSE,TRUE,FALSE,15,Premenopause,FALSE,5,21,FALSE,0,FALSE,TRUE,Medium,Healthy,High,TRUE,Positive
+52,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,TRUE,13,Postmenopause,FALSE,0,9,FALSE,0,TRUE,FALSE,Low,Processed,Low,TRUE,Negative
+64,Nipple discharge,TRUE,Nipple discharge,160,Left,FALSE,FALSE,FALSE,TRUE,11,Postmenopause,FALSE,3,32,TRUE,31,TRUE,TRUE,High,Healthy,Medium,TRUE,Positive
+57,Nipple discharge,TRUE,Nipple discharge,33,None,FALSE,TRUE,TRUE,TRUE,10,Postmenopause,TRUE,4,29,FALSE,0,TRUE,FALSE,Low,High-fat,Low,TRUE,Positive
+57,Pain,TRUE,Pain,77,Left,FALSE,FALSE,FALSE,FALSE,13,Postmenopause,FALSE,1,21,FALSE,0,TRUE,FALSE,Low,Healthy,Low,TRUE,Negative
+63,Nipple discharge,TRUE,Nipple discharge,166,Both,TRUE,FALSE,FALSE,FALSE,11,Postmenopause,FALSE,5,14,FALSE,0,FALSE,TRUE,Medium,High-fat,High,TRUE,Positive
+58,Pain,TRUE,Pain,106,Right,TRUE,FALSE,TRUE,TRUE,13,Postmenopause,FALSE,0,39,TRUE,40,FALSE,FALSE,Medium,Healthy,High,FALSE,Positive
+27,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,12,Premenopause,TRUE,5,8,FALSE,0,TRUE,FALSE,Low,Healthy,Low,TRUE,Negative
+30,Nipple discharge,TRUE,Nipple discharge,73,Right,TRUE,TRUE,TRUE,TRUE,10,Premenopause,TRUE,1,11,FALSE,0,TRUE,FALSE,Medium,Processed,Medium,TRUE,Positive
+32,Lump,TRUE,Lump,72,Right,FALSE,FALSE,TRUE,TRUE,11,Premenopause,TRUE,3,19,FALSE,0,FALSE,TRUE,Low,Healthy,Medium,TRUE,Negative
+71,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,TRUE,12,Postmenopause,TRUE,2,19,FALSE,0,TRUE,TRUE,Medium,Healthy,Low,TRUE,Negative
+40,Lump,TRUE,Lump,132,None,FALSE,TRUE,TRUE,FALSE,15,Premenopause,FALSE,1,21,TRUE,55,FALSE,FALSE,Low,High-fat,Low,TRUE,Positive
+27,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,10,Premenopause,FALSE,3,41,TRUE,43,FALSE,FALSE,Medium,Healthy,Medium,TRUE,Positive
+35,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,11,Premenopause,FALSE,5,11,TRUE,52,TRUE,FALSE,Low,Healthy,High,FALSE,Negative
+36,Nipple discharge,TRUE,Nipple discharge,141,None,TRUE,FALSE,TRUE,TRUE,10,Premenopause,FALSE,4,18,TRUE,65,TRUE,TRUE,Low,High-fat,High,TRUE,Positive
+69,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,TRUE,14,Postmenopause,TRUE,4,31,TRUE,47,TRUE,FALSE,Low,High-fat,Medium,FALSE,Positive
+30,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,11,Premenopause,FALSE,2,21,FALSE,0,TRUE,TRUE,Low,Healthy,Medium,FALSE,Negative
+61,Nipple discharge,TRUE,Nipple discharge,96,Left,TRUE,TRUE,FALSE,TRUE,10,Postmenopause,FALSE,2,2,FALSE,0,TRUE,TRUE,Medium,High-fat,Low,TRUE,Positive
+52,Lump,TRUE,Lump,35,Both,FALSE,TRUE,FALSE,TRUE,14,Postmenopause,FALSE,4,14,TRUE,62,TRUE,TRUE,Medium,Healthy,Medium,TRUE,Positive
+31,Pain,TRUE,Pain,76,None,FALSE,FALSE,FALSE,FALSE,10,Premenopause,FALSE,5,20,FALSE,0,FALSE,TRUE,High,High-fat,High,FALSE,Negative
+55,Pain,TRUE,Pain,24,Right,TRUE,FALSE,FALSE,FALSE,13,Postmenopause,TRUE,4,3,FALSE,0,TRUE,TRUE,Medium,Processed,High,FALSE,Negative
+52,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,13,Postmenopause,FALSE,5,19,FALSE,0,FALSE,FALSE,Low,Processed,Medium,TRUE,Negative
+48,Lump,TRUE,Lump,50,None,TRUE,FALSE,TRUE,TRUE,10,Premenopause,TRUE,2,31,TRUE,65,FALSE,TRUE,Medium,Healthy,Low,FALSE,Positive
+77,Nipple discharge,TRUE,Nipple discharge,98,None,TRUE,TRUE,TRUE,TRUE,13,Postmenopause,TRUE,1,14,TRUE,63,FALSE,FALSE,Low,High-fat,High,TRUE,Positive
+60,Pain,TRUE,Pain,6,Both,FALSE,FALSE,TRUE,FALSE,11,Postmenopause,FALSE,2,11,TRUE,32,FALSE,TRUE,Low,Healthy,High,TRUE,Positive
+69,Pain,TRUE,Pain,18,Left,TRUE,TRUE,TRUE,TRUE,14,Postmenopause,TRUE,0,34,TRUE,55,TRUE,FALSE,Medium,Processed,Medium,FALSE,Positive
+32,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,TRUE,13,Premenopause,FALSE,5,22,TRUE,43,TRUE,TRUE,Low,Healthy,Medium,FALSE,Negative
+38,Lump,TRUE,Lump,2,Left,TRUE,FALSE,FALSE,TRUE,14,Premenopause,FALSE,4,37,FALSE,0,TRUE,FALSE,Medium,Healthy,High,FALSE,Positive
+69,Lump,TRUE,Lump,41,Left,FALSE,FALSE,FALSE,FALSE,15,Postmenopause,FALSE,5,46,FALSE,0,FALSE,TRUE,Low,Processed,Medium,FALSE,Negative
+38,Nipple discharge,TRUE,Nipple discharge,84,None,TRUE,FALSE,TRUE,TRUE,11,Premenopause,FALSE,5,16,FALSE,0,TRUE,TRUE,High,Healthy,High,FALSE,Positive
+49,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,10,Premenopause,TRUE,3,1,FALSE,0,TRUE,TRUE,High,Healthy,Low,FALSE,Negative
+59,Nipple discharge,TRUE,Nipple discharge,5,Left,TRUE,FALSE,TRUE,TRUE,10,Postmenopause,TRUE,3,35,FALSE,0,TRUE,FALSE,Low,Processed,Medium,TRUE,Positive
+69,Pain,TRUE,Pain,151,None,FALSE,FALSE,TRUE,TRUE,12,Postmenopause,FALSE,1,2,FALSE,0,FALSE,TRUE,Medium,Processed,High,FALSE,Positive
+78,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,15,Postmenopause,FALSE,1,28,FALSE,0,TRUE,TRUE,Low,Healthy,High,FALSE,Negative
+34,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,13,Premenopause,FALSE,5,40,FALSE,0,TRUE,TRUE,High,Healthy,Medium,TRUE,Negative
+25,Lump,TRUE,Lump,133,None,FALSE,TRUE,FALSE,FALSE,13,Premenopause,TRUE,2,11,FALSE,0,FALSE,FALSE,High,Processed,Medium,FALSE,Negative
+25,Lump,TRUE,Lump,57,None,TRUE,FALSE,FALSE,FALSE,15,Premenopause,FALSE,3,27,FALSE,0,TRUE,TRUE,Medium,Processed,Low,FALSE,Negative
+67,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,14,Postmenopause,TRUE,4,11,TRUE,66,FALSE,FALSE,Medium,High-fat,High,TRUE,Positive
+73,Nipple discharge,TRUE,Nipple discharge,120,None,FALSE,FALSE,TRUE,FALSE,13,Postmenopause,FALSE,3,46,TRUE,44,FALSE,FALSE,Low,High-fat,High,FALSE,Positive
+30,Nipple discharge,TRUE,Nipple discharge,108,None,TRUE,FALSE,TRUE,TRUE,12,Premenopause,TRUE,4,19,FALSE,0,FALSE,FALSE,High,High-fat,Low,TRUE,Positive
+74,Pain,TRUE,Pain,78,Both,TRUE,TRUE,FALSE,FALSE,11,Postmenopause,TRUE,0,36,FALSE,0,TRUE,FALSE,High,Healthy,Low,TRUE,Negative
+44,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,11,Premenopause,TRUE,4,0,FALSE,0,TRUE,FALSE,Medium,Healthy,Low,TRUE,Negative
+79,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,12,Postmenopause,FALSE,5,36,FALSE,0,FALSE,TRUE,Medium,Healthy,Medium,FALSE,Negative
+77,Nipple discharge,TRUE,Nipple discharge,59,Both,TRUE,FALSE,TRUE,FALSE,14,Postmenopause,FALSE,0,13,TRUE,41,FALSE,TRUE,Low,Processed,High,FALSE,Positive
+66,Pain,TRUE,Pain,20,Both,FALSE,FALSE,TRUE,FALSE,14,Postmenopause,FALSE,1,23,TRUE,63,TRUE,TRUE,Low,High-fat,Low,TRUE,Positive
+49,Lump,TRUE,Lump,50,Right,FALSE,FALSE,TRUE,TRUE,14,Premenopause,FALSE,0,38,TRUE,60,FALSE,TRUE,High,Healthy,Low,TRUE,Positive
+71,Nipple discharge,TRUE,Nipple discharge,171,Left,FALSE,TRUE,TRUE,TRUE,11,Postmenopause,TRUE,3,37,TRUE,49,FALSE,TRUE,High,Processed,Low,TRUE,Positive
+47,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,FALSE,15,Premenopause,FALSE,4,15,FALSE,0,FALSE,TRUE,Low,Healthy,Medium,FALSE,Negative
+74,Lump,TRUE,Lump,124,Right,FALSE,FALSE,TRUE,FALSE,11,Postmenopause,FALSE,4,0,FALSE,0,TRUE,TRUE,Low,Processed,High,TRUE,Negative
+79,Lump,TRUE,Lump,8,None,TRUE,TRUE,FALSE,TRUE,14,Postmenopause,TRUE,5,4,FALSE,0,TRUE,TRUE,High,Processed,Medium,FALSE,Negative
+71,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,15,Postmenopause,TRUE,1,0,FALSE,0,FALSE,FALSE,High,High-fat,Low,FALSE,Negative
+79,Pain,TRUE,Pain,119,Left,FALSE,TRUE,TRUE,FALSE,11,Postmenopause,FALSE,2,9,TRUE,59,FALSE,TRUE,Medium,Processed,High,FALSE,Positive
+74,Pain,TRUE,Pain,145,Right,FALSE,TRUE,FALSE,TRUE,11,Postmenopause,FALSE,0,11,TRUE,56,FALSE,FALSE,High,High-fat,Low,FALSE,Positive
+32,Lump,TRUE,Lump,89,Right,FALSE,FALSE,FALSE,FALSE,15,Premenopause,TRUE,3,32,TRUE,30,TRUE,TRUE,Medium,Processed,Low,TRUE,Negative
+43,Pain,TRUE,Pain,31,Both,FALSE,FALSE,TRUE,TRUE,15,Premenopause,TRUE,4,47,FALSE,0,TRUE,TRUE,Medium,Healthy,Medium,TRUE,Negative
+29,Lump,TRUE,Lump,105,Right,FALSE,TRUE,TRUE,FALSE,11,Premenopause,FALSE,5,27,FALSE,0,FALSE,TRUE,Low,Processed,Medium,FALSE,Negative
+26,Pain,TRUE,Pain,63,None,TRUE,FALSE,FALSE,FALSE,10,Premenopause,FALSE,0,40,TRUE,54,FALSE,FALSE,Low,Processed,Medium,TRUE,Positive
+72,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,14,Postmenopause,FALSE,0,12,FALSE,0,FALSE,TRUE,High,Healthy,High,TRUE,Positive
+55,Pain,TRUE,Pain,68,None,FALSE,TRUE,TRUE,TRUE,11,Postmenopause,FALSE,4,37,TRUE,33,FALSE,TRUE,High,Healthy,High,FALSE,Positive
+62,Lump,TRUE,Lump,19,Both,FALSE,FALSE,TRUE,FALSE,15,Postmenopause,TRUE,1,17,TRUE,42,FALSE,TRUE,Low,Healthy,High,TRUE,Positive
+65,Lump,TRUE,Lump,23,Right,FALSE,TRUE,TRUE,TRUE,12,Postmenopause,FALSE,4,10,FALSE,0,TRUE,TRUE,Low,High-fat,Medium,FALSE,Positive
+25,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,15,Premenopause,TRUE,5,6,TRUE,54,TRUE,FALSE,Low,Healthy,Medium,TRUE,Negative
+45,Lump,TRUE,Lump,143,None,TRUE,FALSE,FALSE,FALSE,10,Premenopause,FALSE,3,6,TRUE,44,TRUE,TRUE,Low,Processed,Medium,TRUE,Positive
+45,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,12,Premenopause,FALSE,3,28,FALSE,0,TRUE,TRUE,Low,Healthy,Low,FALSE,Negative
+49,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,FALSE,10,Premenopause,FALSE,0,31,TRUE,64,TRUE,TRUE,Medium,Healthy,Medium,FALSE,Negative
+68,Nipple discharge,TRUE,Nipple discharge,102,Right,TRUE,TRUE,FALSE,FALSE,11,Postmenopause,TRUE,2,34,TRUE,37,FALSE,FALSE,High,Processed,High,TRUE,Positive
+70,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,FALSE,15,Postmenopause,TRUE,1,1,TRUE,38,TRUE,FALSE,Medium,Processed,Low,TRUE,Negative
+27,Nipple discharge,TRUE,Nipple discharge,85,None,FALSE,TRUE,FALSE,TRUE,11,Premenopause,TRUE,1,5,FALSE,0,FALSE,FALSE,Medium,High-fat,Low,TRUE,Negative
+52,Pain,TRUE,Pain,117,Both,TRUE,FALSE,FALSE,TRUE,14,Postmenopause,FALSE,1,24,FALSE,0,TRUE,FALSE,Medium,Processed,Low,TRUE,Negative
+36,Nipple discharge,TRUE,Nipple discharge,133,Both,TRUE,TRUE,FALSE,FALSE,11,Premenopause,TRUE,4,14,TRUE,65,TRUE,TRUE,Low,Healthy,Medium,FALSE,Positive
+39,Pain,TRUE,Pain,43,Both,FALSE,TRUE,FALSE,FALSE,15,Premenopause,FALSE,5,43,FALSE,0,TRUE,TRUE,High,Healthy,Medium,FALSE,Negative
+67,Nipple discharge,TRUE,Nipple discharge,21,Both,FALSE,TRUE,FALSE,FALSE,12,Postmenopause,TRUE,4,14,FALSE,0,FALSE,TRUE,High,High-fat,High,TRUE,Negative
+49,Pain,TRUE,Pain,36,Both,FALSE,FALSE,FALSE,TRUE,12,Premenopause,FALSE,2,14,FALSE,0,TRUE,FALSE,Low,High-fat,Medium,FALSE,Negative
+28,Lump,TRUE,Lump,21,None,FALSE,TRUE,TRUE,FALSE,14,Premenopause,TRUE,5,18,TRUE,63,TRUE,FALSE,Medium,Processed,High,FALSE,Positive
+38,Lump,TRUE,Lump,125,Both,TRUE,FALSE,TRUE,FALSE,13,Premenopause,TRUE,4,45,FALSE,0,TRUE,TRUE,Low,Processed,High,FALSE,Positive
+51,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,14,Postmenopause,FALSE,3,34,TRUE,37,FALSE,TRUE,High,Healthy,Medium,TRUE,Negative
+40,Pain,TRUE,Pain,106,None,TRUE,FALSE,TRUE,FALSE,13,Premenopause,TRUE,5,17,TRUE,31,TRUE,TRUE,Low,Processed,Low,FALSE,Positive
+73,Pain,TRUE,Pain,77,Left,TRUE,TRUE,TRUE,FALSE,13,Postmenopause,TRUE,1,24,FALSE,0,FALSE,FALSE,High,High-fat,Medium,FALSE,Positive
+54,Lump,TRUE,Lump,7,Left,TRUE,FALSE,TRUE,TRUE,13,Postmenopause,FALSE,1,38,TRUE,42,FALSE,FALSE,Low,Processed,High,FALSE,Positive
+55,Pain,TRUE,Pain,71,Right,FALSE,TRUE,FALSE,FALSE,10,Postmenopause,TRUE,1,41,TRUE,65,FALSE,TRUE,Low,Healthy,Medium,FALSE,Negative
+44,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,13,Premenopause,TRUE,5,6,FALSE,0,FALSE,FALSE,High,Processed,Medium,FALSE,Negative
+78,Nipple discharge,TRUE,Nipple discharge,129,None,TRUE,TRUE,FALSE,FALSE,13,Postmenopause,FALSE,4,41,TRUE,42,FALSE,TRUE,Low,High-fat,High,FALSE,Positive
+79,Lump,TRUE,Lump,150,Right,FALSE,FALSE,FALSE,FALSE,15,Postmenopause,TRUE,4,21,TRUE,57,FALSE,TRUE,Low,Healthy,Medium,TRUE,Negative
+33,Lump,TRUE,Lump,26,Both,TRUE,FALSE,FALSE,TRUE,10,Premenopause,FALSE,1,23,TRUE,37,TRUE,TRUE,Low,High-fat,High,TRUE,Positive
+48,Lump,TRUE,Lump,49,Right,TRUE,TRUE,FALSE,FALSE,11,Premenopause,TRUE,2,36,FALSE,0,FALSE,TRUE,Medium,High-fat,Low,TRUE,Negative
+28,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,11,Premenopause,TRUE,2,35,FALSE,0,TRUE,TRUE,High,Processed,Medium,TRUE,Negative
+63,Pain,TRUE,Pain,89,None,TRUE,FALSE,TRUE,FALSE,11,Postmenopause,TRUE,2,35,TRUE,39,FALSE,FALSE,Low,High-fat,Low,TRUE,Positive
+57,Pain,TRUE,Pain,69,Both,TRUE,FALSE,TRUE,FALSE,10,Postmenopause,TRUE,2,43,FALSE,0,TRUE,TRUE,Low,High-fat,Low,FALSE,Positive
+58,Lump,TRUE,Lump,161,Left,FALSE,FALSE,FALSE,TRUE,14,Postmenopause,FALSE,0,21,FALSE,0,FALSE,FALSE,High,Processed,Low,TRUE,Negative
+72,Lump,TRUE,Lump,37,Both,TRUE,FALSE,FALSE,TRUE,12,Postmenopause,FALSE,3,6,FALSE,0,FALSE,FALSE,High,High-fat,Medium,TRUE,Positive
+56,Lump,TRUE,Lump,11,Both,FALSE,TRUE,FALSE,TRUE,11,Postmenopause,TRUE,0,13,FALSE,0,FALSE,TRUE,Medium,High-fat,Medium,TRUE,Negative
+37,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,14,Premenopause,TRUE,0,24,TRUE,31,FALSE,FALSE,Low,High-fat,High,TRUE,Negative
+59,Lump,TRUE,Lump,7,Right,TRUE,TRUE,FALSE,TRUE,14,Postmenopause,TRUE,1,2,FALSE,0,TRUE,FALSE,Medium,High-fat,Low,FALSE,Positive
+66,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,TRUE,15,Postmenopause,TRUE,4,38,FALSE,0,TRUE,FALSE,Low,Healthy,High,TRUE,Negative
+65,Pain,TRUE,Pain,24,Right,FALSE,TRUE,FALSE,FALSE,13,Postmenopause,FALSE,5,18,FALSE,0,FALSE,TRUE,Low,Processed,Low,FALSE,Negative
+28,Nipple discharge,TRUE,Nipple discharge,102,Right,FALSE,TRUE,TRUE,FALSE,11,Premenopause,TRUE,4,45,TRUE,65,FALSE,FALSE,High,High-fat,Low,FALSE,Positive
+64,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,14,Postmenopause,FALSE,0,35,FALSE,0,FALSE,FALSE,Medium,Processed,Low,FALSE,Negative
+27,Pain,TRUE,Pain,73,Left,FALSE,TRUE,FALSE,FALSE,10,Premenopause,TRUE,2,5,TRUE,68,FALSE,FALSE,High,Healthy,High,FALSE,Negative
+28,Pain,TRUE,Pain,13,None,FALSE,FALSE,FALSE,TRUE,10,Premenopause,FALSE,3,1,TRUE,34,FALSE,TRUE,Low,Healthy,High,FALSE,Positive
+68,Pain,TRUE,Pain,27,None,TRUE,FALSE,TRUE,TRUE,14,Postmenopause,TRUE,5,7,FALSE,0,TRUE,TRUE,High,Processed,Low,TRUE,Positive
+74,Nipple discharge,TRUE,Nipple discharge,67,Right,FALSE,TRUE,TRUE,TRUE,15,Postmenopause,TRUE,3,2,FALSE,0,FALSE,TRUE,Medium,High-fat,Low,TRUE,Positive
+46,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,TRUE,15,Premenopause,FALSE,1,22,TRUE,31,TRUE,FALSE,High,Processed,Low,FALSE,Negative
+62,Lump,TRUE,Lump,35,None,FALSE,TRUE,FALSE,FALSE,11,Postmenopause,TRUE,5,7,FALSE,0,FALSE,TRUE,Medium,High-fat,Medium,TRUE,Negative
+46,Nipple discharge,TRUE,Nipple discharge,44,Left,FALSE,TRUE,TRUE,FALSE,11,Premenopause,TRUE,3,4,TRUE,42,TRUE,FALSE,Medium,Processed,High,FALSE,Positive
+53,Pain,TRUE,Pain,31,Left,TRUE,TRUE,TRUE,FALSE,10,Postmenopause,TRUE,1,29,TRUE,45,FALSE,FALSE,Medium,Processed,High,TRUE,Positive
+36,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,FALSE,10,Premenopause,FALSE,3,7,TRUE,49,TRUE,TRUE,High,High-fat,Medium,TRUE,Negative
+27,Lump,TRUE,Lump,144,Right,FALSE,TRUE,TRUE,FALSE,15,Premenopause,TRUE,4,22,TRUE,57,FALSE,TRUE,High,Processed,Medium,TRUE,Positive
+75,Nipple discharge,TRUE,Nipple discharge,104,Right,FALSE,FALSE,FALSE,FALSE,15,Postmenopause,TRUE,4,19,TRUE,69,TRUE,TRUE,High,Processed,Medium,FALSE,Negative
+68,Lump,TRUE,Lump,65,None,FALSE,FALSE,FALSE,FALSE,10,Postmenopause,TRUE,5,20,TRUE,49,TRUE,TRUE,Medium,Processed,Medium,FALSE,Negative
+30,Lump,TRUE,Lump,150,None,TRUE,FALSE,FALSE,FALSE,11,Premenopause,FALSE,0,15,FALSE,0,TRUE,FALSE,Low,Healthy,Medium,FALSE,Negative
+36,Nipple discharge,TRUE,Nipple discharge,38,None,FALSE,TRUE,TRUE,FALSE,13,Premenopause,TRUE,1,13,TRUE,65,FALSE,TRUE,High,High-fat,High,TRUE,Positive
+57,Lump,TRUE,Lump,151,Right,TRUE,TRUE,TRUE,FALSE,11,Postmenopause,TRUE,4,1,TRUE,50,TRUE,FALSE,Low,Processed,High,FALSE,Positive
+26,Pain,TRUE,Pain,75,Right,TRUE,FALSE,TRUE,TRUE,12,Premenopause,TRUE,3,22,FALSE,0,FALSE,FALSE,Low,Healthy,Medium,FALSE,Positive
+50,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,13,Premenopause,FALSE,1,5,TRUE,64,FALSE,FALSE,Low,High-fat,Medium,FALSE,Negative
+46,Nipple discharge,TRUE,Nipple discharge,171,Left,FALSE,TRUE,TRUE,TRUE,15,Premenopause,TRUE,3,36,FALSE,0,TRUE,TRUE,Medium,High-fat,High,FALSE,Positive
+76,Lump,TRUE,Lump,12,None,FALSE,TRUE,FALSE,TRUE,10,Postmenopause,TRUE,1,37,TRUE,47,TRUE,TRUE,Medium,High-fat,High,FALSE,Positive
+69,Pain,TRUE,Pain,35,Right,FALSE,FALSE,TRUE,FALSE,15,Postmenopause,TRUE,1,29,TRUE,43,FALSE,FALSE,Low,High-fat,High,FALSE,Positive
+30,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,TRUE,12,Premenopause,FALSE,3,13,FALSE,0,TRUE,FALSE,Medium,Healthy,High,TRUE,Negative
+33,Lump,TRUE,Lump,143,None,FALSE,FALSE,FALSE,FALSE,14,Premenopause,TRUE,2,1,FALSE,0,TRUE,FALSE,Medium,Healthy,High,FALSE,Negative
+51,Lump,TRUE,Lump,130,Right,TRUE,TRUE,TRUE,FALSE,12,Postmenopause,FALSE,1,13,FALSE,0,FALSE,FALSE,Medium,Processed,Low,TRUE,Negative
+44,Pain,TRUE,Pain,10,Right,FALSE,FALSE,FALSE,FALSE,10,Premenopause,TRUE,1,24,FALSE,0,FALSE,TRUE,Low,High-fat,Medium,FALSE,Negative
+78,Nipple discharge,TRUE,Nipple discharge,33,Both,TRUE,FALSE,FALSE,TRUE,13,Postmenopause,FALSE,5,0,FALSE,0,TRUE,FALSE,High,Healthy,Medium,TRUE,Negative
+70,Lump,TRUE,Lump,80,None,FALSE,TRUE,TRUE,TRUE,15,Postmenopause,FALSE,5,2,TRUE,64,FALSE,TRUE,Medium,Processed,High,FALSE,Positive
+65,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,TRUE,15,Postmenopause,TRUE,0,12,TRUE,63,TRUE,TRUE,Low,High-fat,Medium,TRUE,Positive
+32,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,14,Premenopause,FALSE,1,3,FALSE,0,FALSE,FALSE,Medium,Healthy,Low,FALSE,Negative
+49,Pain,TRUE,Pain,79,None,TRUE,FALSE,TRUE,FALSE,13,Premenopause,TRUE,4,11,FALSE,0,TRUE,FALSE,Low,Processed,Medium,TRUE,Negative
+56,Pain,TRUE,Pain,128,Left,TRUE,FALSE,FALSE,TRUE,13,Postmenopause,TRUE,4,30,FALSE,0,FALSE,TRUE,High,High-fat,Low,TRUE,Positive
+38,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,13,Premenopause,TRUE,1,28,TRUE,35,TRUE,FALSE,Low,Processed,Low,FALSE,Positive
+56,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,14,Postmenopause,TRUE,2,1,TRUE,52,FALSE,TRUE,Low,Processed,Medium,TRUE,Negative
+43,Nipple discharge,TRUE,Nipple discharge,31,Right,TRUE,TRUE,FALSE,FALSE,12,Premenopause,TRUE,4,18,TRUE,63,TRUE,FALSE,Low,High-fat,Medium,FALSE,Positive
+34,Nipple discharge,TRUE,Nipple discharge,89,Left,FALSE,FALSE,TRUE,TRUE,11,Premenopause,FALSE,5,10,FALSE,0,FALSE,TRUE,Low,Healthy,Low,FALSE,Negative
+74,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,14,Postmenopause,TRUE,0,22,TRUE,48,TRUE,TRUE,Low,High-fat,High,TRUE,Positive
+33,Pain,TRUE,Pain,99,Left,FALSE,FALSE,TRUE,FALSE,14,Premenopause,TRUE,0,27,TRUE,36,TRUE,FALSE,Medium,High-fat,High,FALSE,Positive
+40,Lump,TRUE,Lump,144,Right,FALSE,FALSE,TRUE,TRUE,13,Premenopause,TRUE,0,3,TRUE,33,TRUE,TRUE,High,High-fat,High,TRUE,Positive
+63,Nipple discharge,TRUE,Nipple discharge,40,None,TRUE,FALSE,TRUE,FALSE,10,Postmenopause,TRUE,4,38,FALSE,0,FALSE,FALSE,Low,Healthy,Medium,FALSE,Negative
+76,Pain,TRUE,Pain,52,Both,FALSE,FALSE,FALSE,TRUE,13,Postmenopause,TRUE,3,37,FALSE,0,TRUE,FALSE,High,Healthy,Low,FALSE,Negative
+63,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,11,Postmenopause,TRUE,4,34,FALSE,0,FALSE,FALSE,Medium,Healthy,Medium,FALSE,Negative
+31,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,TRUE,12,Premenopause,FALSE,3,21,FALSE,0,TRUE,FALSE,High,Healthy,Low,FALSE,Negative
+38,Pain,TRUE,Pain,86,Both,TRUE,FALSE,TRUE,FALSE,14,Premenopause,FALSE,5,1,FALSE,0,FALSE,TRUE,High,Healthy,Low,FALSE,Negative
+51,Lump,TRUE,Lump,149,None,TRUE,TRUE,FALSE,TRUE,15,Postmenopause,FALSE,5,14,TRUE,50,FALSE,TRUE,Low,Processed,Low,TRUE,Positive
+34,Lump,TRUE,Lump,58,Both,TRUE,TRUE,FALSE,FALSE,14,Premenopause,TRUE,0,12,TRUE,50,TRUE,TRUE,Medium,Processed,High,TRUE,Positive
+50,Pain,TRUE,Pain,82,Right,FALSE,TRUE,TRUE,FALSE,14,Premenopause,TRUE,4,31,TRUE,65,FALSE,FALSE,High,Healthy,Medium,FALSE,Positive
+41,Nipple discharge,TRUE,Nipple discharge,139,Both,FALSE,TRUE,TRUE,FALSE,14,Premenopause,FALSE,3,25,TRUE,33,FALSE,TRUE,Medium,Healthy,High,TRUE,Positive
+58,Lump,TRUE,Lump,52,None,FALSE,TRUE,TRUE,FALSE,13,Postmenopause,FALSE,1,39,FALSE,0,FALSE,TRUE,Medium,Healthy,Medium,FALSE,Negative
+59,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,FALSE,10,Postmenopause,TRUE,4,28,TRUE,67,FALSE,FALSE,Medium,High-fat,High,FALSE,Positive
+66,Nipple discharge,TRUE,Nipple discharge,21,Right,FALSE,TRUE,TRUE,TRUE,11,Postmenopause,FALSE,4,40,TRUE,46,TRUE,TRUE,Medium,Processed,Medium,TRUE,Positive
+33,Lump,TRUE,Lump,169,Right,FALSE,FALSE,FALSE,FALSE,10,Premenopause,TRUE,1,47,TRUE,58,TRUE,FALSE,High,Processed,High,FALSE,Negative
+57,Nipple discharge,TRUE,Nipple discharge,10,Right,FALSE,FALSE,FALSE,TRUE,11,Postmenopause,FALSE,1,39,FALSE,0,FALSE,FALSE,Low,High-fat,Medium,TRUE,Negative
+45,Nipple discharge,TRUE,Nipple discharge,28,Right,FALSE,TRUE,TRUE,TRUE,12,Premenopause,FALSE,1,7,TRUE,51,FALSE,FALSE,High,High-fat,High,TRUE,Positive
+32,Nipple discharge,TRUE,Nipple discharge,177,Both,FALSE,FALSE,FALSE,FALSE,10,Premenopause,TRUE,3,22,TRUE,53,FALSE,FALSE,Medium,Processed,High,TRUE,Negative
+69,Nipple discharge,TRUE,Nipple discharge,69,Left,TRUE,FALSE,TRUE,TRUE,13,Postmenopause,TRUE,0,22,TRUE,66,TRUE,FALSE,Low,High-fat,Medium,TRUE,Positive
+32,Nipple discharge,TRUE,Nipple discharge,77,Right,FALSE,FALSE,TRUE,FALSE,10,Premenopause,TRUE,2,0,FALSE,0,FALSE,TRUE,Low,Processed,High,TRUE,Negative
+69,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,12,Postmenopause,TRUE,2,23,FALSE,0,TRUE,TRUE,Low,High-fat,Low,TRUE,Negative
+41,Lump,TRUE,Lump,133,Both,FALSE,TRUE,TRUE,FALSE,13,Premenopause,FALSE,4,39,FALSE,0,FALSE,TRUE,Medium,Healthy,High,TRUE,Negative
+55,Pain,TRUE,Pain,110,Left,TRUE,TRUE,TRUE,FALSE,13,Postmenopause,FALSE,2,14,TRUE,48,FALSE,TRUE,Medium,Processed,High,FALSE,Positive
+31,Nipple discharge,TRUE,Nipple discharge,28,Both,FALSE,FALSE,TRUE,FALSE,12,Premenopause,TRUE,2,4,FALSE,0,FALSE,FALSE,Low,Healthy,Low,FALSE,Negative
+29,Lump,TRUE,Lump,94,None,TRUE,FALSE,TRUE,TRUE,15,Premenopause,TRUE,1,37,FALSE,0,TRUE,TRUE,Medium,High-fat,Low,TRUE,Positive
+71,Pain,TRUE,Pain,112,Left,FALSE,FALSE,FALSE,FALSE,13,Postmenopause,FALSE,0,30,TRUE,37,FALSE,TRUE,High,High-fat,Low,TRUE,Negative
+64,Nipple discharge,TRUE,Nipple discharge,153,Right,FALSE,TRUE,FALSE,FALSE,10,Postmenopause,TRUE,1,14,FALSE,0,TRUE,TRUE,High,Healthy,Low,FALSE,Negative
+74,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,FALSE,12,Postmenopause,TRUE,0,35,TRUE,33,FALSE,TRUE,Low,High-fat,Low,FALSE,Negative
+38,Nipple discharge,TRUE,Nipple discharge,105,Both,FALSE,FALSE,TRUE,FALSE,10,Premenopause,TRUE,0,9,TRUE,50,FALSE,TRUE,High,High-fat,Low,TRUE,Positive
+60,Nipple discharge,TRUE,Nipple discharge,140,Left,FALSE,TRUE,TRUE,FALSE,12,Postmenopause,FALSE,1,12,FALSE,0,TRUE,TRUE,Medium,Healthy,Medium,FALSE,Negative
+77,Lump,TRUE,Lump,160,Both,FALSE,FALSE,FALSE,FALSE,13,Postmenopause,FALSE,1,10,TRUE,39,TRUE,FALSE,Medium,Processed,Medium,FALSE,Negative
+39,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,10,Premenopause,FALSE,1,8,TRUE,54,TRUE,TRUE,Medium,High-fat,High,FALSE,Negative
+64,Lump,TRUE,Lump,59,None,TRUE,TRUE,FALSE,FALSE,15,Postmenopause,TRUE,3,24,TRUE,51,FALSE,FALSE,Medium,High-fat,Low,TRUE,Positive
+76,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,15,Postmenopause,FALSE,3,20,FALSE,0,FALSE,TRUE,Medium,High-fat,Low,TRUE,Negative
+68,Nipple discharge,TRUE,Nipple discharge,32,Both,FALSE,FALSE,TRUE,TRUE,12,Postmenopause,TRUE,5,20,TRUE,64,TRUE,TRUE,Medium,Healthy,Medium,FALSE,Positive
+56,Lump,TRUE,Lump,119,None,FALSE,TRUE,FALSE,FALSE,10,Postmenopause,TRUE,3,40,FALSE,0,TRUE,TRUE,Low,High-fat,Medium,FALSE,Negative
+71,Nipple discharge,TRUE,Nipple discharge,18,Both,TRUE,TRUE,FALSE,TRUE,14,Postmenopause,TRUE,4,20,FALSE,0,FALSE,TRUE,High,High-fat,High,TRUE,Positive
+32,Lump,TRUE,Lump,46,Left,TRUE,FALSE,TRUE,TRUE,15,Premenopause,TRUE,3,31,FALSE,0,FALSE,TRUE,High,High-fat,Medium,TRUE,Positive
+35,Nipple discharge,TRUE,Nipple discharge,86,Both,FALSE,TRUE,TRUE,TRUE,15,Premenopause,TRUE,2,24,FALSE,0,TRUE,TRUE,High,Processed,Low,TRUE,Negative
+46,Lump,TRUE,Lump,92,Right,FALSE,FALSE,FALSE,TRUE,14,Premenopause,FALSE,4,17,TRUE,31,TRUE,TRUE,Low,Healthy,High,TRUE,Positive
+53,Lump,TRUE,Lump,27,None,TRUE,TRUE,TRUE,TRUE,11,Postmenopause,TRUE,2,22,TRUE,53,FALSE,TRUE,Medium,Processed,High,FALSE,Positive
+68,Pain,TRUE,Pain,22,Left,FALSE,TRUE,FALSE,TRUE,12,Postmenopause,FALSE,4,32,FALSE,0,TRUE,TRUE,High,High-fat,High,FALSE,Positive
+27,Nipple discharge,TRUE,Nipple discharge,118,Right,TRUE,TRUE,TRUE,TRUE,12,Premenopause,FALSE,4,29,TRUE,68,TRUE,TRUE,Medium,High-fat,Low,FALSE,Positive
+68,Lump,TRUE,Lump,111,Right,FALSE,TRUE,FALSE,TRUE,10,Postmenopause,FALSE,4,46,FALSE,0,TRUE,TRUE,High,Processed,Medium,FALSE,Negative
+32,Pain,TRUE,Pain,106,Right,FALSE,FALSE,FALSE,FALSE,11,Premenopause,FALSE,0,43,FALSE,0,FALSE,TRUE,High,Healthy,Medium,TRUE,Negative
+29,Pain,TRUE,Pain,3,Right,FALSE,FALSE,FALSE,FALSE,10,Premenopause,TRUE,3,39,TRUE,64,FALSE,FALSE,High,Processed,High,FALSE,Negative
+56,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,11,Postmenopause,FALSE,1,42,TRUE,54,TRUE,FALSE,Low,Healthy,Low,TRUE,Negative
+34,Nipple discharge,TRUE,Nipple discharge,149,Both,TRUE,TRUE,TRUE,TRUE,15,Premenopause,TRUE,2,26,FALSE,0,FALSE,FALSE,Low,Processed,High,FALSE,Positive
+26,Nipple discharge,TRUE,Nipple discharge,169,Left,TRUE,TRUE,FALSE,FALSE,14,Premenopause,FALSE,0,35,TRUE,51,TRUE,TRUE,Medium,High-fat,High,TRUE,Positive
+66,Pain,TRUE,Pain,90,Left,TRUE,FALSE,TRUE,TRUE,11,Postmenopause,FALSE,5,11,TRUE,46,FALSE,TRUE,High,Processed,High,FALSE,Positive
+38,Lump,TRUE,Lump,14,Left,FALSE,FALSE,TRUE,TRUE,10,Premenopause,TRUE,1,19,FALSE,0,FALSE,FALSE,Low,High-fat,Low,TRUE,Positive
+35,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,FALSE,12,Premenopause,TRUE,5,18,TRUE,66,FALSE,TRUE,Low,Processed,Medium,FALSE,Negative
+28,Lump,TRUE,Lump,111,Right,FALSE,TRUE,TRUE,FALSE,14,Premenopause,FALSE,3,19,FALSE,0,TRUE,FALSE,High,Healthy,High,FALSE,Negative
+34,Lump,TRUE,Lump,24,None,FALSE,TRUE,FALSE,TRUE,15,Premenopause,FALSE,2,25,TRUE,66,FALSE,TRUE,Low,Healthy,High,TRUE,Positive
+62,Pain,TRUE,Pain,54,Right,FALSE,FALSE,FALSE,FALSE,14,Postmenopause,TRUE,1,37,TRUE,33,FALSE,FALSE,Medium,Healthy,Medium,FALSE,Negative
+69,Lump,TRUE,Lump,20,Right,TRUE,FALSE,FALSE,FALSE,10,Postmenopause,FALSE,3,28,FALSE,0,FALSE,TRUE,High,High-fat,Medium,FALSE,Negative
+38,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,FALSE,12,Premenopause,TRUE,4,15,TRUE,33,FALSE,FALSE,Medium,Processed,Low,FALSE,Negative
+48,Lump,TRUE,Lump,162,Both,TRUE,TRUE,FALSE,FALSE,15,Premenopause,TRUE,1,18,TRUE,60,FALSE,FALSE,High,Processed,Medium,TRUE,Positive
+43,Nipple discharge,TRUE,Nipple discharge,49,Right,TRUE,FALSE,TRUE,FALSE,15,Premenopause,TRUE,2,21,TRUE,53,FALSE,TRUE,High,High-fat,Medium,TRUE,Positive
+69,Pain,TRUE,Pain,76,Right,FALSE,TRUE,FALSE,FALSE,15,Postmenopause,FALSE,1,37,TRUE,60,FALSE,TRUE,Low,Processed,High,TRUE,Negative
+60,Nipple discharge,TRUE,Nipple discharge,19,Right,FALSE,TRUE,TRUE,FALSE,14,Postmenopause,FALSE,3,29,FALSE,0,TRUE,TRUE,Medium,Healthy,Medium,FALSE,Negative
+79,Lump,TRUE,Lump,113,None,TRUE,TRUE,TRUE,FALSE,10,Postmenopause,FALSE,1,27,FALSE,0,FALSE,FALSE,Medium,Processed,Low,FALSE,Negative
+71,Nipple discharge,TRUE,Nipple discharge,57,Right,TRUE,TRUE,FALSE,FALSE,13,Postmenopause,TRUE,5,44,FALSE,0,TRUE,FALSE,Medium,Healthy,High,TRUE,Negative
+57,Lump,TRUE,Lump,145,Both,FALSE,FALSE,TRUE,FALSE,15,Postmenopause,TRUE,3,19,FALSE,0,FALSE,FALSE,Medium,High-fat,High,FALSE,Positive
+72,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,12,Postmenopause,TRUE,5,46,TRUE,43,FALSE,TRUE,Medium,Healthy,High,TRUE,Positive
+35,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,10,Premenopause,TRUE,1,15,TRUE,34,TRUE,FALSE,High,High-fat,High,FALSE,Positive
+76,Pain,TRUE,Pain,61,Right,FALSE,TRUE,FALSE,FALSE,11,Postmenopause,FALSE,1,2,TRUE,42,FALSE,TRUE,Medium,Healthy,High,TRUE,Negative
+67,Lump,TRUE,Lump,113,Left,FALSE,FALSE,TRUE,FALSE,15,Postmenopause,TRUE,5,44,FALSE,0,FALSE,FALSE,High,Healthy,Low,FALSE,Negative
+30,Nipple discharge,TRUE,Nipple discharge,81,Right,FALSE,FALSE,FALSE,TRUE,12,Premenopause,FALSE,4,18,FALSE,0,FALSE,TRUE,Low,High-fat,Low,TRUE,Negative
+66,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,FALSE,12,Postmenopause,FALSE,5,25,TRUE,34,TRUE,TRUE,Low,High-fat,Low,FALSE,Negative
+53,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,14,Postmenopause,TRUE,3,20,TRUE,39,TRUE,TRUE,Medium,High-fat,Low,FALSE,Negative
+29,Nipple discharge,TRUE,Nipple discharge,100,Both,TRUE,TRUE,FALSE,FALSE,15,Premenopause,FALSE,1,3,FALSE,0,FALSE,FALSE,Low,Processed,Medium,TRUE,Negative
+63,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,TRUE,11,Postmenopause,FALSE,2,0,TRUE,53,TRUE,FALSE,Low,Processed,Low,FALSE,Negative
+60,Nipple discharge,TRUE,Nipple discharge,70,Right,FALSE,TRUE,FALSE,FALSE,10,Postmenopause,FALSE,5,45,FALSE,0,FALSE,FALSE,High,Processed,Low,TRUE,Negative
+68,Nipple discharge,TRUE,Nipple discharge,57,Left,TRUE,TRUE,TRUE,FALSE,13,Postmenopause,TRUE,0,35,TRUE,50,FALSE,FALSE,Low,Processed,High,TRUE,Positive
+54,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,13,Postmenopause,FALSE,1,29,FALSE,0,FALSE,FALSE,High,High-fat,High,TRUE,Negative
+46,Nipple discharge,TRUE,Nipple discharge,135,Both,TRUE,FALSE,TRUE,TRUE,12,Premenopause,TRUE,3,13,FALSE,0,TRUE,TRUE,High,Processed,High,TRUE,Positive
+34,Nipple discharge,TRUE,Nipple discharge,80,Left,TRUE,FALSE,TRUE,TRUE,15,Premenopause,TRUE,1,24,TRUE,42,TRUE,TRUE,Low,Processed,Medium,FALSE,Positive
+30,Pain,TRUE,Pain,44,Left,TRUE,FALSE,FALSE,FALSE,10,Premenopause,FALSE,4,35,TRUE,49,TRUE,TRUE,High,Healthy,High,TRUE,Positive
+42,Lump,TRUE,Lump,107,None,FALSE,FALSE,TRUE,TRUE,10,Premenopause,TRUE,4,3,FALSE,0,TRUE,FALSE,High,High-fat,High,TRUE,Positive
+74,Nipple discharge,TRUE,Nipple discharge,161,Left,TRUE,FALSE,FALSE,FALSE,12,Postmenopause,TRUE,5,14,FALSE,0,TRUE,TRUE,High,Healthy,Low,FALSE,Negative
+42,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,12,Premenopause,TRUE,3,23,FALSE,0,FALSE,FALSE,High,High-fat,Low,TRUE,Positive
+39,Nipple discharge,TRUE,Nipple discharge,176,Left,FALSE,FALSE,FALSE,TRUE,14,Premenopause,TRUE,1,25,TRUE,43,TRUE,FALSE,High,Processed,Low,FALSE,Positive
+61,Pain,TRUE,Pain,58,Right,TRUE,FALSE,TRUE,TRUE,14,Postmenopause,TRUE,1,4,TRUE,32,TRUE,FALSE,High,Processed,High,TRUE,Positive
+47,Pain,TRUE,Pain,165,Right,TRUE,FALSE,TRUE,FALSE,10,Premenopause,FALSE,2,24,TRUE,50,FALSE,FALSE,Low,Healthy,Low,FALSE,Positive
+36,Nipple discharge,TRUE,Nipple discharge,169,Right,TRUE,TRUE,FALSE,FALSE,10,Premenopause,FALSE,1,3,FALSE,0,TRUE,FALSE,Medium,High-fat,Medium,TRUE,Negative
+66,Nipple discharge,TRUE,Nipple discharge,71,Both,TRUE,FALSE,TRUE,FALSE,15,Postmenopause,TRUE,0,16,TRUE,53,FALSE,TRUE,Low,Healthy,Low,FALSE,Positive
+58,Nipple discharge,TRUE,Nipple discharge,28,Right,TRUE,FALSE,TRUE,FALSE,11,Postmenopause,FALSE,2,40,TRUE,68,FALSE,TRUE,High,High-fat,High,FALSE,Positive
+46,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,10,Premenopause,TRUE,0,33,FALSE,0,TRUE,FALSE,Low,Healthy,Low,FALSE,Negative
+30,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,15,Premenopause,FALSE,5,33,FALSE,0,TRUE,TRUE,High,High-fat,Low,TRUE,Negative
+25,Nipple discharge,TRUE,Nipple discharge,74,Left,FALSE,TRUE,TRUE,FALSE,14,Premenopause,TRUE,4,1,TRUE,51,TRUE,TRUE,Medium,Healthy,Low,FALSE,Positive
+72,Nipple discharge,TRUE,Nipple discharge,57,Both,TRUE,TRUE,TRUE,FALSE,11,Postmenopause,FALSE,1,33,FALSE,0,TRUE,FALSE,High,High-fat,Low,FALSE,Positive
+40,Pain,TRUE,Pain,112,Both,TRUE,TRUE,FALSE,FALSE,12,Premenopause,TRUE,4,38,TRUE,51,FALSE,TRUE,High,Processed,Low,FALSE,Positive
+36,Pain,TRUE,Pain,88,None,TRUE,TRUE,TRUE,FALSE,15,Premenopause,TRUE,3,9,TRUE,64,FALSE,TRUE,Medium,Healthy,Low,FALSE,Positive
+75,Nipple discharge,TRUE,Nipple discharge,63,Right,FALSE,FALSE,FALSE,TRUE,10,Postmenopause,FALSE,4,19,FALSE,0,TRUE,TRUE,High,High-fat,Low,FALSE,Negative
+50,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,TRUE,13,Premenopause,TRUE,5,21,FALSE,0,TRUE,FALSE,High,Processed,Medium,FALSE,Negative
+39,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,TRUE,14,Premenopause,TRUE,5,27,FALSE,0,FALSE,FALSE,Low,Healthy,Low,FALSE,Negative
+38,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,12,Premenopause,TRUE,4,40,TRUE,69,TRUE,TRUE,Low,High-fat,Low,FALSE,Negative
+52,Nipple discharge,TRUE,Nipple discharge,26,Right,FALSE,TRUE,FALSE,FALSE,10,Postmenopause,TRUE,1,24,FALSE,0,FALSE,TRUE,Low,Processed,Low,TRUE,Negative
+27,Nipple discharge,TRUE,Nipple discharge,44,Right,FALSE,TRUE,FALSE,FALSE,10,Premenopause,FALSE,1,34,TRUE,35,FALSE,TRUE,Low,Healthy,Medium,TRUE,Negative
+63,Lump,TRUE,Lump,23,Right,TRUE,FALSE,FALSE,TRUE,10,Postmenopause,FALSE,2,42,FALSE,0,TRUE,FALSE,High,Processed,High,FALSE,Positive
+43,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,14,Premenopause,FALSE,2,10,FALSE,0,FALSE,FALSE,Low,High-fat,High,FALSE,Negative
+36,Nipple discharge,TRUE,Nipple discharge,74,Both,FALSE,TRUE,TRUE,TRUE,13,Premenopause,TRUE,3,40,FALSE,0,FALSE,TRUE,Low,Healthy,Low,TRUE,Negative
+60,Lump,TRUE,Lump,85,Both,FALSE,FALSE,FALSE,TRUE,10,Postmenopause,FALSE,5,39,TRUE,47,FALSE,FALSE,Medium,Processed,Low,FALSE,Positive
+66,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,13,Postmenopause,TRUE,3,5,TRUE,41,TRUE,FALSE,High,Healthy,Low,FALSE,Negative
+26,Pain,TRUE,Pain,7,Both,FALSE,TRUE,FALSE,TRUE,12,Premenopause,FALSE,4,2,FALSE,0,FALSE,FALSE,Low,High-fat,Low,FALSE,Negative
+51,Nipple discharge,TRUE,Nipple discharge,114,Both,TRUE,TRUE,TRUE,TRUE,12,Postmenopause,TRUE,5,32,TRUE,57,TRUE,FALSE,Medium,Processed,High,FALSE,Positive
+25,Lump,TRUE,Lump,8,Left,FALSE,FALSE,TRUE,TRUE,14,Premenopause,FALSE,3,47,TRUE,66,TRUE,TRUE,Low,Processed,High,FALSE,Positive
+28,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,15,Premenopause,FALSE,5,45,FALSE,0,FALSE,FALSE,Medium,High-fat,High,TRUE,Negative
+78,Lump,TRUE,Lump,19,Left,FALSE,TRUE,FALSE,TRUE,10,Postmenopause,TRUE,3,10,TRUE,45,TRUE,FALSE,Medium,Healthy,Medium,TRUE,Positive
+25,Pain,TRUE,Pain,63,Left,TRUE,TRUE,TRUE,FALSE,14,Premenopause,TRUE,4,20,FALSE,0,FALSE,TRUE,High,Healthy,High,TRUE,Positive
+54,Lump,TRUE,Lump,13,None,FALSE,FALSE,TRUE,TRUE,11,Postmenopause,FALSE,3,27,FALSE,0,TRUE,FALSE,Low,Healthy,Low,TRUE,Negative
+62,Lump,TRUE,Lump,59,Both,TRUE,TRUE,TRUE,TRUE,12,Postmenopause,FALSE,4,24,TRUE,32,FALSE,FALSE,Medium,Processed,Low,TRUE,Positive
+57,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,13,Postmenopause,FALSE,0,19,FALSE,0,FALSE,TRUE,High,Processed,Medium,FALSE,Negative
+58,Nipple discharge,TRUE,Nipple discharge,154,Right,TRUE,TRUE,TRUE,FALSE,15,Postmenopause,FALSE,5,4,FALSE,0,FALSE,TRUE,Low,High-fat,Low,FALSE,Positive
+59,Lump,TRUE,Lump,9,Left,FALSE,TRUE,FALSE,FALSE,13,Postmenopause,FALSE,5,5,TRUE,48,TRUE,FALSE,Low,High-fat,Medium,TRUE,Negative
+68,Pain,TRUE,Pain,121,Left,TRUE,TRUE,FALSE,FALSE,12,Postmenopause,TRUE,1,46,TRUE,38,FALSE,FALSE,Medium,Healthy,Low,TRUE,Positive
+45,Nipple discharge,TRUE,Nipple discharge,131,None,FALSE,FALSE,TRUE,TRUE,13,Premenopause,FALSE,3,29,FALSE,0,TRUE,FALSE,High,High-fat,Medium,FALSE,Positive
+50,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,14,Premenopause,TRUE,3,25,TRUE,62,TRUE,TRUE,High,Healthy,Medium,TRUE,Negative
+45,Lump,TRUE,Lump,163,Right,FALSE,TRUE,TRUE,FALSE,13,Premenopause,TRUE,1,40,FALSE,0,TRUE,TRUE,High,High-fat,Low,TRUE,Negative
+75,Nipple discharge,TRUE,Nipple discharge,175,Left,FALSE,TRUE,FALSE,FALSE,11,Postmenopause,TRUE,1,10,FALSE,0,TRUE,FALSE,Low,High-fat,Medium,FALSE,Negative
+47,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,15,Premenopause,FALSE,0,4,FALSE,0,TRUE,FALSE,Low,Healthy,Low,TRUE,Negative
+68,Nipple discharge,TRUE,Nipple discharge,139,Left,FALSE,FALSE,TRUE,FALSE,15,Postmenopause,FALSE,2,34,TRUE,62,TRUE,TRUE,High,Processed,Medium,TRUE,Positive
+44,Nipple discharge,TRUE,Nipple discharge,125,None,FALSE,FALSE,TRUE,TRUE,11,Premenopause,TRUE,1,34,FALSE,0,TRUE,TRUE,High,High-fat,Medium,FALSE,Positive
+64,Lump,TRUE,Lump,156,None,TRUE,TRUE,TRUE,FALSE,15,Postmenopause,TRUE,0,19,FALSE,0,FALSE,TRUE,Medium,High-fat,Medium,TRUE,Positive
+25,Pain,TRUE,Pain,87,Both,TRUE,FALSE,FALSE,TRUE,12,Premenopause,TRUE,3,24,FALSE,0,TRUE,FALSE,Medium,Processed,Low,FALSE,Negative
+71,Nipple discharge,TRUE,Nipple discharge,38,Right,TRUE,TRUE,TRUE,TRUE,14,Postmenopause,TRUE,2,45,TRUE,43,TRUE,TRUE,High,Healthy,High,TRUE,Positive
+60,Nipple discharge,TRUE,Nipple discharge,145,Both,FALSE,FALSE,FALSE,FALSE,10,Postmenopause,TRUE,2,12,FALSE,0,TRUE,FALSE,Low,Healthy,Medium,FALSE,Negative
+39,Lump,TRUE,Lump,115,Left,TRUE,FALSE,FALSE,FALSE,10,Premenopause,TRUE,5,26,TRUE,52,TRUE,FALSE,Medium,Processed,Low,FALSE,Positive
+51,Pain,TRUE,Pain,98,None,TRUE,TRUE,TRUE,FALSE,15,Postmenopause,FALSE,5,13,FALSE,0,TRUE,FALSE,Medium,Healthy,Medium,TRUE,Negative
+60,Lump,TRUE,Lump,72,Left,FALSE,TRUE,FALSE,FALSE,15,Postmenopause,TRUE,2,18,FALSE,0,FALSE,FALSE,High,High-fat,Low,TRUE,Negative
+54,Lump,TRUE,Lump,78,None,FALSE,FALSE,FALSE,TRUE,12,Postmenopause,FALSE,3,24,FALSE,0,FALSE,TRUE,Medium,Healthy,Low,FALSE,Negative
+64,Pain,TRUE,Pain,88,Left,TRUE,FALSE,TRUE,TRUE,15,Postmenopause,FALSE,1,37,FALSE,0,FALSE,FALSE,High,High-fat,Low,TRUE,Positive
+47,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,15,Premenopause,TRUE,0,18,FALSE,0,TRUE,TRUE,Medium,Healthy,Medium,FALSE,Negative
+70,Pain,TRUE,Pain,179,Both,FALSE,FALSE,FALSE,FALSE,12,Postmenopause,TRUE,1,18,FALSE,0,FALSE,FALSE,High,High-fat,Low,FALSE,Negative
+33,Pain,TRUE,Pain,28,Left,FALSE,TRUE,FALSE,FALSE,13,Premenopause,FALSE,4,6,TRUE,43,TRUE,TRUE,Medium,High-fat,Low,TRUE,Negative
+33,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,12,Premenopause,TRUE,3,18,TRUE,43,FALSE,TRUE,Low,High-fat,Medium,FALSE,Positive
+62,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,14,Postmenopause,TRUE,4,35,FALSE,0,TRUE,FALSE,High,Processed,Medium,TRUE,Negative
+64,Lump,TRUE,Lump,30,Both,FALSE,FALSE,TRUE,TRUE,10,Postmenopause,TRUE,0,24,TRUE,43,FALSE,TRUE,High,Healthy,Low,TRUE,Positive
+35,Nipple discharge,TRUE,Nipple discharge,53,Both,FALSE,TRUE,FALSE,TRUE,12,Premenopause,FALSE,0,13,TRUE,59,FALSE,FALSE,Low,Healthy,Medium,TRUE,Positive
+65,Lump,TRUE,Lump,68,Both,TRUE,FALSE,TRUE,FALSE,13,Postmenopause,TRUE,1,40,FALSE,0,FALSE,TRUE,High,Processed,Low,TRUE,Negative
+70,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,FALSE,15,Postmenopause,TRUE,0,15,TRUE,58,TRUE,FALSE,Medium,High-fat,High,TRUE,Positive
+73,Pain,TRUE,Pain,176,Both,FALSE,FALSE,TRUE,FALSE,15,Postmenopause,TRUE,3,34,FALSE,0,FALSE,TRUE,Medium,High-fat,Medium,FALSE,Negative
+35,Nipple discharge,TRUE,Nipple discharge,64,Left,FALSE,FALSE,FALSE,FALSE,15,Premenopause,FALSE,1,20,TRUE,50,TRUE,FALSE,Low,Healthy,High,TRUE,Negative
+29,Pain,TRUE,Pain,48,None,TRUE,TRUE,FALSE,TRUE,13,Premenopause,TRUE,4,2,TRUE,62,FALSE,FALSE,Low,Healthy,High,FALSE,Positive
+77,Nipple discharge,TRUE,Nipple discharge,137,Left,TRUE,TRUE,FALSE,FALSE,13,Postmenopause,TRUE,2,16,TRUE,63,TRUE,TRUE,Low,Healthy,High,FALSE,Positive
+48,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,10,Premenopause,FALSE,4,22,FALSE,0,TRUE,FALSE,Medium,Processed,High,FALSE,Negative
+71,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,13,Postmenopause,FALSE,5,11,FALSE,0,FALSE,FALSE,High,Healthy,High,FALSE,Negative
+70,Pain,TRUE,Pain,47,Left,FALSE,TRUE,TRUE,TRUE,10,Postmenopause,FALSE,2,25,FALSE,0,TRUE,FALSE,High,Healthy,Medium,FALSE,Negative
+76,Pain,TRUE,Pain,93,Left,FALSE,TRUE,TRUE,TRUE,15,Postmenopause,FALSE,4,37,FALSE,0,TRUE,FALSE,Medium,Processed,Medium,TRUE,Negative
+44,Pain,TRUE,Pain,157,Right,TRUE,TRUE,FALSE,TRUE,12,Premenopause,FALSE,3,6,TRUE,57,TRUE,FALSE,High,Healthy,Low,FALSE,Positive
+52,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,13,Postmenopause,FALSE,5,11,FALSE,0,FALSE,TRUE,High,High-fat,Low,TRUE,Negative
+69,Nipple discharge,TRUE,Nipple discharge,67,Left,FALSE,FALSE,FALSE,TRUE,15,Postmenopause,FALSE,3,1,TRUE,53,TRUE,FALSE,High,Processed,Medium,TRUE,Positive
+58,Pain,TRUE,Pain,91,Left,FALSE,TRUE,TRUE,TRUE,10,Postmenopause,FALSE,0,7,FALSE,0,FALSE,TRUE,High,High-fat,Medium,FALSE,Positive
+47,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,15,Premenopause,FALSE,5,21,TRUE,54,TRUE,FALSE,Medium,Processed,Low,FALSE,Negative
+42,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,10,Premenopause,FALSE,4,11,FALSE,0,FALSE,FALSE,Low,Healthy,Medium,TRUE,Negative
+30,Pain,TRUE,Pain,27,Right,TRUE,FALSE,TRUE,TRUE,12,Premenopause,TRUE,3,41,TRUE,30,TRUE,FALSE,Low,Processed,Medium,TRUE,Positive
+53,Nipple discharge,TRUE,Nipple discharge,109,Right,FALSE,FALSE,FALSE,FALSE,10,Postmenopause,FALSE,2,39,FALSE,0,FALSE,FALSE,Medium,Processed,High,TRUE,Negative
+38,Lump,TRUE,Lump,35,Right,TRUE,FALSE,TRUE,TRUE,14,Premenopause,TRUE,3,12,FALSE,0,FALSE,TRUE,High,Healthy,Low,TRUE,Positive
+62,Nipple discharge,TRUE,Nipple discharge,49,None,FALSE,FALSE,TRUE,TRUE,15,Postmenopause,FALSE,0,7,FALSE,0,TRUE,TRUE,High,Processed,Low,TRUE,Negative
+67,Lump,TRUE,Lump,148,Both,FALSE,FALSE,TRUE,TRUE,13,Postmenopause,FALSE,0,25,FALSE,0,FALSE,FALSE,High,High-fat,Medium,FALSE,Positive
+63,Lump,TRUE,Lump,85,None,TRUE,TRUE,TRUE,TRUE,14,Postmenopause,TRUE,0,41,FALSE,0,TRUE,TRUE,Low,High-fat,Low,FALSE,Positive
+67,Lump,TRUE,Lump,54,Right,TRUE,TRUE,FALSE,TRUE,15,Postmenopause,TRUE,0,8,FALSE,0,FALSE,TRUE,High,Healthy,Low,FALSE,Negative
+48,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,TRUE,14,Premenopause,FALSE,0,40,FALSE,0,TRUE,TRUE,Low,Processed,Low,FALSE,Negative
+41,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,14,Premenopause,TRUE,2,38,FALSE,0,TRUE,FALSE,High,Processed,Medium,FALSE,Negative
+79,Lump,TRUE,Lump,41,None,FALSE,TRUE,FALSE,TRUE,14,Postmenopause,FALSE,2,45,FALSE,0,FALSE,TRUE,Medium,Processed,Medium,TRUE,Negative
+43,Lump,TRUE,Lump,139,Right,TRUE,TRUE,FALSE,FALSE,14,Premenopause,FALSE,5,44,FALSE,0,TRUE,TRUE,Low,Healthy,High,TRUE,Negative
+25,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,13,Premenopause,FALSE,2,11,FALSE,0,TRUE,FALSE,High,High-fat,Low,TRUE,Negative
+32,Pain,TRUE,Pain,109,Right,TRUE,TRUE,FALSE,FALSE,13,Premenopause,TRUE,4,47,TRUE,62,TRUE,TRUE,Medium,Processed,Medium,FALSE,Positive
+69,Lump,TRUE,Lump,90,None,FALSE,TRUE,FALSE,FALSE,13,Postmenopause,FALSE,1,4,FALSE,0,TRUE,FALSE,High,Healthy,Medium,FALSE,Negative
+32,Lump,TRUE,Lump,153,Right,FALSE,TRUE,FALSE,FALSE,12,Premenopause,FALSE,5,22,FALSE,0,FALSE,FALSE,Medium,Processed,High,TRUE,Negative
+54,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,14,Postmenopause,TRUE,0,46,TRUE,49,TRUE,TRUE,High,Processed,Low,FALSE,Negative
+42,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,FALSE,11,Premenopause,FALSE,1,3,TRUE,59,FALSE,TRUE,Medium,High-fat,Medium,TRUE,Negative
+57,Nipple discharge,TRUE,Nipple discharge,127,Both,FALSE,TRUE,FALSE,TRUE,13,Postmenopause,FALSE,1,36,FALSE,0,TRUE,FALSE,Low,High-fat,High,FALSE,Positive
+43,Lump,TRUE,Lump,156,None,TRUE,FALSE,FALSE,TRUE,13,Premenopause,FALSE,0,32,TRUE,41,FALSE,FALSE,Medium,Processed,High,FALSE,Positive
+75,Nipple discharge,TRUE,Nipple discharge,143,None,FALSE,FALSE,FALSE,FALSE,10,Postmenopause,FALSE,1,28,FALSE,0,FALSE,FALSE,Medium,Healthy,Medium,FALSE,Negative
+65,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,11,Postmenopause,TRUE,1,10,FALSE,0,TRUE,FALSE,Low,Processed,Low,FALSE,Negative
+37,Nipple discharge,TRUE,Nipple discharge,10,None,FALSE,FALSE,FALSE,TRUE,15,Premenopause,FALSE,1,8,TRUE,68,TRUE,FALSE,High,Healthy,Low,FALSE,Positive
+52,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,12,Postmenopause,FALSE,3,5,TRUE,56,FALSE,FALSE,High,Healthy,High,FALSE,Negative
+77,Lump,TRUE,Lump,2,Left,TRUE,TRUE,FALSE,FALSE,14,Postmenopause,TRUE,5,2,FALSE,0,FALSE,FALSE,Low,High-fat,Low,FALSE,Negative
+40,Pain,TRUE,Pain,94,Right,FALSE,TRUE,FALSE,FALSE,11,Premenopause,TRUE,0,40,TRUE,41,TRUE,FALSE,High,Processed,High,FALSE,Negative
+59,Nipple discharge,TRUE,Nipple discharge,65,Left,TRUE,FALSE,TRUE,FALSE,14,Postmenopause,TRUE,1,36,TRUE,50,FALSE,TRUE,High,Healthy,Medium,FALSE,Positive
+73,Nipple discharge,TRUE,Nipple discharge,127,Left,TRUE,FALSE,TRUE,FALSE,10,Postmenopause,FALSE,0,37,TRUE,57,TRUE,TRUE,Low,Processed,Medium,FALSE,Positive
+45,Nipple discharge,TRUE,Nipple discharge,107,None,TRUE,FALSE,FALSE,FALSE,11,Premenopause,FALSE,3,34,FALSE,0,FALSE,FALSE,Low,Healthy,Low,TRUE,Negative
+69,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,10,Postmenopause,TRUE,4,37,TRUE,59,TRUE,TRUE,Low,Healthy,Low,TRUE,Negative
+68,Lump,TRUE,Lump,98,Right,FALSE,FALSE,TRUE,TRUE,12,Postmenopause,TRUE,2,27,FALSE,0,FALSE,FALSE,High,High-fat,Low,TRUE,Positive
+68,Lump,TRUE,Lump,79,Left,FALSE,TRUE,FALSE,TRUE,10,Postmenopause,TRUE,2,47,FALSE,0,TRUE,FALSE,Low,Healthy,High,TRUE,Negative
+56,Nipple discharge,TRUE,Nipple discharge,57,Both,TRUE,TRUE,TRUE,FALSE,15,Postmenopause,TRUE,3,32,FALSE,0,FALSE,FALSE,High,Healthy,Medium,TRUE,Negative
+48,Nipple discharge,TRUE,Nipple discharge,167,Right,TRUE,TRUE,TRUE,FALSE,11,Premenopause,FALSE,3,36,FALSE,0,TRUE,TRUE,Low,Healthy,Low,TRUE,Negative
+31,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,13,Premenopause,FALSE,4,0,FALSE,0,FALSE,FALSE,Medium,Healthy,High,FALSE,Negative
+25,Pain,TRUE,Pain,47,Both,TRUE,TRUE,FALSE,TRUE,13,Premenopause,TRUE,2,28,TRUE,39,TRUE,FALSE,Low,High-fat,Low,TRUE,Positive
+42,Nipple discharge,TRUE,Nipple discharge,163,None,FALSE,TRUE,FALSE,TRUE,12,Premenopause,FALSE,2,10,FALSE,0,TRUE,FALSE,Medium,Processed,Low,TRUE,Negative
+73,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,TRUE,10,Postmenopause,FALSE,5,4,TRUE,37,TRUE,FALSE,Low,Healthy,Low,FALSE,Negative
+58,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,13,Postmenopause,FALSE,3,37,TRUE,30,FALSE,TRUE,Low,Healthy,Low,FALSE,Negative
+55,Nipple discharge,TRUE,Nipple discharge,132,None,FALSE,TRUE,TRUE,TRUE,10,Postmenopause,TRUE,4,4,TRUE,59,FALSE,FALSE,High,High-fat,Medium,FALSE,Positive
+48,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,12,Premenopause,FALSE,2,10,FALSE,0,TRUE,TRUE,Low,Processed,Medium,FALSE,Negative
+69,Lump,TRUE,Lump,4,Both,FALSE,TRUE,FALSE,TRUE,11,Postmenopause,TRUE,2,45,FALSE,0,TRUE,TRUE,Medium,Processed,Low,TRUE,Negative
+78,Pain,TRUE,Pain,107,Right,FALSE,TRUE,FALSE,TRUE,12,Postmenopause,TRUE,1,5,FALSE,0,FALSE,FALSE,Low,Processed,Medium,FALSE,Negative
+39,Lump,TRUE,Lump,30,Both,TRUE,TRUE,TRUE,TRUE,11,Premenopause,TRUE,4,36,FALSE,0,FALSE,TRUE,Medium,Processed,High,TRUE,Positive
+66,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,13,Postmenopause,TRUE,4,34,TRUE,52,TRUE,FALSE,High,Processed,Low,FALSE,Positive
+30,Lump,TRUE,Lump,18,None,TRUE,TRUE,TRUE,TRUE,13,Premenopause,FALSE,0,28,TRUE,42,FALSE,FALSE,Low,Healthy,Medium,FALSE,Positive
+71,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,15,Postmenopause,FALSE,3,16,FALSE,0,TRUE,FALSE,Medium,Processed,Medium,TRUE,Negative
+69,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,15,Postmenopause,FALSE,3,4,TRUE,66,FALSE,TRUE,Medium,Processed,Low,TRUE,Negative
+65,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,10,Postmenopause,TRUE,4,33,FALSE,0,TRUE,FALSE,Low,Healthy,Low,TRUE,Negative
+69,Pain,TRUE,Pain,86,Left,FALSE,FALSE,FALSE,TRUE,14,Postmenopause,TRUE,2,22,TRUE,32,FALSE,FALSE,Medium,High-fat,Low,TRUE,Positive
+66,Nipple discharge,TRUE,Nipple discharge,98,Both,FALSE,TRUE,TRUE,TRUE,14,Postmenopause,FALSE,2,20,TRUE,50,FALSE,TRUE,Medium,Processed,Low,FALSE,Positive
+68,Nipple discharge,TRUE,Nipple discharge,139,Both,TRUE,FALSE,FALSE,TRUE,13,Postmenopause,TRUE,2,0,TRUE,57,FALSE,TRUE,Low,Healthy,High,FALSE,Positive
+48,Pain,TRUE,Pain,125,Right,FALSE,TRUE,FALSE,TRUE,12,Premenopause,TRUE,4,46,TRUE,63,TRUE,TRUE,Medium,High-fat,High,TRUE,Positive
+35,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,13,Premenopause,FALSE,2,16,TRUE,64,TRUE,FALSE,Low,Healthy,High,TRUE,Positive
+42,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,15,Premenopause,FALSE,0,23,FALSE,0,FALSE,TRUE,High,Processed,Low,TRUE,Negative
+43,Nipple discharge,TRUE,Nipple discharge,165,Both,FALSE,FALSE,TRUE,FALSE,14,Premenopause,FALSE,3,4,TRUE,46,FALSE,FALSE,Low,Healthy,High,FALSE,Positive
+61,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,13,Postmenopause,TRUE,5,18,TRUE,56,TRUE,FALSE,Low,Processed,Low,TRUE,Negative
+77,Pain,TRUE,Pain,98,Left,FALSE,TRUE,FALSE,FALSE,12,Postmenopause,FALSE,5,44,TRUE,41,TRUE,FALSE,High,Healthy,Low,FALSE,Negative
+78,Lump,TRUE,Lump,149,Right,TRUE,FALSE,FALSE,FALSE,15,Postmenopause,FALSE,2,38,FALSE,0,TRUE,FALSE,Low,Processed,Low,TRUE,Negative
+52,Pain,TRUE,Pain,5,Both,TRUE,FALSE,FALSE,FALSE,10,Postmenopause,TRUE,3,40,FALSE,0,FALSE,FALSE,High,High-fat,High,FALSE,Positive
+70,Lump,TRUE,Lump,12,Left,TRUE,FALSE,TRUE,FALSE,15,Postmenopause,FALSE,0,18,FALSE,0,FALSE,TRUE,Low,High-fat,Low,TRUE,Positive
+50,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,13,Premenopause,FALSE,3,31,FALSE,0,TRUE,TRUE,Medium,Processed,Medium,TRUE,Negative
+30,Pain,TRUE,Pain,102,Both,FALSE,TRUE,TRUE,TRUE,12,Premenopause,FALSE,0,23,FALSE,0,FALSE,FALSE,Medium,Processed,Low,FALSE,Negative
+47,Pain,TRUE,Pain,143,Both,FALSE,TRUE,TRUE,FALSE,12,Premenopause,FALSE,2,16,TRUE,43,FALSE,FALSE,High,Healthy,Low,TRUE,Positive
+51,Lump,TRUE,Lump,82,Right,FALSE,FALSE,TRUE,FALSE,13,Postmenopause,TRUE,2,46,FALSE,0,TRUE,FALSE,Medium,High-fat,Low,TRUE,Negative
+71,Pain,TRUE,Pain,4,Right,FALSE,FALSE,TRUE,FALSE,14,Postmenopause,TRUE,2,47,FALSE,0,TRUE,TRUE,High,High-fat,Low,TRUE,Negative
+33,Nipple discharge,TRUE,Nipple discharge,72,Left,TRUE,TRUE,TRUE,FALSE,13,Premenopause,FALSE,4,16,TRUE,46,TRUE,TRUE,Low,High-fat,Low,TRUE,Positive
+73,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,FALSE,10,Postmenopause,TRUE,2,37,FALSE,0,FALSE,TRUE,Low,Processed,Low,TRUE,Negative
+27,Nipple discharge,TRUE,Nipple discharge,69,None,FALSE,TRUE,TRUE,FALSE,14,Premenopause,FALSE,5,30,FALSE,0,TRUE,TRUE,Low,Healthy,High,FALSE,Negative
+79,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,11,Postmenopause,TRUE,5,28,FALSE,0,FALSE,FALSE,High,High-fat,Medium,FALSE,Negative
+46,Nipple discharge,TRUE,Nipple discharge,171,Both,TRUE,TRUE,FALSE,FALSE,12,Premenopause,FALSE,5,9,FALSE,0,FALSE,TRUE,Low,Processed,Low,FALSE,Negative
+66,Nipple discharge,TRUE,Nipple discharge,64,Right,FALSE,FALSE,FALSE,TRUE,15,Postmenopause,TRUE,4,15,FALSE,0,TRUE,FALSE,Medium,Healthy,Low,FALSE,Negative
+36,Lump,TRUE,Lump,169,None,FALSE,TRUE,FALSE,TRUE,12,Premenopause,TRUE,5,29,TRUE,64,TRUE,FALSE,Medium,Processed,High,FALSE,Positive
+43,Nipple discharge,TRUE,Nipple discharge,114,Both,FALSE,TRUE,TRUE,TRUE,11,Premenopause,TRUE,0,39,FALSE,0,FALSE,TRUE,Medium,Processed,Low,FALSE,Negative
+31,Lump,TRUE,Lump,30,Both,TRUE,FALSE,TRUE,FALSE,12,Premenopause,TRUE,0,35,FALSE,0,TRUE,FALSE,High,Processed,Medium,FALSE,Negative
+49,Lump,TRUE,Lump,37,Left,TRUE,FALSE,FALSE,TRUE,10,Premenopause,FALSE,4,12,TRUE,69,FALSE,TRUE,Medium,Processed,High,TRUE,Positive
+32,Nipple discharge,TRUE,Nipple discharge,133,Left,TRUE,TRUE,TRUE,FALSE,13,Premenopause,TRUE,0,0,FALSE,0,FALSE,FALSE,High,Healthy,High,TRUE,Positive
+60,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,12,Postmenopause,FALSE,1,39,TRUE,52,TRUE,TRUE,High,Healthy,High,FALSE,Negative
+33,Nipple discharge,TRUE,Nipple discharge,34,Left,FALSE,FALSE,TRUE,TRUE,15,Premenopause,TRUE,5,3,TRUE,59,FALSE,FALSE,High,Healthy,Medium,FALSE,Positive
+55,Lump,TRUE,Lump,102,Both,FALSE,TRUE,TRUE,FALSE,12,Postmenopause,TRUE,2,7,TRUE,32,FALSE,TRUE,Medium,Processed,High,TRUE,Positive
+38,Pain,TRUE,Pain,173,Right,FALSE,TRUE,FALSE,TRUE,11,Premenopause,FALSE,4,18,TRUE,67,FALSE,TRUE,Medium,High-fat,Medium,TRUE,Positive
+40,Nipple discharge,TRUE,Nipple discharge,66,Both,FALSE,FALSE,FALSE,FALSE,10,Premenopause,FALSE,1,41,FALSE,0,FALSE,FALSE,Medium,Healthy,Low,TRUE,Negative
+40,Pain,TRUE,Pain,102,Left,TRUE,FALSE,TRUE,FALSE,13,Premenopause,TRUE,1,1,TRUE,55,FALSE,FALSE,High,Processed,Medium,FALSE,Positive
+37,Lump,TRUE,Lump,111,Right,TRUE,FALSE,FALSE,FALSE,13,Premenopause,FALSE,1,38,TRUE,32,FALSE,TRUE,Low,Healthy,Low,FALSE,Positive
+32,Nipple discharge,TRUE,Nipple discharge,120,Left,TRUE,TRUE,TRUE,FALSE,15,Premenopause,FALSE,2,28,FALSE,0,FALSE,FALSE,Medium,High-fat,Low,TRUE,Positive
+63,Nipple discharge,TRUE,Nipple discharge,53,Both,FALSE,TRUE,FALSE,FALSE,10,Postmenopause,TRUE,0,40,TRUE,59,TRUE,FALSE,High,High-fat,Low,TRUE,Negative
+77,Lump,TRUE,Lump,13,Left,TRUE,TRUE,TRUE,FALSE,14,Postmenopause,TRUE,2,18,FALSE,0,FALSE,TRUE,Low,High-fat,Medium,TRUE,Positive
+49,Lump,TRUE,Lump,31,None,FALSE,TRUE,FALSE,TRUE,10,Premenopause,FALSE,5,9,TRUE,39,FALSE,FALSE,Low,Processed,Medium,FALSE,Positive
+60,Nipple discharge,TRUE,Nipple discharge,54,Both,FALSE,TRUE,TRUE,FALSE,13,Postmenopause,TRUE,3,31,FALSE,0,FALSE,TRUE,High,Healthy,Medium,TRUE,Negative
+74,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,15,Postmenopause,TRUE,1,27,TRUE,53,TRUE,FALSE,Medium,High-fat,Low,FALSE,Negative
+39,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,15,Premenopause,FALSE,5,3,TRUE,42,TRUE,TRUE,Medium,Processed,High,TRUE,Negative
+47,Pain,TRUE,Pain,8,None,FALSE,FALSE,FALSE,TRUE,11,Premenopause,TRUE,3,30,TRUE,43,TRUE,TRUE,Medium,High-fat,High,FALSE,Positive
+58,Pain,TRUE,Pain,82,Both,FALSE,TRUE,TRUE,TRUE,11,Postmenopause,TRUE,2,40,TRUE,41,FALSE,TRUE,Low,High-fat,Low,TRUE,Positive
+73,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,FALSE,10,Postmenopause,TRUE,0,28,TRUE,55,TRUE,FALSE,Low,High-fat,Low,TRUE,Negative
+42,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,FALSE,15,Premenopause,TRUE,5,16,FALSE,0,TRUE,FALSE,High,Processed,Low,TRUE,Negative
+47,Nipple discharge,TRUE,Nipple discharge,88,Both,FALSE,FALSE,FALSE,FALSE,11,Premenopause,FALSE,0,5,FALSE,0,FALSE,FALSE,High,Healthy,Medium,TRUE,Negative
+29,Nipple discharge,TRUE,Nipple discharge,172,Both,FALSE,TRUE,TRUE,FALSE,10,Premenopause,FALSE,4,27,FALSE,0,FALSE,TRUE,Medium,High-fat,Low,FALSE,Negative
+35,Nipple discharge,TRUE,Nipple discharge,121,None,TRUE,FALSE,FALSE,TRUE,10,Premenopause,TRUE,2,18,FALSE,0,FALSE,FALSE,Medium,Healthy,High,TRUE,Positive
+33,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,12,Premenopause,TRUE,1,43,FALSE,0,FALSE,TRUE,Low,Healthy,High,FALSE,Negative
+28,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,13,Premenopause,TRUE,1,14,FALSE,0,TRUE,FALSE,Low,High-fat,Low,TRUE,Negative
+75,Lump,TRUE,Lump,141,Left,FALSE,FALSE,FALSE,TRUE,12,Postmenopause,TRUE,0,5,FALSE,0,FALSE,TRUE,Low,Healthy,High,TRUE,Negative
+72,Nipple discharge,TRUE,Nipple discharge,56,None,TRUE,TRUE,FALSE,FALSE,13,Postmenopause,FALSE,2,36,FALSE,0,FALSE,FALSE,Low,Processed,High,FALSE,Negative
+41,Pain,TRUE,Pain,157,Right,TRUE,TRUE,TRUE,TRUE,10,Premenopause,FALSE,3,26,TRUE,54,FALSE,FALSE,Medium,Processed,Low,TRUE,Positive
+79,Pain,TRUE,Pain,138,None,TRUE,TRUE,FALSE,TRUE,14,Postmenopause,TRUE,4,42,FALSE,0,TRUE,FALSE,Medium,High-fat,Low,FALSE,Positive
+37,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,14,Premenopause,FALSE,0,23,FALSE,0,FALSE,FALSE,High,Healthy,High,TRUE,Negative
+68,Pain,TRUE,Pain,11,None,FALSE,TRUE,FALSE,FALSE,10,Postmenopause,TRUE,3,46,FALSE,0,FALSE,FALSE,Medium,Processed,Low,TRUE,Negative
+49,Lump,TRUE,Lump,94,Right,TRUE,FALSE,TRUE,TRUE,10,Premenopause,TRUE,4,19,TRUE,48,TRUE,FALSE,High,High-fat,High,FALSE,Positive
+43,Pain,TRUE,Pain,140,Right,FALSE,TRUE,FALSE,TRUE,14,Premenopause,FALSE,1,16,TRUE,66,FALSE,FALSE,Medium,High-fat,Medium,TRUE,Positive
+78,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,13,Postmenopause,TRUE,0,34,TRUE,47,FALSE,TRUE,Medium,Healthy,Low,FALSE,Positive
+38,Lump,TRUE,Lump,105,Right,FALSE,TRUE,FALSE,TRUE,13,Premenopause,FALSE,0,12,TRUE,47,FALSE,TRUE,Low,Processed,Medium,TRUE,Positive
+61,Lump,TRUE,Lump,141,Both,TRUE,TRUE,FALSE,FALSE,13,Postmenopause,TRUE,1,15,FALSE,0,FALSE,FALSE,Low,Healthy,High,FALSE,Negative
+33,Lump,TRUE,Lump,73,Right,FALSE,FALSE,TRUE,TRUE,15,Premenopause,TRUE,2,21,TRUE,62,TRUE,TRUE,High,Healthy,Low,FALSE,Positive
+60,Pain,TRUE,Pain,109,Left,FALSE,TRUE,TRUE,FALSE,14,Postmenopause,FALSE,4,33,FALSE,0,FALSE,FALSE,Low,High-fat,High,TRUE,Positive
+33,Lump,TRUE,Lump,8,Left,FALSE,TRUE,TRUE,TRUE,13,Premenopause,TRUE,1,2,TRUE,57,FALSE,FALSE,High,High-fat,Medium,FALSE,Positive
+30,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,13,Premenopause,FALSE,3,20,TRUE,57,FALSE,TRUE,Low,Processed,High,TRUE,Positive
+64,Lump,TRUE,Lump,54,Both,TRUE,TRUE,FALSE,TRUE,15,Postmenopause,FALSE,0,35,TRUE,50,TRUE,TRUE,Low,Processed,Low,FALSE,Positive
+67,Pain,TRUE,Pain,13,Both,FALSE,TRUE,FALSE,TRUE,10,Postmenopause,TRUE,0,9,TRUE,39,TRUE,FALSE,High,High-fat,High,TRUE,Positive
+70,Nipple discharge,TRUE,Nipple discharge,13,Both,FALSE,FALSE,FALSE,TRUE,14,Postmenopause,FALSE,5,23,FALSE,0,FALSE,TRUE,High,High-fat,High,FALSE,Positive
+26,Lump,TRUE,Lump,81,None,FALSE,FALSE,FALSE,TRUE,13,Premenopause,TRUE,5,9,FALSE,0,FALSE,FALSE,Low,High-fat,Medium,TRUE,Negative
+59,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,10,Postmenopause,FALSE,2,46,FALSE,0,TRUE,TRUE,Low,Healthy,Medium,TRUE,Negative
+62,Lump,TRUE,Lump,17,Both,TRUE,FALSE,TRUE,TRUE,13,Postmenopause,FALSE,5,23,FALSE,0,FALSE,TRUE,Low,Healthy,Low,TRUE,Positive
+53,Pain,TRUE,Pain,171,None,TRUE,TRUE,FALSE,FALSE,10,Postmenopause,FALSE,3,25,FALSE,0,TRUE,FALSE,High,High-fat,High,TRUE,Positive
+62,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,TRUE,10,Postmenopause,FALSE,3,27,FALSE,0,TRUE,TRUE,High,Healthy,High,TRUE,Negative
+40,Lump,TRUE,Lump,175,Left,TRUE,TRUE,TRUE,TRUE,10,Premenopause,TRUE,3,11,TRUE,56,FALSE,TRUE,High,High-fat,Medium,FALSE,Positive
+78,Nipple discharge,TRUE,Nipple discharge,170,Left,FALSE,FALSE,TRUE,TRUE,12,Postmenopause,FALSE,5,40,TRUE,63,FALSE,TRUE,Medium,Processed,Medium,FALSE,Positive
+61,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,15,Postmenopause,FALSE,4,24,FALSE,0,FALSE,TRUE,Medium,Processed,High,FALSE,Positive
+57,Nipple discharge,TRUE,Nipple discharge,55,Right,TRUE,FALSE,TRUE,FALSE,11,Postmenopause,TRUE,3,11,TRUE,45,TRUE,FALSE,High,Healthy,Low,TRUE,Positive
+40,Lump,TRUE,Lump,43,Both,FALSE,TRUE,TRUE,TRUE,14,Premenopause,FALSE,3,12,FALSE,0,TRUE,TRUE,Medium,Processed,Medium,TRUE,Negative
+31,Lump,TRUE,Lump,111,Both,TRUE,TRUE,TRUE,FALSE,12,Premenopause,FALSE,0,31,TRUE,40,FALSE,TRUE,Medium,Healthy,Low,TRUE,Positive
+32,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,10,Premenopause,TRUE,0,7,TRUE,51,FALSE,TRUE,Low,High-fat,High,FALSE,Positive
+28,Lump,TRUE,Lump,104,None,TRUE,TRUE,FALSE,FALSE,12,Premenopause,TRUE,4,40,TRUE,58,TRUE,TRUE,Medium,Processed,Low,FALSE,Positive
+58,Lump,TRUE,Lump,156,None,FALSE,FALSE,TRUE,TRUE,14,Postmenopause,FALSE,3,22,TRUE,55,FALSE,TRUE,High,Healthy,High,FALSE,Positive
+28,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,11,Premenopause,TRUE,0,4,TRUE,61,TRUE,FALSE,Low,Processed,Low,FALSE,Negative
+44,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,11,Premenopause,TRUE,2,14,FALSE,0,TRUE,FALSE,High,Processed,Low,FALSE,Negative
+56,Pain,TRUE,Pain,28,Right,TRUE,FALSE,FALSE,FALSE,15,Postmenopause,FALSE,0,16,FALSE,0,TRUE,FALSE,Medium,Processed,Medium,TRUE,Negative
+50,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,13,Premenopause,TRUE,1,25,FALSE,0,FALSE,FALSE,Medium,Healthy,Medium,TRUE,Negative
+49,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,11,Premenopause,FALSE,2,44,TRUE,48,TRUE,TRUE,Medium,Processed,Medium,TRUE,Negative
+35,Nipple discharge,TRUE,Nipple discharge,104,Right,TRUE,TRUE,FALSE,FALSE,13,Premenopause,FALSE,3,10,TRUE,30,TRUE,TRUE,Medium,Processed,Medium,TRUE,Positive
+73,Pain,TRUE,Pain,175,Right,FALSE,TRUE,FALSE,TRUE,13,Postmenopause,FALSE,5,23,TRUE,60,FALSE,FALSE,Low,Healthy,Low,TRUE,Positive
+65,Lump,TRUE,Lump,174,Both,FALSE,TRUE,FALSE,FALSE,11,Postmenopause,FALSE,1,4,FALSE,0,FALSE,FALSE,Low,Processed,Medium,FALSE,Negative
+44,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,13,Premenopause,FALSE,0,10,FALSE,0,TRUE,TRUE,Medium,High-fat,Low,FALSE,Negative
+78,Lump,TRUE,Lump,161,Both,TRUE,TRUE,FALSE,FALSE,11,Postmenopause,FALSE,5,26,TRUE,63,TRUE,TRUE,High,Processed,Low,FALSE,Positive
+39,Pain,TRUE,Pain,61,None,TRUE,FALSE,TRUE,FALSE,11,Premenopause,FALSE,4,45,TRUE,34,TRUE,TRUE,Low,High-fat,High,TRUE,Positive
+30,Pain,TRUE,Pain,38,Left,TRUE,FALSE,FALSE,FALSE,15,Premenopause,FALSE,5,17,FALSE,0,TRUE,FALSE,Medium,Processed,High,TRUE,Negative
+38,Pain,TRUE,Pain,46,None,TRUE,TRUE,TRUE,TRUE,14,Premenopause,FALSE,5,2,TRUE,59,TRUE,TRUE,Low,Healthy,High,TRUE,Positive
+30,Lump,TRUE,Lump,93,None,TRUE,FALSE,FALSE,TRUE,13,Premenopause,TRUE,4,42,TRUE,62,FALSE,TRUE,Medium,High-fat,Medium,TRUE,Positive
+41,Nipple discharge,TRUE,Nipple discharge,75,Right,TRUE,TRUE,FALSE,FALSE,14,Premenopause,FALSE,1,10,FALSE,0,FALSE,TRUE,Medium,High-fat,Low,FALSE,Negative
+55,Lump,TRUE,Lump,156,Right,FALSE,FALSE,FALSE,FALSE,13,Postmenopause,FALSE,5,40,TRUE,45,FALSE,TRUE,High,Healthy,High,FALSE,Negative
+28,Nipple discharge,TRUE,Nipple discharge,99,Left,TRUE,TRUE,TRUE,TRUE,13,Premenopause,FALSE,2,25,FALSE,0,FALSE,TRUE,Medium,Processed,Medium,FALSE,Positive
+36,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,12,Premenopause,TRUE,4,24,TRUE,47,FALSE,TRUE,Medium,Healthy,Low,TRUE,Negative
+43,Lump,TRUE,Lump,55,Both,TRUE,TRUE,FALSE,TRUE,15,Premenopause,FALSE,5,17,FALSE,0,FALSE,FALSE,Low,Healthy,High,FALSE,Positive
+50,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,15,Premenopause,FALSE,3,43,FALSE,0,FALSE,TRUE,Low,High-fat,Medium,FALSE,Negative
+75,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,14,Postmenopause,FALSE,2,33,FALSE,0,TRUE,FALSE,High,High-fat,Medium,TRUE,Positive
+41,Nipple discharge,TRUE,Nipple discharge,107,Right,TRUE,FALSE,TRUE,TRUE,12,Premenopause,FALSE,4,15,FALSE,0,FALSE,TRUE,Low,Processed,Low,TRUE,Positive
+26,Nipple discharge,TRUE,Nipple discharge,162,None,FALSE,TRUE,FALSE,TRUE,14,Premenopause,TRUE,1,7,TRUE,59,TRUE,FALSE,High,Processed,High,FALSE,Positive
+56,Nipple discharge,TRUE,Nipple discharge,94,Right,FALSE,TRUE,TRUE,TRUE,10,Postmenopause,TRUE,2,38,TRUE,46,TRUE,FALSE,Medium,High-fat,High,TRUE,Positive
+44,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,FALSE,11,Premenopause,FALSE,5,28,FALSE,0,TRUE,FALSE,Low,Processed,Low,FALSE,Negative
+46,Lump,TRUE,Lump,44,Both,FALSE,TRUE,TRUE,TRUE,10,Premenopause,TRUE,4,9,TRUE,65,FALSE,TRUE,Low,High-fat,High,TRUE,Positive
+61,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,TRUE,13,Postmenopause,TRUE,3,41,TRUE,50,TRUE,TRUE,High,Healthy,Medium,TRUE,Negative
+48,Nipple discharge,TRUE,Nipple discharge,170,Left,TRUE,FALSE,FALSE,TRUE,13,Premenopause,TRUE,1,7,TRUE,56,TRUE,TRUE,Low,High-fat,Low,FALSE,Positive
+46,Nipple discharge,TRUE,Nipple discharge,101,Both,FALSE,TRUE,FALSE,TRUE,12,Premenopause,TRUE,0,28,FALSE,0,FALSE,TRUE,High,Healthy,Medium,FALSE,Negative
+27,Lump,TRUE,Lump,108,Both,TRUE,FALSE,TRUE,FALSE,14,Premenopause,TRUE,4,9,TRUE,65,FALSE,FALSE,High,Healthy,Medium,FALSE,Positive
+33,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,TRUE,15,Premenopause,FALSE,2,33,FALSE,0,FALSE,TRUE,Medium,Healthy,High,TRUE,Negative
+75,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,10,Postmenopause,FALSE,0,28,TRUE,36,FALSE,FALSE,Medium,Processed,Low,FALSE,Negative
+73,Lump,TRUE,Lump,67,Right,FALSE,TRUE,TRUE,FALSE,13,Postmenopause,FALSE,3,29,TRUE,64,TRUE,FALSE,Medium,Processed,Low,TRUE,Positive
+59,Pain,TRUE,Pain,113,None,FALSE,FALSE,TRUE,TRUE,12,Postmenopause,TRUE,1,13,TRUE,46,FALSE,FALSE,Medium,Processed,High,FALSE,Positive
+42,Lump,TRUE,Lump,173,Left,TRUE,TRUE,TRUE,TRUE,13,Premenopause,TRUE,4,19,TRUE,56,FALSE,FALSE,Low,Processed,Medium,TRUE,Positive
+42,Pain,TRUE,Pain,68,None,FALSE,FALSE,TRUE,TRUE,10,Premenopause,FALSE,1,0,FALSE,0,TRUE,FALSE,Low,Healthy,Medium,FALSE,Negative
+50,Lump,TRUE,Lump,109,None,TRUE,TRUE,TRUE,TRUE,13,Premenopause,TRUE,3,22,FALSE,0,TRUE,FALSE,High,Processed,Medium,FALSE,Positive
+34,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,12,Premenopause,TRUE,2,40,FALSE,0,FALSE,TRUE,Low,Healthy,Medium,TRUE,Negative
+65,Nipple discharge,TRUE,Nipple discharge,133,None,TRUE,TRUE,FALSE,TRUE,11,Postmenopause,TRUE,0,16,TRUE,51,FALSE,FALSE,Medium,Healthy,Medium,TRUE,Positive
+58,Pain,TRUE,Pain,169,None,TRUE,TRUE,FALSE,FALSE,14,Postmenopause,TRUE,3,4,TRUE,40,TRUE,TRUE,High,High-fat,Low,TRUE,Positive
+75,Pain,TRUE,Pain,149,Left,FALSE,TRUE,FALSE,TRUE,12,Postmenopause,FALSE,3,25,FALSE,0,FALSE,TRUE,Medium,Healthy,Low,TRUE,Negative
+75,Lump,TRUE,Lump,147,Right,FALSE,FALSE,TRUE,TRUE,14,Postmenopause,FALSE,3,6,TRUE,36,TRUE,FALSE,Medium,Processed,Medium,FALSE,Positive
+50,Lump,TRUE,Lump,40,Left,FALSE,FALSE,FALSE,TRUE,14,Premenopause,FALSE,4,13,FALSE,0,TRUE,FALSE,Medium,Processed,High,TRUE,Negative
+28,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,FALSE,11,Premenopause,FALSE,3,14,TRUE,58,TRUE,FALSE,Medium,High-fat,Low,TRUE,Negative
+32,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,10,Premenopause,FALSE,2,47,FALSE,0,TRUE,TRUE,Low,High-fat,Low,TRUE,Negative
+63,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,15,Postmenopause,FALSE,3,45,FALSE,0,TRUE,FALSE,Low,Healthy,High,FALSE,Negative
+51,Lump,TRUE,Lump,68,Left,FALSE,TRUE,TRUE,TRUE,11,Postmenopause,TRUE,2,36,FALSE,0,TRUE,FALSE,Low,High-fat,Medium,TRUE,Positive
+25,Pain,TRUE,Pain,111,None,TRUE,FALSE,TRUE,FALSE,12,Premenopause,FALSE,4,35,FALSE,0,FALSE,FALSE,High,Processed,High,FALSE,Positive
+58,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,14,Postmenopause,TRUE,1,3,FALSE,0,TRUE,TRUE,Low,High-fat,Medium,FALSE,Negative
+27,Pain,TRUE,Pain,34,None,FALSE,TRUE,TRUE,TRUE,10,Premenopause,TRUE,0,22,TRUE,52,FALSE,TRUE,Medium,Processed,Medium,TRUE,Positive
+69,Pain,TRUE,Pain,69,None,TRUE,FALSE,FALSE,FALSE,15,Postmenopause,FALSE,4,40,TRUE,35,FALSE,FALSE,High,Processed,Medium,FALSE,Positive
+61,Lump,TRUE,Lump,57,Both,FALSE,FALSE,FALSE,TRUE,11,Postmenopause,FALSE,5,20,TRUE,49,TRUE,TRUE,Medium,High-fat,Medium,FALSE,Positive
+27,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,TRUE,12,Premenopause,TRUE,5,46,TRUE,33,TRUE,FALSE,Medium,Processed,Low,TRUE,Negative
+52,Nipple discharge,TRUE,Nipple discharge,76,Both,FALSE,FALSE,TRUE,TRUE,15,Postmenopause,TRUE,2,35,FALSE,0,FALSE,FALSE,Low,Processed,Medium,TRUE,Negative
+71,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,TRUE,10,Postmenopause,TRUE,4,12,FALSE,0,TRUE,FALSE,High,High-fat,High,FALSE,Negative
+47,Lump,TRUE,Lump,58,Right,TRUE,TRUE,TRUE,TRUE,11,Premenopause,FALSE,5,36,FALSE,0,TRUE,TRUE,Medium,High-fat,High,TRUE,Positive
+49,Nipple discharge,TRUE,Nipple discharge,112,Both,FALSE,FALSE,TRUE,TRUE,12,Premenopause,TRUE,2,13,TRUE,65,TRUE,TRUE,High,Processed,Low,TRUE,Positive
+63,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,15,Postmenopause,FALSE,4,20,TRUE,37,TRUE,TRUE,Medium,Processed,High,TRUE,Positive
+73,Nipple discharge,TRUE,Nipple discharge,16,None,TRUE,FALSE,FALSE,TRUE,12,Postmenopause,FALSE,1,9,FALSE,0,FALSE,FALSE,High,Healthy,High,TRUE,Positive
+56,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,12,Postmenopause,TRUE,1,8,FALSE,0,TRUE,FALSE,High,Healthy,Low,FALSE,Negative
+41,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,12,Premenopause,FALSE,1,21,TRUE,46,TRUE,FALSE,Medium,Healthy,High,FALSE,Negative
+28,Nipple discharge,TRUE,Nipple discharge,48,Right,FALSE,TRUE,FALSE,TRUE,13,Premenopause,TRUE,0,20,FALSE,0,FALSE,TRUE,Medium,Healthy,Low,TRUE,Negative
+61,Nipple discharge,TRUE,Nipple discharge,102,None,TRUE,TRUE,TRUE,FALSE,10,Postmenopause,FALSE,0,24,FALSE,0,TRUE,FALSE,High,Processed,Low,FALSE,Negative
+75,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,13,Postmenopause,TRUE,0,40,TRUE,53,FALSE,FALSE,Medium,Processed,High,FALSE,Negative
+26,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,TRUE,12,Premenopause,FALSE,5,0,TRUE,52,FALSE,FALSE,Medium,Healthy,Medium,FALSE,Negative
+63,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,14,Postmenopause,FALSE,5,16,FALSE,0,TRUE,TRUE,Medium,High-fat,High,TRUE,Positive
+58,Pain,TRUE,Pain,169,Both,TRUE,FALSE,FALSE,TRUE,14,Postmenopause,TRUE,0,12,FALSE,0,TRUE,FALSE,Medium,High-fat,Low,FALSE,Positive
+30,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,15,Premenopause,TRUE,3,2,TRUE,46,FALSE,FALSE,Low,High-fat,High,TRUE,Positive
+73,Lump,TRUE,Lump,76,Both,TRUE,FALSE,TRUE,TRUE,14,Postmenopause,FALSE,0,16,FALSE,0,TRUE,TRUE,High,High-fat,Medium,FALSE,Positive
+27,Nipple discharge,TRUE,Nipple discharge,15,Right,TRUE,TRUE,FALSE,TRUE,13,Premenopause,FALSE,3,17,FALSE,0,FALSE,TRUE,High,Processed,Low,TRUE,Negative
+73,Pain,TRUE,Pain,83,Right,FALSE,TRUE,TRUE,TRUE,12,Postmenopause,TRUE,3,34,FALSE,0,TRUE,TRUE,Low,Healthy,Low,TRUE,Negative
+64,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,TRUE,15,Postmenopause,FALSE,1,32,FALSE,0,FALSE,FALSE,Low,High-fat,Medium,FALSE,Negative
+38,Nipple discharge,TRUE,Nipple discharge,162,Right,FALSE,FALSE,FALSE,TRUE,14,Premenopause,FALSE,3,23,FALSE,0,TRUE,FALSE,Low,Healthy,Medium,FALSE,Negative
+53,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,12,Postmenopause,FALSE,5,32,TRUE,69,TRUE,FALSE,Medium,Processed,Medium,FALSE,Negative
+43,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,14,Premenopause,FALSE,0,4,TRUE,56,TRUE,FALSE,Medium,Healthy,Medium,TRUE,Negative
+40,Lump,TRUE,Lump,134,None,FALSE,TRUE,FALSE,FALSE,14,Premenopause,FALSE,5,34,TRUE,48,TRUE,FALSE,Low,Processed,High,FALSE,Negative
+36,Nipple discharge,TRUE,Nipple discharge,80,Left,FALSE,TRUE,TRUE,FALSE,12,Premenopause,FALSE,2,9,FALSE,0,TRUE,TRUE,High,High-fat,Medium,FALSE,Negative
+49,Pain,TRUE,Pain,148,Left,FALSE,FALSE,FALSE,FALSE,13,Premenopause,FALSE,3,22,TRUE,31,TRUE,TRUE,Medium,Processed,High,TRUE,Negative
+46,Pain,TRUE,Pain,115,Left,FALSE,TRUE,TRUE,FALSE,10,Premenopause,TRUE,4,7,FALSE,0,FALSE,TRUE,Medium,Processed,Medium,FALSE,Negative
+31,Nipple discharge,TRUE,Nipple discharge,119,None,FALSE,FALSE,FALSE,TRUE,12,Premenopause,FALSE,1,15,FALSE,0,TRUE,TRUE,Medium,High-fat,High,TRUE,Positive
+79,Pain,TRUE,Pain,83,Left,TRUE,TRUE,FALSE,TRUE,12,Postmenopause,TRUE,1,15,FALSE,0,FALSE,FALSE,Medium,High-fat,Medium,FALSE,Positive
+32,Pain,TRUE,Pain,124,Left,TRUE,TRUE,TRUE,TRUE,10,Premenopause,FALSE,0,11,TRUE,40,FALSE,FALSE,High,Processed,Medium,FALSE,Positive
+29,Nipple discharge,TRUE,Nipple discharge,27,Both,TRUE,TRUE,FALSE,FALSE,13,Premenopause,FALSE,0,5,TRUE,62,TRUE,TRUE,High,Processed,High,TRUE,Positive
+29,Nipple discharge,TRUE,Nipple discharge,57,None,FALSE,FALSE,FALSE,FALSE,13,Premenopause,TRUE,5,4,TRUE,62,FALSE,FALSE,Medium,High-fat,Medium,FALSE,Negative
+74,Pain,TRUE,Pain,112,Right,FALSE,FALSE,FALSE,TRUE,10,Postmenopause,TRUE,2,21,TRUE,34,TRUE,TRUE,Low,Processed,Medium,FALSE,Positive
+26,Nipple discharge,TRUE,Nipple discharge,47,Left,FALSE,TRUE,FALSE,TRUE,13,Premenopause,TRUE,0,12,TRUE,49,TRUE,TRUE,Low,High-fat,Medium,TRUE,Positive
+78,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,FALSE,15,Postmenopause,FALSE,2,28,FALSE,0,TRUE,TRUE,High,Processed,Low,FALSE,Negative
+44,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,FALSE,14,Premenopause,FALSE,1,9,TRUE,37,TRUE,FALSE,High,Healthy,Low,FALSE,Negative
+50,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,15,Premenopause,TRUE,4,9,TRUE,46,TRUE,TRUE,Medium,Healthy,High,TRUE,Negative
+26,Pain,TRUE,Pain,6,Both,FALSE,FALSE,FALSE,FALSE,11,Premenopause,TRUE,4,27,TRUE,34,TRUE,FALSE,High,Processed,Medium,FALSE,Negative
+42,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,11,Premenopause,FALSE,3,40,TRUE,56,TRUE,FALSE,Medium,High-fat,Low,TRUE,Positive
+73,Lump,TRUE,Lump,71,Right,FALSE,FALSE,FALSE,FALSE,12,Postmenopause,FALSE,2,9,FALSE,0,FALSE,FALSE,Low,Processed,High,TRUE,Negative
+58,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,10,Postmenopause,FALSE,2,15,FALSE,0,FALSE,TRUE,Low,Processed,High,FALSE,Positive
+26,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,13,Premenopause,TRUE,1,37,TRUE,51,FALSE,FALSE,High,Processed,Low,TRUE,Positive
+50,Lump,TRUE,Lump,171,Right,TRUE,FALSE,FALSE,TRUE,12,Premenopause,TRUE,4,46,FALSE,0,FALSE,TRUE,High,High-fat,Low,TRUE,Positive
+62,Nipple discharge,TRUE,Nipple discharge,20,None,TRUE,FALSE,TRUE,TRUE,12,Postmenopause,FALSE,0,19,TRUE,48,FALSE,TRUE,Low,High-fat,Low,FALSE,Positive
+44,Nipple discharge,TRUE,Nipple discharge,111,Right,TRUE,TRUE,FALSE,TRUE,11,Premenopause,TRUE,5,33,TRUE,51,TRUE,TRUE,Medium,High-fat,Low,FALSE,Positive
+27,Nipple discharge,TRUE,Nipple discharge,134,Both,FALSE,FALSE,FALSE,TRUE,12,Premenopause,TRUE,1,8,TRUE,62,TRUE,TRUE,Medium,High-fat,Medium,TRUE,Positive
+56,Pain,TRUE,Pain,48,None,FALSE,TRUE,TRUE,FALSE,15,Postmenopause,TRUE,0,35,TRUE,31,TRUE,FALSE,High,Healthy,High,FALSE,Positive
+53,Lump,TRUE,Lump,65,None,FALSE,TRUE,FALSE,TRUE,12,Postmenopause,FALSE,1,24,FALSE,0,TRUE,FALSE,Medium,Processed,High,TRUE,Negative
+34,Lump,TRUE,Lump,53,Both,TRUE,FALSE,TRUE,TRUE,12,Premenopause,TRUE,5,47,TRUE,50,FALSE,TRUE,Low,High-fat,High,TRUE,Positive
+46,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,FALSE,13,Premenopause,FALSE,1,29,TRUE,54,FALSE,FALSE,Medium,Processed,Low,FALSE,Negative
+69,Nipple discharge,TRUE,Nipple discharge,28,None,TRUE,TRUE,TRUE,FALSE,10,Postmenopause,FALSE,0,44,FALSE,0,FALSE,TRUE,Medium,Healthy,High,FALSE,Positive
+28,Lump,TRUE,Lump,7,Left,FALSE,FALSE,FALSE,TRUE,10,Premenopause,TRUE,0,35,TRUE,48,FALSE,TRUE,High,Processed,Low,FALSE,Positive
+25,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,11,Premenopause,FALSE,3,8,FALSE,0,FALSE,TRUE,High,Processed,Low,FALSE,Negative
+69,Nipple discharge,TRUE,Nipple discharge,46,Left,FALSE,FALSE,TRUE,TRUE,11,Postmenopause,FALSE,5,47,FALSE,0,FALSE,FALSE,Medium,Healthy,High,TRUE,Positive
+62,Nipple discharge,TRUE,Nipple discharge,145,Left,TRUE,FALSE,TRUE,TRUE,11,Postmenopause,TRUE,1,26,FALSE,0,FALSE,TRUE,Medium,Processed,Low,TRUE,Positive
+78,Lump,TRUE,Lump,178,Both,FALSE,FALSE,FALSE,TRUE,12,Postmenopause,TRUE,3,20,TRUE,54,FALSE,FALSE,Medium,Healthy,High,TRUE,Positive
+52,Nipple discharge,TRUE,Nipple discharge,111,Left,FALSE,TRUE,FALSE,FALSE,13,Postmenopause,FALSE,4,8,TRUE,56,TRUE,TRUE,Low,Processed,High,TRUE,Negative
+50,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,FALSE,12,Premenopause,FALSE,3,16,FALSE,0,FALSE,TRUE,Low,Processed,High,TRUE,Negative
+67,Nipple discharge,TRUE,Nipple discharge,121,Left,TRUE,TRUE,TRUE,FALSE,10,Postmenopause,TRUE,1,19,FALSE,0,FALSE,TRUE,Medium,Processed,High,TRUE,Positive
+69,Nipple discharge,TRUE,Nipple discharge,168,Left,FALSE,TRUE,TRUE,TRUE,10,Postmenopause,FALSE,4,22,FALSE,0,FALSE,TRUE,Medium,Healthy,Low,FALSE,Negative
+71,Lump,TRUE,Lump,47,Left,TRUE,FALSE,FALSE,TRUE,10,Postmenopause,FALSE,0,45,FALSE,0,TRUE,FALSE,Low,High-fat,Medium,TRUE,Positive
+29,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,TRUE,12,Premenopause,TRUE,1,39,FALSE,0,TRUE,FALSE,Low,Processed,High,TRUE,Negative
+35,Pain,TRUE,Pain,61,Right,TRUE,TRUE,FALSE,FALSE,11,Premenopause,FALSE,2,32,TRUE,40,FALSE,TRUE,Low,High-fat,Low,TRUE,Positive
+40,Lump,TRUE,Lump,82,None,TRUE,TRUE,FALSE,TRUE,15,Premenopause,FALSE,1,17,TRUE,67,FALSE,FALSE,High,Processed,Medium,TRUE,Positive
+43,Pain,TRUE,Pain,164,None,TRUE,TRUE,TRUE,TRUE,12,Premenopause,FALSE,4,45,TRUE,32,FALSE,TRUE,Medium,Processed,Medium,TRUE,Positive
+34,Nipple discharge,TRUE,Nipple discharge,102,Right,TRUE,TRUE,FALSE,TRUE,10,Premenopause,TRUE,2,45,FALSE,0,FALSE,FALSE,Low,High-fat,Medium,FALSE,Positive
+32,Pain,TRUE,Pain,179,Both,FALSE,TRUE,TRUE,TRUE,15,Premenopause,TRUE,1,16,TRUE,38,FALSE,TRUE,High,Healthy,High,FALSE,Positive
+30,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,12,Premenopause,FALSE,0,38,FALSE,0,TRUE,TRUE,Medium,Processed,Low,FALSE,Negative
+73,Pain,TRUE,Pain,28,Both,FALSE,TRUE,TRUE,TRUE,10,Postmenopause,FALSE,5,36,FALSE,0,TRUE,TRUE,Low,Processed,Low,FALSE,Negative
+33,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,TRUE,11,Premenopause,TRUE,2,20,FALSE,0,FALSE,TRUE,Medium,High-fat,High,FALSE,Negative
+26,Nipple discharge,TRUE,Nipple discharge,58,Both,FALSE,FALSE,TRUE,FALSE,12,Premenopause,TRUE,2,37,TRUE,69,TRUE,TRUE,Medium,Healthy,Low,FALSE,Positive
+60,Lump,TRUE,Lump,114,Left,FALSE,FALSE,FALSE,FALSE,13,Postmenopause,FALSE,2,36,FALSE,0,TRUE,TRUE,High,Healthy,Medium,TRUE,Negative
+39,Pain,TRUE,Pain,92,Left,TRUE,TRUE,TRUE,TRUE,11,Premenopause,TRUE,1,21,TRUE,40,FALSE,FALSE,Low,Processed,Low,TRUE,Positive
+37,Nipple discharge,TRUE,Nipple discharge,4,None,TRUE,TRUE,FALSE,TRUE,15,Premenopause,TRUE,4,42,FALSE,0,TRUE,FALSE,Medium,High-fat,High,TRUE,Positive
+78,Lump,TRUE,Lump,88,Right,FALSE,TRUE,TRUE,TRUE,13,Postmenopause,FALSE,3,14,TRUE,30,FALSE,TRUE,Low,Processed,Low,FALSE,Positive
+79,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,FALSE,12,Postmenopause,TRUE,5,37,FALSE,0,FALSE,FALSE,Low,Healthy,High,TRUE,Negative
+74,Nipple discharge,TRUE,Nipple discharge,121,Right,FALSE,TRUE,TRUE,FALSE,10,Postmenopause,FALSE,5,37,FALSE,0,TRUE,TRUE,Low,Processed,High,FALSE,Negative
+45,Nipple discharge,TRUE,Nipple discharge,157,Both,FALSE,FALSE,TRUE,TRUE,14,Premenopause,TRUE,0,9,FALSE,0,TRUE,TRUE,High,Healthy,Low,TRUE,Negative
+52,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,TRUE,14,Postmenopause,TRUE,1,6,FALSE,0,TRUE,TRUE,Medium,Healthy,Low,TRUE,Negative
+27,Nipple discharge,TRUE,Nipple discharge,109,Left,TRUE,FALSE,FALSE,FALSE,13,Premenopause,FALSE,2,34,FALSE,0,TRUE,TRUE,Low,Processed,Low,FALSE,Negative
+28,Lump,TRUE,Lump,69,Right,TRUE,FALSE,TRUE,TRUE,10,Premenopause,TRUE,3,11,TRUE,56,TRUE,TRUE,Low,Processed,High,TRUE,Positive
+66,Lump,TRUE,Lump,23,Right,FALSE,FALSE,FALSE,FALSE,10,Postmenopause,FALSE,4,23,FALSE,0,FALSE,TRUE,Medium,Healthy,High,TRUE,Negative
+49,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,14,Premenopause,FALSE,5,31,FALSE,0,TRUE,TRUE,High,High-fat,High,FALSE,Negative
+79,Nipple discharge,TRUE,Nipple discharge,96,Both,FALSE,FALSE,FALSE,FALSE,14,Postmenopause,TRUE,3,45,FALSE,0,TRUE,TRUE,High,Healthy,Medium,FALSE,Negative
+66,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,FALSE,10,Postmenopause,TRUE,1,38,TRUE,45,FALSE,FALSE,High,High-fat,Low,TRUE,Negative
+57,Nipple discharge,TRUE,Nipple discharge,113,Both,FALSE,TRUE,FALSE,FALSE,14,Postmenopause,TRUE,4,8,FALSE,0,TRUE,TRUE,High,Healthy,Medium,TRUE,Negative
+30,Lump,TRUE,Lump,109,None,FALSE,TRUE,TRUE,FALSE,12,Premenopause,TRUE,5,40,FALSE,0,FALSE,FALSE,High,High-fat,Low,FALSE,Negative
+78,Pain,TRUE,Pain,5,Left,TRUE,TRUE,FALSE,FALSE,11,Postmenopause,FALSE,0,11,TRUE,52,TRUE,FALSE,Low,Healthy,Low,FALSE,Positive
+40,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,12,Premenopause,FALSE,5,21,TRUE,38,FALSE,TRUE,Medium,Healthy,Medium,TRUE,Positive
+53,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,TRUE,14,Postmenopause,TRUE,4,31,FALSE,0,FALSE,FALSE,Low,High-fat,Low,TRUE,Positive
+70,Nipple discharge,TRUE,Nipple discharge,116,None,TRUE,TRUE,TRUE,FALSE,14,Postmenopause,TRUE,0,39,TRUE,50,FALSE,FALSE,Low,Processed,High,TRUE,Positive
+26,Pain,TRUE,Pain,134,None,FALSE,TRUE,FALSE,TRUE,13,Premenopause,FALSE,1,29,TRUE,51,FALSE,FALSE,Medium,Processed,Medium,FALSE,Positive
+78,Nipple discharge,TRUE,Nipple discharge,33,Both,FALSE,TRUE,TRUE,FALSE,15,Postmenopause,FALSE,0,42,FALSE,0,FALSE,FALSE,High,Processed,Low,TRUE,Negative
+56,Lump,TRUE,Lump,170,None,FALSE,TRUE,TRUE,TRUE,12,Postmenopause,TRUE,5,9,FALSE,0,TRUE,FALSE,High,Healthy,Medium,TRUE,Negative
+71,Nipple discharge,TRUE,Nipple discharge,115,Right,FALSE,TRUE,FALSE,FALSE,13,Postmenopause,TRUE,1,8,TRUE,57,TRUE,TRUE,Low,Processed,Medium,TRUE,Negative
+35,Nipple discharge,TRUE,Nipple discharge,167,Both,FALSE,FALSE,TRUE,FALSE,15,Premenopause,TRUE,2,14,FALSE,0,FALSE,FALSE,Low,Healthy,Medium,TRUE,Negative
+52,Pain,TRUE,Pain,152,Right,FALSE,TRUE,TRUE,TRUE,12,Postmenopause,TRUE,4,8,FALSE,0,TRUE,TRUE,Medium,Healthy,Medium,FALSE,Negative
+71,Lump,TRUE,Lump,33,Left,TRUE,TRUE,FALSE,TRUE,15,Postmenopause,FALSE,0,18,TRUE,32,TRUE,TRUE,Medium,High-fat,Medium,TRUE,Positive
+34,Nipple discharge,TRUE,Nipple discharge,168,Left,TRUE,TRUE,FALSE,TRUE,11,Premenopause,TRUE,0,28,TRUE,63,FALSE,TRUE,High,Healthy,Low,TRUE,Positive
+75,Routine check,FALSE,None,0,None,FALSE,FALSE,FALSE,TRUE,14,Postmenopause,FALSE,5,0,FALSE,0,FALSE,FALSE,Medium,High-fat,Low,FALSE,Negative
+58,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,14,Postmenopause,TRUE,4,47,FALSE,0,TRUE,FALSE,Low,High-fat,High,FALSE,Negative
+73,Lump,TRUE,Lump,64,None,FALSE,FALSE,FALSE,TRUE,14,Postmenopause,FALSE,4,38,FALSE,0,TRUE,FALSE,Medium,Healthy,Medium,FALSE,Negative
+48,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,TRUE,11,Premenopause,FALSE,0,6,FALSE,0,FALSE,TRUE,Medium,Processed,High,TRUE,Negative
+37,Lump,TRUE,Lump,69,Right,FALSE,FALSE,FALSE,FALSE,11,Premenopause,TRUE,0,2,FALSE,0,FALSE,TRUE,Medium,High-fat,Low,FALSE,Negative
+31,Nipple discharge,TRUE,Nipple discharge,58,None,FALSE,TRUE,FALSE,TRUE,10,Premenopause,TRUE,4,0,FALSE,0,TRUE,FALSE,Low,High-fat,Low,FALSE,Negative
+73,Nipple discharge,TRUE,Nipple discharge,62,Both,TRUE,TRUE,TRUE,FALSE,10,Postmenopause,FALSE,2,24,TRUE,32,FALSE,FALSE,Low,High-fat,Low,TRUE,Positive
+39,Nipple discharge,TRUE,Nipple discharge,29,Right,FALSE,TRUE,FALSE,TRUE,14,Premenopause,FALSE,2,31,TRUE,55,TRUE,FALSE,High,Processed,Medium,TRUE,Positive
+40,Pain,TRUE,Pain,25,Right,FALSE,FALSE,FALSE,FALSE,15,Premenopause,TRUE,3,8,FALSE,0,TRUE,FALSE,High,Processed,High,TRUE,Negative
+25,Nipple discharge,TRUE,Nipple discharge,93,Both,TRUE,FALSE,FALSE,TRUE,10,Premenopause,FALSE,5,15,TRUE,36,TRUE,FALSE,Low,Healthy,Low,TRUE,Positive
+38,Pain,TRUE,Pain,157,None,TRUE,TRUE,FALSE,FALSE,12,Premenopause,FALSE,2,1,FALSE,0,TRUE,FALSE,Medium,High-fat,High,FALSE,Positive
+65,Nipple discharge,TRUE,Nipple discharge,173,Right,FALSE,TRUE,TRUE,FALSE,12,Postmenopause,TRUE,2,45,TRUE,59,TRUE,FALSE,Medium,Processed,Medium,FALSE,Positive
+64,Pain,TRUE,Pain,146,None,TRUE,TRUE,TRUE,TRUE,12,Postmenopause,FALSE,1,31,FALSE,0,FALSE,TRUE,Medium,Processed,Medium,FALSE,Positive
+32,Lump,TRUE,Lump,22,Right,TRUE,TRUE,TRUE,TRUE,15,Premenopause,TRUE,3,46,FALSE,0,TRUE,FALSE,High,Healthy,High,FALSE,Positive
+64,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,13,Postmenopause,FALSE,3,44,TRUE,47,TRUE,TRUE,Low,Healthy,Medium,TRUE,Negative
+26,Nipple discharge,TRUE,Nipple discharge,77,Right,TRUE,TRUE,TRUE,TRUE,14,Premenopause,FALSE,5,14,FALSE,0,TRUE,FALSE,High,High-fat,Low,TRUE,Positive
+44,Nipple discharge,TRUE,Nipple discharge,123,Left,TRUE,FALSE,FALSE,FALSE,11,Premenopause,TRUE,4,2,TRUE,48,FALSE,FALSE,Medium,Healthy,Low,TRUE,Positive
+27,Nipple discharge,TRUE,Nipple discharge,64,Left,FALSE,FALSE,TRUE,FALSE,12,Premenopause,TRUE,5,3,FALSE,0,FALSE,TRUE,High,Processed,High,FALSE,Negative
+76,Pain,TRUE,Pain,75,None,FALSE,TRUE,TRUE,FALSE,11,Postmenopause,FALSE,2,31,TRUE,56,TRUE,TRUE,Low,High-fat,High,TRUE,Positive
+54,Nipple discharge,TRUE,Nipple discharge,130,Left,FALSE,FALSE,TRUE,FALSE,15,Postmenopause,TRUE,0,8,FALSE,0,TRUE,FALSE,Low,Processed,Medium,TRUE,Negative
+52,Lump,TRUE,Lump,159,Left,FALSE,FALSE,FALSE,FALSE,13,Postmenopause,TRUE,1,14,FALSE,0,TRUE,TRUE,Low,Healthy,High,TRUE,Negative
+72,Pain,TRUE,Pain,153,Both,FALSE,FALSE,FALSE,TRUE,13,Postmenopause,FALSE,0,36,FALSE,0,TRUE,TRUE,Medium,Processed,High,TRUE,Negative
+72,Lump,TRUE,Lump,173,Right,TRUE,FALSE,FALSE,FALSE,15,Postmenopause,FALSE,1,16,FALSE,0,TRUE,FALSE,High,Healthy,Medium,FALSE,Negative
+59,Lump,TRUE,Lump,44,None,TRUE,FALSE,FALSE,FALSE,14,Postmenopause,FALSE,2,6,FALSE,0,TRUE,FALSE,High,High-fat,Low,TRUE,Negative
+52,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,TRUE,10,Postmenopause,TRUE,3,5,FALSE,0,TRUE,TRUE,Medium,Processed,Medium,TRUE,Negative
+53,Nipple discharge,TRUE,Nipple discharge,145,Right,TRUE,FALSE,TRUE,TRUE,12,Postmenopause,FALSE,4,25,FALSE,0,TRUE,FALSE,Medium,Healthy,Low,FALSE,Positive
+60,Nipple discharge,TRUE,Nipple discharge,62,Both,FALSE,TRUE,TRUE,FALSE,11,Postmenopause,FALSE,3,41,TRUE,42,TRUE,TRUE,Low,Healthy,High,FALSE,Positive
+35,Nipple discharge,TRUE,Nipple discharge,54,None,FALSE,TRUE,TRUE,TRUE,12,Premenopause,TRUE,0,39,TRUE,31,FALSE,FALSE,High,Healthy,Low,TRUE,Positive
+54,Nipple discharge,TRUE,Nipple discharge,138,Right,TRUE,TRUE,TRUE,TRUE,13,Postmenopause,FALSE,2,14,FALSE,0,FALSE,FALSE,Medium,Processed,Medium,FALSE,Positive
+40,Nipple discharge,TRUE,Nipple discharge,81,None,TRUE,TRUE,FALSE,FALSE,11,Premenopause,TRUE,1,11,FALSE,0,FALSE,FALSE,Medium,High-fat,Medium,FALSE,Negative
+75,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,11,Postmenopause,FALSE,1,31,FALSE,0,TRUE,TRUE,High,Healthy,Medium,FALSE,Negative
+73,Pain,TRUE,Pain,128,None,TRUE,FALSE,FALSE,FALSE,15,Postmenopause,TRUE,5,46,FALSE,0,FALSE,TRUE,Low,Processed,Low,TRUE,Negative
+27,Routine check,FALSE,None,0,None,TRUE,FALSE,FALSE,FALSE,15,Premenopause,TRUE,2,29,TRUE,30,TRUE,TRUE,Low,Healthy,Low,TRUE,Negative
+54,Pain,TRUE,Pain,173,None,TRUE,FALSE,TRUE,FALSE,13,Postmenopause,TRUE,4,45,TRUE,42,TRUE,FALSE,Low,Processed,High,TRUE,Positive
+51,Lump,TRUE,Lump,100,Both,TRUE,TRUE,TRUE,TRUE,15,Postmenopause,TRUE,1,38,FALSE,0,FALSE,FALSE,Medium,High-fat,Medium,FALSE,Positive
+77,Pain,TRUE,Pain,132,Right,FALSE,FALSE,TRUE,TRUE,15,Postmenopause,TRUE,3,36,TRUE,49,FALSE,FALSE,Low,Healthy,High,FALSE,Positive
+36,Lump,TRUE,Lump,161,Left,FALSE,FALSE,FALSE,FALSE,13,Premenopause,TRUE,0,36,TRUE,51,TRUE,TRUE,High,High-fat,Medium,TRUE,Negative
+30,Nipple discharge,TRUE,Nipple discharge,125,Both,FALSE,TRUE,FALSE,FALSE,14,Premenopause,TRUE,2,14,TRUE,34,FALSE,FALSE,High,Healthy,High,FALSE,Negative
+70,Pain,TRUE,Pain,178,Right,FALSE,TRUE,FALSE,TRUE,15,Postmenopause,TRUE,0,45,TRUE,69,TRUE,FALSE,Low,Processed,Medium,FALSE,Positive
+53,Lump,TRUE,Lump,104,Left,TRUE,FALSE,FALSE,FALSE,14,Postmenopause,FALSE,5,17,FALSE,0,FALSE,TRUE,Medium,Healthy,Low,FALSE,Negative
+26,Routine check,FALSE,None,0,None,FALSE,FALSE,TRUE,FALSE,12,Premenopause,FALSE,0,37,TRUE,56,FALSE,TRUE,Medium,Healthy,Medium,TRUE,Negative
+44,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,13,Premenopause,TRUE,2,30,FALSE,0,FALSE,FALSE,Low,High-fat,Low,FALSE,Negative
+51,Routine check,FALSE,None,0,None,FALSE,TRUE,FALSE,TRUE,14,Postmenopause,FALSE,1,2,FALSE,0,FALSE,TRUE,Low,Processed,High,TRUE,Negative
+69,Nipple discharge,TRUE,Nipple discharge,91,Both,FALSE,TRUE,FALSE,TRUE,12,Postmenopause,TRUE,4,12,FALSE,0,FALSE,FALSE,Medium,Healthy,Low,FALSE,Negative
+73,Routine check,FALSE,None,0,None,TRUE,TRUE,TRUE,FALSE,12,Postmenopause,FALSE,3,10,FALSE,0,FALSE,FALSE,Medium,Healthy,Low,FALSE,Negative
+45,Pain,TRUE,Pain,158,Both,FALSE,TRUE,TRUE,TRUE,13,Premenopause,FALSE,4,34,FALSE,0,FALSE,TRUE,Low,High-fat,Medium,FALSE,Positive
+46,Nipple discharge,TRUE,Nipple discharge,166,Right,TRUE,FALSE,TRUE,TRUE,15,Premenopause,FALSE,1,31,TRUE,65,TRUE,TRUE,Medium,High-fat,Medium,FALSE,Positive
+56,Nipple discharge,TRUE,Nipple discharge,99,Right,TRUE,TRUE,FALSE,FALSE,12,Postmenopause,FALSE,4,20,TRUE,39,FALSE,FALSE,Medium,Healthy,Low,TRUE,Positive
+43,Lump,TRUE,Lump,25,Both,TRUE,TRUE,FALSE,FALSE,13,Premenopause,FALSE,4,28,FALSE,0,TRUE,TRUE,Low,Processed,High,TRUE,Negative
+43,Routine check,FALSE,None,0,None,TRUE,FALSE,TRUE,FALSE,12,Premenopause,FALSE,1,9,FALSE,0,FALSE,TRUE,High,Processed,High,TRUE,Negative
+67,Nipple discharge,TRUE,Nipple discharge,153,None,FALSE,FALSE,FALSE,FALSE,13,Postmenopause,FALSE,2,22,FALSE,0,TRUE,TRUE,High,Healthy,Low,TRUE,Negative
+48,Lump,TRUE,Lump,139,Left,TRUE,FALSE,TRUE,TRUE,15,Premenopause,TRUE,1,27,TRUE,34,FALSE,TRUE,Low,High-fat,High,FALSE,Positive
+29,Lump,TRUE,Lump,51,Both,TRUE,FALSE,TRUE,TRUE,14,Premenopause,FALSE,3,3,TRUE,49,TRUE,FALSE,Low,Processed,High,FALSE,Positive
+62,Pain,TRUE,Pain,153,None,TRUE,TRUE,TRUE,FALSE,15,Postmenopause,TRUE,2,31,FALSE,0,TRUE,TRUE,High,Healthy,Low,FALSE,Negative
+35,Nipple discharge,TRUE,Nipple discharge,146,None,TRUE,TRUE,TRUE,TRUE,12,Premenopause,TRUE,5,17,FALSE,0,TRUE,TRUE,Medium,Healthy,High,TRUE,Positive
+47,Nipple discharge,TRUE,Nipple discharge,75,Both,TRUE,TRUE,FALSE,FALSE,14,Premenopause,FALSE,3,4,TRUE,52,TRUE,TRUE,Low,Healthy,Low,FALSE,Positive
+65,Nipple discharge,TRUE,Nipple discharge,59,Both,FALSE,TRUE,TRUE,FALSE,10,Postmenopause,TRUE,0,9,FALSE,0,FALSE,TRUE,High,High-fat,High,TRUE,Positive
+46,Lump,TRUE,Lump,83,None,TRUE,FALSE,FALSE,TRUE,10,Premenopause,TRUE,3,0,FALSE,0,FALSE,TRUE,Low,High-fat,Medium,TRUE,Positive
+39,Nipple discharge,TRUE,Nipple discharge,104,Left,FALSE,TRUE,TRUE,FALSE,13,Premenopause,FALSE,5,21,TRUE,46,TRUE,TRUE,Low,High-fat,Low,TRUE,Positive
+53,Nipple discharge,TRUE,Nipple discharge,174,Both,FALSE,FALSE,TRUE,FALSE,15,Postmenopause,FALSE,1,19,FALSE,0,TRUE,TRUE,Low,Healthy,Low,TRUE,Negative
+74,Lump,TRUE,Lump,112,Right,TRUE,FALSE,TRUE,FALSE,10,Postmenopause,FALSE,2,42,FALSE,0,TRUE,TRUE,Medium,Processed,Medium,TRUE,Negative
+39,Routine check,FALSE,None,0,None,TRUE,TRUE,FALSE,FALSE,13,Premenopause,TRUE,5,19,FALSE,0,FALSE,TRUE,Low,Processed,High,TRUE,Negative
+54,Nipple discharge,TRUE,Nipple discharge,166,Left,FALSE,FALSE,FALSE,FALSE,12,Postmenopause,TRUE,3,25,FALSE,0,FALSE,FALSE,Medium,High-fat,Medium,TRUE,Negative
+54,Routine check,FALSE,None,0,None,FALSE,TRUE,TRUE,FALSE,14,Postmenopause,TRUE,4,1,FALSE,0,TRUE,FALSE,High,High-fat,Medium,TRUE,Negative
+61,Nipple discharge,TRUE,Nipple discharge,177,Left,TRUE,TRUE,TRUE,TRUE,15,Postmenopause,TRUE,1,35,FALSE,0,FALSE,TRUE,Low,Processed,Medium,TRUE,Positive

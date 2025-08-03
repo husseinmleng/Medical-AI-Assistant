@@ -1,0 +1,7 @@
+['relative_diagnosis_age',
+ 'family_history_breast_cancer',
+ 'recent_weight_loss',
+ 'previous_breast_conditions',
+ 'symptom_duration_days',
+ 'fatigue',
+ 'breastfeeding_months']
