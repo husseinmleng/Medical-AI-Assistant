@@ -1,0 +1,25 @@
+# Environments
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Joblib
+*.joblib
+
+# Data
+*.csv
+*.zip
+
+# Images
+annotated_images/
+*.jpg
+*.png
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDEs
+.idea/
+.vscode/

@@ -5,6 +5,7 @@ import asyncio
 import os
 import tempfile
 from src.llm_chat import run_chat, clear_session, generate_chat_title, transcribe_audio
+from src.yolo_model import detect_cancer_in_image
 from streamlit_mic_recorder import mic_recorder
 
 # --- Page Configuration ---
@@ -199,10 +200,40 @@ else:
             try:
                 with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1]) as tmp_file:
                     tmp_file.write(uploaded_file.getvalue())
-                    image_path_to_process = tmp_file.name
+                    # Store the path in session state
+                    st.session_state.image_path_to_process = tmp_file.name
                 
-                process_and_display_chat(image_path_to_process, active_session_id, active_conv["lang"], image_path=image_path_to_process)
+                # Set flag and rerun
+                st.session_state.processing_image = True
                 st.rerun()
 
             except Exception as e:
                 st.error(f"Error processing image: {e}")
+
+# --- Image Processing Logic (runs after rerun) ---
+if st.session_state.get('processing_image'):
+    # Retrieve the image path from session state
+    image_path_to_process = st.session_state.get('image_path_to_process')
+    active_session_id = st.session_state.active_session_id
+    active_conv = st.session_state.conversations[active_session_id]
+
+    if image_path_to_process and os.path.exists(image_path_to_process):
+        # The user_input can be a generic message as the agent will prioritize the image path
+        user_input_for_image = "Here is the X-ray image for analysis."
+        
+        # Call the main chat processing function, which will handle the agent logic
+        process_and_display_chat(
+            user_input_for_image, 
+            active_session_id, 
+            active_conv["lang"], 
+            image_path=image_path_to_process
+        )
+    else:
+        st.error("Something went wrong during image processing. Please try uploading again.")
+
+    # Reset flags and clean up session state
+    st.session_state.processing_image = False
+    if 'image_path_to_process' in st.session_state:
+        del st.session_state['image_path_to_process']
+    
+    st.rerun()
