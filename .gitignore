@@ -13,7 +13,8 @@ __pycache__/
 *.zip
 
 # Images
-annotated_images/
+/*.png
+/*.jpg
 *.jpg
 *.png
 
