@@ -1,4 +1,3 @@
-# llm_chat.py
 
 from langchain_openai import ChatOpenAI
 from langchain_core.runnables.history import RunnableWithMessageHistory
@@ -31,34 +30,39 @@ step_results_store = {}
 
 @tool
 def predict_breast_cancer_risk(relative_diagnosis_age: int, family_history_breast_cancer: str,
-                                recent_weight_loss: str, previous_breast_conditions: str,
-                                symptom_duration_days: int, fatigue: str, breastfeeding_months: int) -> str:
+                               recent_weight_loss: str, previous_breast_conditions: str,
+                               symptom_duration_days: int, fatigue: str, breastfeeding_months: int) -> str:
     """
     Predicts breast cancer risk based on 7 key patient factors.
     This is the FIRST step. After this, you MUST ask the user for an X-ray image.
     Use this tool once you have collected all 7 pieces of information.
+    The user must provide a specific number for age, symptom duration, and breastfeeding months.
+    For yes/no questions, the user must answer with 'yes' or 'no'.
     """
     try:
+        # Convert yes/no strings to 1/0, being flexible with case and language
         inputs = {
-            "relative_diagnosis_age": relative_diagnosis_age,
+            "relative_diagnosis_age": int(relative_diagnosis_age),
             "family_history_breast_cancer": 1 if family_history_breast_cancer.lower() in ["yes", "نعم"] else 0,
             "recent_weight_loss": 1 if recent_weight_loss.lower() in ["yes", "نعم"] else 0,
             "previous_breast_conditions": 1 if previous_breast_conditions.lower() in ["yes", "نعم"] else 0,
-            "symptom_duration_days": symptom_duration_days,
+            "symptom_duration_days": int(symptom_duration_days),
             "fatigue": 1 if fatigue.lower() in ["yes", "نعم"] else 0,
-            "breastfeeding_months": breastfeeding_months
+            "breastfeeding_months": int(breastfeeding_months)
         }
         prediction, confidence = predict_cancer_risk(inputs)
         result = "Positive" if prediction == 1 else "Negative"
+        # Return a structured string for easy parsing
         return f"INITIAL_ASSESSMENT_RESULT:{result}|CONFIDENCE:{confidence*100:.1f}"
     except Exception as e:
-        return f"Error making prediction: {str(e)}"
+        print(f"Error in predict_breast_cancer_risk tool: {e}")
+        return f"Error: There was a problem processing the inputs. Please ensure all numeric values are provided as numbers. Error: {str(e)}"
 
 @tool
 def analyze_xray_image(image_path: str) -> str:
     """
     Analyzes a medical X-ray image for signs of breast cancer using a YOLO model.
-    This is the SECOND and FINAL step.
+    This is the SECOND and FINAL step. Call this tool when the user provides an image file.
     It returns the analysis result, confidence, and the path to the annotated image.
     """
     try:
@@ -70,7 +74,7 @@ def analyze_xray_image(image_path: str) -> str:
         
         return f"XRAY_RESULT:{result}|CONFIDENCE:{confidence_percent:.1f}|ANNOTATED_IMAGE_PATH:{annotated_path_str}"
     except Exception as e:
-        print(f"Error during X-ray analysis: {e}")
+        print(f"Error during X-ray analysis tool: {e}")
         return f"Error analyzing image: {str(e)}"
 
 
@@ -80,25 +84,20 @@ async def transcribe_audio(audio_bytes: bytes, lang: str) -> str:
         return ""
     temp_audio_file_path = None
     try:
-        audio = AudioSegment.from_file(io.BytesIO(audio_bytes))
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_audio_file:
-            audio.export(temp_audio_file.name, format="mp3")
-            temp_audio_file_path = temp_audio_file.name
-        with open(temp_audio_file_path, "rb") as audio_file_to_transcribe:
-            transcription_response = transcription_client.audio.transcriptions.create(
-                model="whisper-1",
-                file=audio_file_to_transcribe,
-                response_format="text",
-                language=lang
-            )
+        # Use an in-memory buffer
+        audio_io = io.BytesIO(audio_bytes)
+        audio_io.name = "temp_audio.mp3" # Whisper API needs a file name
+        
+        transcription_response = transcription_client.audio.transcriptions.create(
+            model="whisper-1",
+            file=audio_io,
+            response_format="text",
+            language=lang
+        )
         return transcription_response
     except Exception as e:
         print(f"ERROR: An error occurred during audio transcription: {e}")
         return ""
-    finally:
-        if temp_audio_file_path and os.path.exists(temp_audio_file_path):
-            os.remove(temp_audio_file_path)
-
 
 async def interpret_final_results(ml_result: str, ml_confidence: float, xray_result: str, xray_confidence: float, questionnaire_inputs: dict, lang: str) -> str:
     """Generates a final, empathetic explanation of the combined results."""
@@ -127,7 +126,7 @@ Your task is to provide a clear, calm, and detailed summary of their two-part br
 2.  Briefly explain what the combined results might suggest in simple, non-alarming terms.
 3.  If the X-ray result is 'Positive', explain that the analysis highlighted an area of interest for a specialist to review. Mention that the confidence score reflects the model's certainty.
 4.  If the X-ray result is 'Negative', state that the image did not show any immediate areas of concern, and the confidence score reflects this.
-5.  **Crucially, end with this strong, reassuring message:** \"The most important next step is to discuss these results with your healthcare provider. This analysis is a helpful tool, but it is not a diagnosis. A doctor is the only one who can provide a definitive answer and guide you on what to do next.\"
+5.  **Crucially, end with this strong, reassuring message:** "The most important next step is to discuss these results with your healthcare provider. This analysis is a helpful tool, but it is not a diagnosis. A doctor is the only one who can provide a definitive answer and guide you on what to do next."
 """
 
     prompt_ar = f"""أهلاً بيكي مرة تانية. أنا هنا عشان أشرحلك نتايج التقييم بتاعك بالتفصيل. متقلقيش، هنمشي في الموضوع خطوة بخطوة.
@@ -146,9 +145,9 @@ Your task is to provide a clear, calm, and detailed summary of their two-part br
 **شرح النتايج:**
 ١. ابدأي بتلخيص النتيجتين بهدوء، مع ذكر نسبة الثقة لكل واحدة.
 ٢. اشرحي ببساطة إيه ممكن تكون دلالة النتايج دي مع بعض، من غير مصطلحات طبية معقدة.
-٣. لو نتيجة الأشعة \"إيجابية\"، وضحي إن التحليل أظهر منطقة محتاجة اهتمام ومراجعة من دكتور متخصص. اذكري إن نسبة الثقة بتوضح مدى تأكد النموذج من النتيجة دي.
-٤. لو نتيجة الأشعة \"سلبية\"، قولي إن الصورة موضحتش أي مناطق تدعو للقلق حاليًا، ونسبة الثقة بتعكس ده.
-٥. **الأهم من كل ده، اختمي بالرسالة دي:** \"أهم خطوة جاية هي إنك تتكلمي مع دكتورك وتناقشي معاه النتايج دي بالتفصيل. التحليل ده مجرد أداة مساعدة، لكنه مش تشخيص نهائي. الدكتور هو الوحيد اللي يقدر يديكي إجابة قاطعة ويوجهك للخطوات الجاية.\"
+٣. لو نتيجة الأشعة "إيجابية"، وضحي إن التحليل أظهر منطقة محتاجة اهتمام ومراجعة من دكتور متخصص. اذكري إن نسبة الثقة بتوضح مدى تأكد النموذج من النتيجة دي.
+٤. لو نتيجة الأشعة "سلبية"، قولي إن الصورة موضحتش أي مناطق تدعو للقلق حاليًا، ونسبة الثقة بتعكس ده.
+٥. **الأهم من كل ده، اختمي بالرسالة دي:** "أهم خطوة جاية هي إنك تتكلمي مع دكتورك وتناقشي معاه النتايج دي بالتفصيل. التحليل ده مجرد أداة مساعدة، لكنه مش تشخيص نهائي. الدكتور هو الوحيد اللي يقدر يديكي إجابة قاطعة ويوجهك للخطوات الجاية."
 """
     
     interpretation_prompt = prompt_ar if lang == 'ar' else prompt_en
@@ -163,23 +162,34 @@ Your task is to provide a clear, calm, and detailed summary of their two-part br
 
 
 # --- System Prompts ---
+# FIX: Made the prompt more direct and checklist-oriented for the agent.
 system_prompt_template = """
 You are a calm, empathetic, and reassuring doctor speaking {language}. Your primary role is to guide a patient through a two-step breast cancer risk assessment.
 
 **Your Persona:**
 - **Warm & Welcoming:** Start with a kind greeting.
-- **Conversational & Focused:** Ask one question at a time to gather the necessary information for the tools. Be natural and focused.
+- **Conversational & Focused:** Ask ONE question at a time to gather the necessary information. Be natural.
 - **Empathetic & Clear:** Acknowledge the user's answers and explain things simply.
 
 **Your Process & Tool Use:**
-1.  **Step 1: Gather Data & Predict Risk:** Your first job is to collect the 7 pieces of information needed for the `predict_breast_cancer_risk` tool. Once you have all of them, you **MUST** call the tool immediately.
-2.  **Step 2: Request & Analyze X-ray:** After the first tool call, you must ask the user to upload their X-ray. When they provide an image, you **MUST** call the `analyze_xray_image` tool immediately.
+1.  **Step 1: Gather Data for `predict_breast_cancer_risk`:**
+    Your first job is to collect the following 7 pieces of information. Ask one question at a time until you have all of them:
+    - `relative_diagnosis_age` (What was the age of the relative diagnosed with breast cancer?)
+    - `family_history_breast_cancer` (Do you have a family history of breast cancer? yes/no)
+    - `recent_weight_loss` (Have you experienced recent, unexplained weight loss? yes/no)
+    - `previous_breast_conditions` (Have you had previous benign breast conditions? yes/no)
+    - `symptom_duration_days` (For how many days have you been experiencing symptoms?)
+    - `fatigue` (Are you experiencing unusual fatigue? yes/no)
+    - `breastfeeding_months` (How many months in total have you breastfed?)
+    Once you have answers for all 7, you **MUST** call the `predict_breast_cancer_risk` tool immediately.
+
+2.  **Step 2: Request & Analyze X-ray:**
+    After the first tool call, you **MUST** ask the user to upload their X-ray image. When they provide an image path (the input will contain 'Here is the X-ray image'), you **MUST** call the `analyze_xray_image` tool immediately.
 
 **CRITICAL RULES:**
 - You **MUST** call the tools when their required information is available. This is not optional.
 - Ask only one question at a time.
-- If the user provides a file path, it is an X-ray. Call the `analyze_xray_image` tool.
-- Do not make up results. Rely only on the tool outputs.
+- Do not make up results. Rely *only* on the tool outputs.
 """
 
 def get_session_history(session_id: str):
@@ -197,31 +207,23 @@ async def generate_chat_title(user_input: str) -> str:
         print(f"Error generating title: {e}")
         return "New Chat"
 
-
 def run_chat(user_input: str, session_id: str, lang: str, image_path: str = None):
     """Main function to handle a user's message, including image paths."""
     try:
         language_map = {"en": "English", "ar": "in an Egyptian dialect"}
         formatted_prompt = system_prompt_template.format(language=language_map.get(lang, "English"))
-
+        
         prompt = ChatPromptTemplate.from_messages([
             ("system", formatted_prompt),
             MessagesPlaceholder(variable_name="chat_history"),
             ("human", "{input}"),
             MessagesPlaceholder(variable_name="agent_scratchpad"),
         ])
-
+        
         tools = [predict_breast_cancer_risk, analyze_xray_image]
-        agent = create_openai_functions_agent(llm=llm, tools=tools, prompt=prompt)
-
-        # Wrapping agent in executor
-        agent_executor = AgentExecutor.from_agent_and_tools(
-            agent=agent,
-            tools=tools,
-            verbose=True,
-            handle_parsing_errors=True
-        )
-
+        agent = create_openai_functions_agent(llm, tools, prompt)
+        agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
+        
         agent_with_memory = RunnableWithMessageHistory(
             agent_executor,
             get_session_history,
@@ -233,29 +235,42 @@ def run_chat(user_input: str, session_id: str, lang: str, image_path: str = None
         if session_id not in step_results_store:
             step_results_store[session_id] = {}
 
+        # If an image path is provided, it's the primary input for this turn.
         current_input = image_path if image_path else user_input
+        
         response = agent_with_memory.invoke(
             {"input": current_input},
             config={"configurable": {"session_id": session_id}}
         )
 
         intermediate_steps = response.get("intermediate_steps", [])
-
+        
         if not intermediate_steps:
             return {"type": "agent_message", "content": response.get("output", "")}
 
+        # Process the latest tool call
         last_step = intermediate_steps[-1]
         tool_name = last_step[0].tool
         tool_output = last_step[1]
 
         if tool_name == 'predict_breast_cancer_risk':
+            # Store the inputs and results from the first tool
             step_results_store[session_id]['questionnaire_inputs'] = last_step[0].tool_input
-            parts = {p.split(':', 1)[0]: p.split(':', 1)[1] for p in tool_output.split('|')}
-            step_results_store[session_id]['ml_result'] = parts.get("INITIAL_ASSESSMENT_RESULT", "Error")
-            step_results_store[session_id]['ml_confidence'] = float(parts.get("CONFIDENCE", 0.0))
+            # Safely parse the tool output
+            if '|' in tool_output and ':' in tool_output:
+                parts = {p.split(':', 1)[0]: p.split(':', 1)[1] for p in tool_output.split('|')}
+                step_results_store[session_id]['ml_result'] = parts.get("INITIAL_ASSESSMENT_RESULT", "Error")
+                step_results_store[session_id]['ml_confidence'] = float(parts.get("CONFIDENCE", 0.0))
+            else:
+                # Handle error string from tool
+                step_results_store[session_id]['ml_result'] = "Error"
+                step_results_store[session_id]['ml_confidence'] = 0.0
+
+            # Return the agent's follow-up message (asking for the X-ray)
             return {"type": "agent_message", "content": response.get("output", "")}
 
         elif tool_name == 'analyze_xray_image':
+            # This is the final step, generate the full explanation
             xray_parts = {p.split(':', 1)[0]: p.split(':', 1)[1] for p in tool_output.split('|')}
             xray_result = xray_parts.get("XRAY_RESULT", "Error")
             xray_confidence = float(xray_parts.get("CONFIDENCE", 0.0))
@@ -263,6 +278,7 @@ def run_chat(user_input: str, session_id: str, lang: str, image_path: str = None
             if annotated_image_path == 'None':
                 annotated_image_path = None
 
+            # Retrieve all data from the session store
             session_data = step_results_store.get(session_id, {})
             ml_result = session_data.get("ml_result", "Not available")
             ml_confidence = session_data.get("ml_confidence", 0.0)
@@ -271,9 +287,9 @@ def run_chat(user_input: str, session_id: str, lang: str, image_path: str = None
             interpretation = asyncio.run(interpret_final_results(
                 ml_result, ml_confidence, xray_result, xray_confidence, questionnaire_inputs, lang
             ))
-
-            clear_session(session_id)
-
+            
+            clear_session(session_id)  # Clean up after final result
+            
             return {
                 "type": "final_analysis",
                 "explanation": interpretation,
@@ -285,7 +301,10 @@ def run_chat(user_input: str, session_id: str, lang: str, image_path: str = None
     except Exception as e:
         error_msg = f"An unexpected error occurred in the chat logic: {str(e)}"
         print(f"❌ {error_msg}")
-        return {"type": "error", "content": error_msg}
+        # Be careful with traceback in user-facing errors
+        import traceback
+        traceback.print_exc()
+        return {"type": "error", "content": "I'm sorry, a system error occurred. Please try starting a new chat."}
 
 def clear_session(session_id: str):
     """Clears the session data for a given session ID."""
@@ -293,3 +312,4 @@ def clear_session(session_id: str):
         del session_store[session_id]
     if session_id in step_results_store:
         del step_results_store[session_id]
+    print(f"Cleared session data for {session_id}")

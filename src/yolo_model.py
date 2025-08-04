@@ -1,16 +1,19 @@
-# yolo_model.py
 from ultralytics import YOLO
 import os
 import uuid
 from PIL import Image
 
-# Load the trained YOLOv8 model
-# Create an absolute path to the model file to avoid any pathing issues.
-model_path = r"/media/husseinmleng/New Volume/Jupyter_Notebooks/Freelancing/Breast-Cancer/src/weights/best.pt"
+# --- FIX: Use relative paths and create output directory robustly ---
+_script_dir = os.path.dirname(__file__)
+_project_root = os.path.dirname(_script_dir) # Assumes src is in project root
+
+# Model Path
+model_path = os.path.join(_script_dir, "weights", "best.pt")
 model = YOLO(model_path)
 
-# Ensure the directory for annotated images exists
-output_dir = "annotated_images"
+# Output directory for annotated images
+# Place it in the project root to be easily accessible by Streamlit
+output_dir = os.path.join(_project_root, "annotated_images")
 os.makedirs(output_dir, exist_ok=True)
 
 def detect_cancer_in_image(image_path: str):
@@ -24,7 +27,7 @@ def detect_cancer_in_image(image_path: str):
         A tuple containing:
         - result_text (str): "Positive" or "Negative".
         - confidence (float): The confidence score of the detection (0.0 to 1.0).
-        - annotated_image_path (str or None): The path to the saved annotated image, or None.
+        - annotated_image_path (str or None): The absolute path to the saved annotated image, or None.
     """
     try:
         # Run inference on the image
@@ -35,6 +38,7 @@ def detect_cancer_in_image(image_path: str):
         has_detection = False
         annotated_image_path = None
 
+        # Check all results for detections
         for r in results:
             if len(r.boxes) > 0:
                 has_detection = True
@@ -53,22 +57,29 @@ def detect_cancer_in_image(image_path: str):
                     result_text = "Positive"
                     confidence = max_conf
 
+        # Save the annotated image ONLY if a detection was made
         if has_detection:
             # Generate a unique filename for the annotated image
             unique_filename = f"{uuid.uuid4()}.png"
+            # The save_path must be absolute for Streamlit to find it reliably
             save_path = os.path.join(output_dir, unique_filename)
 
-            # Save the annotated image
+            # Save the annotated image from the first result object
             annotated_image = Image.fromarray(results[0].plot()[..., ::-1])
             annotated_image.save(save_path)
-            annotated_image_path = save_path
+            annotated_image_path = save_path # This is now an absolute path
             
             print(f"YOLO Analysis Result: {result_text}, Confidence: {confidence:.2f}, Annotated image saved to: {annotated_image_path}")
         else:
+            # If no detections, confidence remains 0 for 'Positive'
+            # We can assign a high confidence for 'Negative' if needed, but it's simpler this way.
+            confidence = 1.0 # Confidence in the "Negative" result
             print("YOLO Analysis Result: Negative (No detections)")
 
         return result_text, confidence, annotated_image_path
 
     except Exception as e:
         print(f"Error during YOLO model inference: {e}")
+        import traceback
+        traceback.print_exc()
         return "Error", 0.0, None

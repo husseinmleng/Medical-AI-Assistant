@@ -1,0 +1,22 @@
+# Core LLM and Agent Framework
+langchain
+langchain-openai
+langgraph
+openai
+
+# Machine Learning & Data
+pandas
+scikit-learn
+joblib
+
+# Image Analysis (YOLO)
+ultralytics
+Pillow
+
+# Web Application (Streamlit)
+streamlit
+streamlit-mic-recorder
+
+# Utilities
+python-dotenv
+pydub
