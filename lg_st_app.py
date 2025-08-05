@@ -1,11 +1,10 @@
-# st_app.py
+# st_app.py (Corrected)
 import streamlit as st
 import uuid
 import asyncio
 import os
 import tempfile
-from src.llm_chat import run_chat, clear_session, generate_chat_title, transcribe_audio
-from src.yolo_model import detect_cancer_in_image
+from src.app_logic import run_graph, clear_session_history, generate_chat_title, transcribe_audio, get_history
 from streamlit_mic_recorder import mic_recorder
 
 # --- Page Configuration ---
@@ -44,6 +43,51 @@ if "conversations" not in st.session_state:
 if "active_session_id" not in st.session_state:
     st.session_state.active_session_id = None
 
+# --- Main Processing Function (Refactored) ---
+def handle_chat_submission(user_input, image_path=None):
+    """
+    Central function to process all user inputs (text, audio, image).
+    It runs the graph and updates the session state correctly.
+    """
+    session_id = st.session_state.active_session_id
+    active_conv = st.session_state.conversations[session_id]
+    
+    # Use a display message for image uploads
+    display_message = "Here is the X-ray image for analysis." if image_path else user_input
+    
+    # Add user message to the conversation state
+    active_conv["messages"].append({"role": "user", "content": display_message})
+
+    # Show a spinner while the backend is working
+    with st.spinner("AI assistant is thinking..."):
+        # Generate a title for new chats on the first user message
+        is_new_chat = len(active_conv["messages"]) < 2
+        if is_new_chat and not image_path:
+            try:
+                active_conv['title'] = asyncio.run(generate_chat_title(user_input))
+            except Exception as e:
+                print(f"Error generating title: {e}")
+                active_conv['title'] = "Medical Chat"
+
+        # Run the graph with the actual user input
+        response = run_graph(user_input, session_id, active_conv["lang"], image_path)
+        
+        # CRITICAL: Replace the entire message history with the final, complete
+        # history from the graph's state. This ensures consistency.
+        final_messages = response.get("messages", [])
+        active_conv["messages"] = [{"role": msg.type, "content": msg.content} for msg in final_messages]
+        
+        # Update the path for the annotated image if it exists
+        active_conv["annotated_image_path"] = response.get("annotated_image_path")
+
+    # Clean up the temporary file for the uploaded image
+    if image_path and "temp_upload" in image_path and os.path.exists(image_path):
+        try:
+            os.remove(image_path)
+            print(f"Removed temporary upload file: {image_path}")
+        except OSError as e:
+            print(f"Error removing temporary upload file {image_path}: {e}")
+
 # --- Helper Functions ---
 def create_new_chat():
     """Creates a new chat session."""
@@ -52,67 +96,23 @@ def create_new_chat():
     st.session_state.conversations[session_id] = {
         "title": "New Chat",
         "lang": None,
-        "messages": []
+        "messages": [],
+        "annotated_image_path": None,
     }
-    # Initialize session-specific state keys to avoid errors
-    st.session_state[f'last_audio_id_{session_id}'] = None
-    clear_session(session_id)
+    clear_session_history(session_id)
     return session_id
 
 def switch_conversation(session_id):
-    """Switches the active conversation."""
+    """Switches the active conversation and reloads its history."""
     st.session_state.active_session_id = session_id
+    active_conv = st.session_state.conversations[session_id]
+    history_messages = get_history(session_id)
+    active_conv['messages'] = [{"role": msg.type, "content": msg.content} for msg in history_messages]
 
 # --- Ensure a chat is always active ---
 if not st.session_state.active_session_id or st.session_state.active_session_id not in st.session_state.conversations:
     create_new_chat()
     st.rerun()
-
-# --- Main Processing Function ---
-def process_and_display_chat(user_input, session_id, lang, image_path=None):
-    """Handles the chat logic and updates the UI."""
-    active_conv = st.session_state.conversations[session_id]
-    
-    # Add user message to chat history
-    if image_path:
-         # For image uploads, we show a placeholder message.
-        active_conv["messages"].append({"role": "user", "content": "Here is the X-ray image for analysis."})
-    else:
-        active_conv["messages"].append({"role": "user", "content": user_input})
-    
-    # Generate title for new chats
-    is_new_chat = len(active_conv["messages"]) < 3
-    
-    with st.spinner("AI assistant is thinking..."):
-        if is_new_chat and not image_path:
-            try:
-                active_conv['title'] = asyncio.run(generate_chat_title(user_input))
-            except Exception as e:
-                print(f"Error generating title: {e}")
-                active_conv['title'] = "Medical Chat"
-
-        response = run_chat(user_input, session_id, lang=lang, image_path=image_path)
-
-        if response['type'] == 'final_analysis':
-            final_message = {
-                "role": "assistant",
-                "content": response['explanation'],
-                "annotated_image_path": response.get('annotated_image_path') # Use .get for safety
-            }
-            active_conv["messages"].append(final_message)
-        elif response['type'] == 'agent_message':
-            active_conv["messages"].append({"role": "assistant", "content": response['content']})
-        else: # Error
-            st.error(response.get('content', 'An unknown error occurred.'))
-
-    # Clean up temp file if one was created for an image upload
-    # The ANNOTATED image is handled separately and should NOT be deleted here.
-    if image_path and "temp_upload" in image_path and os.path.exists(image_path):
-        try:
-            os.remove(image_path)
-            print(f"Removed temporary upload file: {image_path}")
-        except OSError as e:
-            print(f"Error removing temporary upload file {image_path}: {e}")
 
 # --- Sidebar for Chat History ---
 with st.sidebar:
@@ -122,7 +122,6 @@ with st.sidebar:
         st.rerun()
     st.divider()
     
-    # Sort conversations by creation time (newest first)
     sorted_conversations = sorted(st.session_state.conversations.items(), key=lambda item: item[0], reverse=True)
     
     for session_id, conv_data in sorted_conversations:
@@ -152,23 +151,20 @@ if active_conv["lang"] is None:
 else:
     # --- Display Chat Messages ---
     for msg in active_conv["messages"]:
-        with st.chat_message(msg["role"]):
+        role = "assistant" if msg["role"] in ["assistant", "ai"] else "user"
+        with st.chat_message(role):
             st.write(msg["content"])
-            # FIX: Check for the annotated image path and ensure the file exists before displaying
-            if "annotated_image_path" in msg and msg["annotated_image_path"]:
-                if os.path.exists(msg["annotated_image_path"]):
-                    st.image(msg["annotated_image_path"], caption="Annotated X-ray Image")
-                else:
-                    # This helps in debugging if the path is wrong or file is missing
-                    st.warning(f"Could not find annotated image at path: {msg['annotated_image_path']}")
+
+    # After displaying messages, check if there's an annotated image to show
+    if active_conv.get("annotated_image_path") and os.path.exists(active_conv["annotated_image_path"]):
+        with st.chat_message("assistant"):
+            st.image(active_conv["annotated_image_path"], caption="Annotated X-ray Image")
 
     # --- Input Area ---
     st.markdown("---")
 
-    # Session-specific key for the uploaded image path
     image_path_key = f'image_path_to_process_{active_session_id}'
 
-    # Layout for file uploader and analysis button
     col1, col2 = st.columns([0.7, 0.3])
     with col1:
         uploaded_file = st.file_uploader(
@@ -176,7 +172,6 @@ else:
             type=['png', 'jpg', 'jpeg'],
             key=f"uploader_{active_session_id}"
         )
-
     with col2:
         analyze_button = st.button(
             "🔬 Analyze X-ray",
@@ -184,36 +179,23 @@ else:
             use_container_width=True
         )
 
-    # If a file is uploaded, save its path to a temporary file
     if uploaded_file is not None:
-        try:
-            # Create a temporary file to store the upload
-            with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1], prefix="temp_upload_") as tmp_file:
-                tmp_file.write(uploaded_file.getvalue())
-                st.session_state[image_path_key] = tmp_file.name # Store the path in session state
-        except Exception as e:
-            st.error(f"Error saving uploaded file: {e}")
-            
-    # Layout for text and audio input
+        with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1], prefix="temp_upload_") as tmp_file:
+            tmp_file.write(uploaded_file.getvalue())
+            st.session_state[image_path_key] = tmp_file.name
+
     col1, col2 = st.columns([0.9, 0.1])
     with col1:
         text_prompt = st.chat_input("Type your message...", key=f"chat_input_{active_session_id}")
     with col2:
-        audio_info = mic_recorder(
-            start_prompt="🎤",
-            stop_prompt="⏹️",
-            key=f'recorder_{active_session_id}',
-            use_container_width=True
-        )
+        audio_info = mic_recorder(start_prompt="🎤", stop_prompt="⏹️", key=f'recorder_{active_session_id}', use_container_width=True)
 
-    # --- INPUT HANDLING LOGIC ---
+    # --- INPUT HANDLING LOGIC (Simplified) ---
 
-    # 1. Handle Text Input
     if text_prompt:
-        process_and_display_chat(text_prompt, active_session_id, active_conv["lang"])
+        handle_chat_submission(text_prompt)
         st.rerun()
 
-    # 2. Handle Audio Input
     elif audio_info and audio_info['id'] is not None:
         last_audio_id_key = f'last_audio_id_{active_session_id}'
         if audio_info['id'] != st.session_state.get(last_audio_id_key):
@@ -221,22 +203,18 @@ else:
             with st.spinner("🎙️ Transcribing audio..."):
                 transcribed_text = asyncio.run(transcribe_audio(audio_info['bytes'], lang=active_conv["lang"]))
             if transcribed_text and transcribed_text.strip():
-                process_and_display_chat(transcribed_text, active_session_id, active_conv["lang"])
+                handle_chat_submission(transcribed_text)
                 st.rerun()
             else:
                 st.toast("⚠️ Audio could not be transcribed. Please try speaking again.", icon="🎤")
 
-    # 3. Handle "Analyze X-ray" Button Click
     elif analyze_button:
         image_path_to_process = st.session_state.get(image_path_key)
         if image_path_to_process and os.path.exists(image_path_to_process):
-            process_and_display_chat(
+            handle_chat_submission(
                 user_input="Here is the X-ray image for analysis.",
-                session_id=active_session_id,
-                lang=active_conv["lang"],
                 image_path=image_path_to_process
             )
-            # Clean up the stored path after processing
             if image_path_key in st.session_state:
                 del st.session_state[image_path_key]
             st.rerun()
