@@ -13,9 +13,15 @@ joblib
 ultralytics
 Pillow
 
+# Web Application (FastAPI)
+fastapi
+uvicorn
+python-multipart
+jinja2
+
 # Web Application (Streamlit)
-streamlit
-streamlit-mic-recorder
+# streamlit
+# streamlit-mic-recorder
 
 # Utilities
 python-dotenv

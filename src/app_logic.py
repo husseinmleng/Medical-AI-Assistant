@@ -44,7 +44,7 @@ async def generate_chat_title(user_input: str) -> str:
         return "New Chat"
 
 # --- Main Graph Invocation Function ---
-def run_graph(user_input: str, session_id: str, lang: str, image_path: str = None):
+async def run_graph(user_input: str, session_id: str, lang: str, image_path: str = None):
     """
     Main function to run the LangGraph-based chat.
     """
@@ -59,7 +59,7 @@ def run_graph(user_input: str, session_id: str, lang: str, image_path: str = Non
         graph_input = {"messages": messages, "lang": lang}
 
         # Invoke the graph. It already has the checkpointer from compilation.
-        final_state = app.invoke(graph_input, config)
+        final_state = await app.ainvoke(graph_input, config)
         
         return {
             "messages": final_state.get("messages", []),

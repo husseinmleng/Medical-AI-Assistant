@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical AI Assistant</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="chat-history" id="chat-history">
+            <!-- Chat history will be displayed here -->
+        </div>
+        <div class="chat-interface">
+            <div id="chat-messages" class="chat-messages">
+                <!-- Chat messages will be displayed here -->
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Type your message...">
+                <button id="send-button">Send</button>
+                <input type="file" id="image-upload" accept="image/*">
+                <label for="image-upload" class="upload-button">Upload X-ray</label>
+            </div>
+        </div>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
