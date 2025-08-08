@@ -71,7 +71,8 @@ def handle_chat_submission(user_input, image_path=None):
 
         # Run the graph with the actual user input
         response = run_graph(user_input, session_id, active_conv["lang"], image_path)
-        
+        if response.get("tts_audio"):
+            st.session_state.audio_to_play = response["tts_audio"]
         # CRITICAL: Replace the entire message history with the final, complete
         # history from the graph's state. This ensures consistency.
         final_messages = response.get("messages", [])
@@ -159,6 +160,10 @@ else:
     if active_conv.get("annotated_image_path") and os.path.exists(active_conv["annotated_image_path"]):
         with st.chat_message("assistant"):
             st.image(active_conv["annotated_image_path"], caption="Annotated X-ray Image")
+
+    if "audio_to_play" in st.session_state and st.session_state.audio_to_play:
+        st.audio(st.session_state.audio_to_play, autoplay=True)
+        st.session_state.audio_to_play = None
 
     # --- Input Area ---
     st.markdown("---")

@@ -31,6 +31,24 @@ async def transcribe_audio(audio_bytes: bytes, lang: str) -> str:
     except Exception as e:
         print(f"ERROR: An error occurred during audio transcription: {e}")
         return ""
+    
+async def text_to_speech(text: str, voice: str = "alloy") -> bytes:
+    """
+    Converts text to speech using OpenAI's TTS model.
+    Returns raw audio bytes that can be played or saved.
+    """
+    try:
+        tts_client = OpenAI()
+        with tts_client.audio.speech.with_streaming_response.create(
+            model="gpt-4o-mini-tts",
+            voice=voice,
+            input=text
+        ) as response:
+            audio_bytes = response.read()  # Read full audio
+        return audio_bytes
+    except Exception as e:
+        print(f"ERROR: TTS generation failed: {e}")
+        return b""
 
 async def generate_chat_title(user_input: str) -> str:
     """Generates a short title for a new chat session."""
@@ -49,23 +67,24 @@ def run_graph(user_input: str, session_id: str, lang: str, image_path: str = Non
     Main function to run the LangGraph-based chat.
     """
     try:
-        # Configuration for the graph run
         config = {"configurable": {"thread_id": session_id}}
-        
-        # Prepare the input for the graph
+
         current_input = image_path if image_path else user_input
         messages = [HumanMessage(content=current_input)]
-        # The 'lang' key is now part of the GraphState and must be included
-        graph_input = {"messages": messages, "lang": lang}
 
-        # Invoke the graph. It already has the checkpointer from compilation.
+        graph_input = {"messages": messages, "lang": lang}
         final_state = app.invoke(graph_input, config)
-        
+
+        ai_messages = [m for m in final_state.get("messages", []) if isinstance(m, AIMessage)]
+        tts_audio = None
+        if ai_messages:
+            tts_audio = asyncio.run(text_to_speech(ai_messages[-1].content))
+
         return {
             "messages": final_state.get("messages", []),
-            "annotated_image_path": final_state.get("annotated_image_path")
+            "annotated_image_path": final_state.get("annotated_image_path"),
+            "tts_audio": tts_audio  # New field for audio
         }
-
     except Exception as e:
         error_msg = f"An unexpected error occurred in the graph logic: {str(e)}"
         print(f"❌ {error_msg}")
