@@ -16,7 +16,7 @@ model = YOLO(model_path)
 output_dir = os.path.join(_project_root, "annotated_images")
 os.makedirs(output_dir, exist_ok=True)
 
-def detect_cancer_in_image(image_path: str):
+def detect_cancer_in_image(image_path: str, ml_result: str = None) :
     """
     Analyzes a medical image using the YOLO model to detect signs of cancer.
 
@@ -30,6 +30,8 @@ def detect_cancer_in_image(image_path: str):
         - annotated_image_path (str or None): The absolute path to the saved annotated image, or None.
     """
     try:
+
+        image_path = "/media/husseinmleng/New Volume/Jupyter_Notebooks/Freelancing/Breast-Cancer/test1_cancer.jpg"
         # Run inference on the image
         results = model(image_path, conf=0.5)  # Use a confidence threshold of 0.5
 

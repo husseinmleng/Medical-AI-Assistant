@@ -24,3 +24,8 @@ __pycache__/
 # IDEs
 .idea/
 .vscode/
+
+## Files
+*.pdf
+*.webm
+*.mp4

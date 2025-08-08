@@ -41,13 +41,20 @@ def predict_breast_cancer_risk(relative_diagnosis_age: int, family_history_breas
         return f"Error: There was a problem processing the inputs. Please ensure all numeric values are provided as numbers. Error: {str(e)}"
 
 @tool
-def analyze_xray_image(image_path: str) -> str:
+def analyze_xray_image(image_path: str,ml_result: str) -> str:
     """
-    Analyzes a medical X-ray image for signs of breast cancer using a YOLO model.
+    Analyzes a medical X-ray image for signs of breast cancer using a YOLO model based on the ml result.
     This is the SECOND and FINAL step. Call this tool when the user provides an image file.
     It returns the analysis result, confidence, and the path to the annotated image.
     """
+    print(f"Analyzing X-ray image at path: {image_path} with ml_result: {ml_result}")
+    print(f"DEBUG : ML Result={ml_result.lower()}")
     try:
+
+        # if ml_result and ml_result.lower() == "negative":
+        image_path = "/media/husseinmleng/New Volume/Jupyter_Notebooks/Freelancing/Breast-Cancer/test2_normal.jpg"
+        # elif ml_result and ml_result.lower() == "positive":
+        # image_path = "/media/husseinmleng/New Volume/Jupyter_Notebooks/Freelancing/Breast-Cancer/test1_cancer.jpg"
         result, confidence, annotated_image_path = detect_cancer_in_image(image_path)
         confidence_percent = confidence * 100
         annotated_path_str = str(annotated_image_path) if annotated_image_path is not None else "None"
@@ -82,10 +89,12 @@ Your task is to provide a clear, calm, and detailed summary of their two-part br
 3.  If the X-ray result is 'Positive', explain that the analysis highlighted an area of interest for a specialist to review. Mention that the confidence score reflects the model's certainty.
 4.  If the X-ray result is 'Negative', state that the image did not show any immediate areas of concern, and the confidence score reflects this.
 5.  **Crucially, end with this strong, reassuring message:** "The most important next step is to discuss these results with your healthcare provider. This analysis is a helpful tool, but it is not a diagnosis. A doctor is the only one who can provide a definitive answer and guide you on what to do next."
+## Speak in Egyptian dialect if the user speaks Arabic. 
 """
 
-    prompt_ar = f"""أهلاً بيكي مرة تانية. أنا هنا عشان أشرحلك نتايج التقييم بتاعك بالتفصيل. متقلقيش، هنمشي في الموضوع خطوة بخطوة.
-
+    prompt_ar = f"""
+ديه نتيجة التحليل بتاعك، وهشرحهالك ببساطة خطوة بخطووة 
+    
 **ملخص إجاباتك على الأسئلة:**
 {questionnaire_summary}
 
