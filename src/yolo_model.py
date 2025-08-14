@@ -1,4 +1,5 @@
 from ultralytics import YOLO
+import torch
 import os
 import uuid
 from PIL import Image
@@ -10,6 +11,9 @@ _project_root = os.path.dirname(_script_dir) # Assumes src is in project root
 # Model Path
 model_path = os.path.join(_script_dir, "weights", "best.pt")
 model = YOLO(model_path)
+
+# Select device with safe CPU fallback
+_device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Output directory for annotated images
 # Place it in the project root to be easily accessible by Streamlit
@@ -30,10 +34,13 @@ def detect_cancer_in_image(image_path: str, ml_result: str = None) :
         - annotated_image_path (str or None): The absolute path to the saved annotated image, or None.
     """
     try:
-
-        image_path = "/media/husseinmleng/New Volume/Jupyter_Notebooks/Freelancing/Breast-Cancer/test1_cancer.jpg"
-        # Run inference on the image
-        results = model(image_path, conf=0.5)  # Use a confidence threshold of 0.5
+        # Run inference on the provided image_path with robust device selection
+        try:
+            results = model.predict(image_path, conf=0.5, device=_device)
+        except Exception as e:
+            # Fallback to CPU if CUDA is busy/unavailable at runtime
+            print(f"YOLO inference failed on device '{_device}' with error: {e}. Falling back to CPU.")
+            results = model.predict(image_path, conf=0.5, device="cpu")
 
         result_text = "Negative"
         confidence = 0.0

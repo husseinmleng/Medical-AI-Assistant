@@ -13,12 +13,15 @@ from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import MemorySaver
 from src.reports_agent import interpret_reports_with_gpt4o
 
-from src.tools import (analyze_xray_image, interpret_final_results,
-                       predict_breast_cancer_risk, interpret_medical_reports)
+from src.tools import (
+    analyze_xray_image,
+    interpret_final_results,
+    interpret_medical_reports,
+)
 
 # --- LLM and Tools ---
-llm = ChatOpenAI(model="gpt-4.1", temperature=1, max_tokens=2000)
-tools = [predict_breast_cancer_risk, analyze_xray_image, interpret_medical_reports]
+llm = ChatOpenAI(model="gpt-4.1", temperature=0.4, max_tokens=2000)
+tools = [analyze_xray_image, interpret_medical_reports]
 tool_node = ToolNode(tools)
 
 # --- Agent Prompt ---
@@ -27,48 +30,50 @@ tool_node = ToolNode(tools)
 system_prompt_template = """
 You are a calm, empathetic, and reassuring doctor speaking {language}. Your primary role is to guide a patient through a two-step breast cancer risk assessment. You also have a tool to interpret medical reports.
 
-**Your Persona:**
-- **Warm & Welcoming:** Start with a kind greeting.
-- **Conversational & Focused:** Ask ONE question at a time.
-- **Empathetic & Clear:** Acknowledge the user's answers and explain things simply.
-- **Egyptian Dialect:** If the user speaks Arabic, respond in an Egyptian dialect.
+Persona
+- Warm & welcoming, conversational, empathetic, simple explanations
+- Egyptian dialect if the user speaks Arabic
 
-**Your Process & Tool Use:**
-1.  **Review History:** Before asking a question, review the chat history to see what information you have already collected.
-2.  **Step 1: Gather Data for `predict_breast_cancer_risk`:**
-    Your first job is to collect the following 7 pieces of information. Ask one question at a time until you have all of them:
-    - `relative_diagnosis_age`: in any age entered consider it the relative diagnosis age even the user says its my age
-    - `family_history_breast_cancer`
-    - `recent_weight_loss`
-    - `previous_breast_conditions`
-    - `symptom_duration_days` : always proceed with the duration you calculate don't ask confirmation from the user
-    - `fatigue`
-    - `breastfeeding_months` : always proceed with the duration you calculate don't ask confirmation from the user
-    ask them in order, one by one, until you have all 7.
-    Once you have confirmed from the history that you have answers for all 7, you **MUST** call the `predict_breast_cancer_risk` tool immediately. Do not ask again for information you already have.
-    don't ask a robot make it a normal human conversation between you as a doctor who speaks Egyptian dialect and releif the patient and the patient
-    Don't ask the user to input the information in a specific format, just ask them to answer the question in their own words.
-    Don't tell the user to answer with 'yes' or 'no', just ask the question and let them respond naturally.
-    Don't say  you have recoreded the information, just ask the question and wait for their response.
-    Speak conversationally, and add more context to your questions to make them feel natural and human-like.
-    Add more words to your questions to make them feel more natural and human-like.
-3.  **Step 2: Request & Analyze X-ray:**
-    After the first tool call, you **MUST** ask the user to upload their X-ray image. When the user asks you to analyze the image, you **MUST** call the `analyze_xray_image` tool immediately.
-4.  **Medical Report Interpretation:**
-    If the user uploads one or more medical documents (like PDFs, images, or DOCs) and asks for an interpretation, you **MUST** use the `interpret_medical_reports` tool.
+Process
+1) Review chat history before asking a new question.
+2) Initial assessment (no machine learning):
+   - Collect exactly these 5 items, one by one:
+     • family_history_breast_cancer (yes/no)
+     • recent_weight_loss (yes/no)
+     • previous_breast_conditions (yes/no)
+     • symptom_duration_days (number)
+     • fatigue (yes/no)
+   - Decision rule (few-shot guidance below):
+     If family_history_breast_cancer=yes AND recent_weight_loss=yes AND previous_breast_conditions=yes AND symptom_duration_days>=7 AND fatigue=yes → assessment = Positive. Otherwise → Negative.
+   - Confidence: Generate a plausible confidence percentage based on how strongly the inputs match the Positive pattern (e.g., 70–90% for Positive matches; 60–80% for clearly Negative; lower when information is uncertain).
+   - After you have all 5 items, produce a supportive explanation for the patient.
+   - At the end, add a single separate technical line (for internal use only):
+     INITIAL_ASSESSMENT_RESULT:<Positive|Negative>|CONFIDENCE:<0-100>|QUESTIONNAIRE:family_history_breast_cancer=<yes/no>;recent_weight_loss=<yes/no>;previous_breast_conditions=<yes/no>;symptom_duration_days=<number>;fatigue=<yes/no>
+   - Do NOT mention this technical line in your visible message.
+3) X-ray analysis: After giving the initial assessment, ask the user to upload an X-ray. When the user provides an image, call analyze_xray_image immediately. If the latest user message contains a local file path to the uploaded image, pass that exact path as image_path when you call the tool.
+4) Medical report interpretation: If the user uploads one or more medical documents and asks for an interpretation, use the interpret_medical_reports tool.
 
-**Current State Information:**
-- The result of the initial questionnaire was: **{ml_result}**
+Few-shot examples
+Example A (Positive):
+  Inputs: family_history_breast_cancer=yes, recent_weight_loss=yes, previous_breast_conditions=yes, symptom_duration_days=12, fatigue=yes
+  Your explanation: Calm summary that risk indicators are present; recommend speaking with a doctor; reassure the patient.
+  Technical line: INITIAL_ASSESSMENT_RESULT:Positive|CONFIDENCE:82.0|QUESTIONNAIRE:family_history_breast_cancer=yes;recent_weight_loss=yes;previous_breast_conditions=yes;symptom_duration_days=12;fatigue=yes
 
-**CRITICAL RULES:**
-- Speak with An Egyptian dialect if the user speaks Arabic.
-- اتكلم باللغة العربيى المصرية دايما لو لغة المستخدم عربية.
-- You **MUST** call the tools when their required information is available. This is not optional.
-- When calling `analyze_xray_image`, you **MUST** pass the `ml_result` you have from the current state.
-- Ask only one question at a time.
-- Do not make up results. Rely *only* on the tool outputs.
-- **NEVER** show raw tool outputs or technical details to the user.
-- After tool calls, provide friendly, conversational responses.
+Example B (Negative):
+  Inputs: family_history_breast_cancer=no, recent_weight_loss=no, previous_breast_conditions=no, symptom_duration_days=3, fatigue=no
+  Your explanation: Calm summary that current answers do not suggest immediate risk; recommend monitoring and consulting a doctor if symptoms change.
+  Technical line: INITIAL_ASSESSMENT_RESULT:Negative|CONFIDENCE:72.0|QUESTIONNAIRE:family_history_breast_cancer=no;recent_weight_loss=no;previous_breast_conditions=no;symptom_duration_days=3;fatigue=no
+
+Critical rules
+- Use Egyptian dialect if the user speaks Arabic
+- اتكلم بالمصري لو المستخدم عربي
+- Ask one question at a time; do not force formats
+- Never reveal technical lines to the user
+- Call tools when required inputs are available
+- When calling analyze_xray_image, pass the current ml_result from state
+
+Current state
+- Initial assessment so far: {ml_result}
 """
 
 # 1. DEFINE THE GRAPH STATE
@@ -83,6 +88,7 @@ class GraphState(TypedDict):
     annotated_image_path: Optional[str]
     interpretation_result: Optional[str]
     report_file_paths: Optional[List[str]]
+    uploaded_image_path: Optional[str]
     lang: str
 
 # 2. DEFINE THE NODES
@@ -108,6 +114,60 @@ def call_agent(state: GraphState):
     
     return {"messages": [response]}
 
+def process_initial_assessment_from_agent(state: GraphState):
+    """Parses the agent's inline technical line for initial assessment and updates state, while emitting a cleaned message for the user."""
+    last_message = state["messages"][-1]
+    assert isinstance(last_message, AIMessage)
+    raw = last_message.content if isinstance(last_message.content, str) else str(last_message.content)
+
+    ml_result = None
+    ml_confidence = None
+    questionnaire_inputs = {}
+
+    # Extract technical line components
+    if "INITIAL_ASSESSMENT_RESULT:" in raw:
+        try:
+            # Find the segment after the marker
+            tech_start = raw.find("INITIAL_ASSESSMENT_RESULT:")
+            tech_segment = raw[tech_start:]
+            # Stop at newline if any
+            tech_segment = tech_segment.splitlines()[0]
+            # Parse key-value pairs separated by '|'
+            parts = {p.split(':', 1)[0]: p.split(':', 1)[1] for p in tech_segment.split('|') if ':' in p}
+            ml_result = parts.get("INITIAL_ASSESSMENT_RESULT")
+            conf_str = parts.get("CONFIDENCE")
+            if conf_str is not None:
+                ml_confidence = float(conf_str)
+            q_str = parts.get("QUESTIONNAIRE")
+            if q_str:
+                # Parse semicolon-separated k=v pairs
+                for kv in q_str.split(';'):
+                    if '=' in kv:
+                        k, v = kv.split('=', 1)
+                        questionnaire_inputs[k.strip()] = v.strip()
+        except Exception:
+            pass
+
+    # Clean technical lines from the visible content
+    cleaned_lines = []
+    for line in raw.splitlines():
+        if ("INITIAL_ASSESSMENT_RESULT:" in line) or ("CONFIDENCE:" in line) or ("QUESTIONNAIRE:" in line):
+            continue
+        cleaned_lines.append(line)
+    cleaned_content = "\n".join(cleaned_lines).strip()
+
+    updates = {}
+    if ml_result is not None:
+        updates["ml_result"] = ml_result
+    if ml_confidence is not None:
+        updates["ml_confidence"] = ml_confidence
+    if questionnaire_inputs:
+        updates["questionnaire_inputs"] = questionnaire_inputs
+
+    final_message = AIMessage(content=cleaned_content or (ml_result or ""))
+    updates["messages"] = [final_message]
+    return updates
+
 def reports_agent(state: GraphState):
     """Dedicated multimodal reports interpreter agent (GPT-4o)."""
     file_paths = state.get("report_file_paths") or []
@@ -115,6 +175,34 @@ def reports_agent(state: GraphState):
     interpretation = interpret_reports_with_gpt4o(file_paths, lang)
     final_message = AIMessage(content=interpretation)
     return {"messages": [final_message], "interpretation_result": interpretation}
+
+def auto_analyze_xray(state: GraphState):
+    """Automatically runs X-ray analysis when an uploaded image path is present in state."""
+    image_path = state.get("uploaded_image_path")
+    if not image_path:
+        return {}
+    ml_result = state.get("ml_result") or "Not available"
+    try:
+        tool_output = analyze_xray_image.invoke({"image_path": image_path, "ml_result": ml_result})
+    except Exception as e:
+        print(f"Auto X-ray analysis failed: {e}")
+        return {"xray_result": "Error", "xray_confidence": 0.0, "annotated_image_path": None}
+
+    # Parse tool output
+    xray_result, xray_confidence, annotated_image_path = "Error", 0.0, None
+    if isinstance(tool_output, str) and '|' in tool_output and ':' in tool_output:
+        parts = {p.split(':', 1)[0]: p.split(':', 1)[1] for p in tool_output.split('|')}
+        xray_result = parts.get("XRAY_RESULT", "Error")
+        try:
+            xray_confidence = float(parts.get("CONFIDENCE", 0.0))
+        except Exception:
+            xray_confidence = 0.0
+        annotated_image_path = parts.get("ANNOTATED_IMAGE_PATH")
+        if annotated_image_path == 'None':
+            annotated_image_path = None
+
+    print(f"Auto X-ray State: result={xray_result}, conf={xray_confidence}")
+    return {"xray_result": xray_result, "xray_confidence": xray_confidence, "annotated_image_path": annotated_image_path}
 
 def process_risk_prediction_result(state: GraphState):
     """Parses the output of the first tool and updates the state."""
@@ -185,8 +273,14 @@ def generate_final_report(state: GraphState):
 # 3. DEFINE THE EDGES (ROUTING LOGIC)
 def route_after_agent(state: GraphState):
     """Routes to tools or ends the turn."""
-    if isinstance(state["messages"][-1], AIMessage) and state["messages"][-1].tool_calls:
+    last = state["messages"][-1]
+    if isinstance(last, AIMessage) and last.tool_calls:
         return "tools"
+    # Route to initial assessment parser if the agent embedded a technical line
+    if isinstance(last, AIMessage):
+        content = last.content if isinstance(last.content, str) else str(last.content)
+        if "INITIAL_ASSESSMENT_RESULT:" in content:
+            return "process_initial_assessment"
     return END
 
 def entry_node(state: GraphState):
@@ -197,6 +291,8 @@ def route_from_entry(state: GraphState):
     """Route to reports agent immediately when report files are present, otherwise to the conversational agent."""
     if state.get("report_file_paths"):
         return "reports_agent"
+    if state.get("uploaded_image_path"):
+        return "auto_xray"
     return "agent"
 
 def route_after_tools(state: GraphState):
@@ -210,9 +306,7 @@ def route_after_tools(state: GraphState):
     tool_name = tool_call['name']
     
     print(f"Routing after tool '{tool_name}' execution.")
-    if tool_name == "predict_breast_cancer_risk":
-        return "process_risk_prediction"
-    elif tool_name == "analyze_xray_image":
+    if tool_name == "analyze_xray_image":
         return "process_xray_analysis"
     elif tool_name == "interpret_medical_reports":
         return "process_interpretation"
@@ -224,31 +318,32 @@ workflow = StateGraph(GraphState)
 workflow.add_node("agent", call_agent)
 workflow.add_node("tools", tool_node)
 workflow.add_node("reports_agent", reports_agent)
+workflow.add_node("auto_xray", auto_analyze_xray)
 workflow.add_node("entry", entry_node)
-workflow.add_node("process_risk_prediction", process_risk_prediction_result)
+workflow.add_node("process_initial_assessment", process_initial_assessment_from_agent)
 workflow.add_node("process_xray_analysis", process_xray_analysis_result)
 workflow.add_node("process_interpretation", process_interpretation_result)
 workflow.add_node("generate_final_report", generate_final_report)
 
 workflow.set_entry_point("entry")
 
-workflow.add_conditional_edges("entry", route_from_entry, {"agent": "agent", "reports_agent": "reports_agent"})
-workflow.add_conditional_edges("agent", route_after_agent, {"tools": "tools", END: END})
+workflow.add_conditional_edges("entry", route_from_entry, {"agent": "agent", "reports_agent": "reports_agent", "auto_xray": "auto_xray"})
+workflow.add_conditional_edges("agent", route_after_agent, {"tools": "tools", "process_initial_assessment": "process_initial_assessment", END: END})
 workflow.add_conditional_edges(
     "tools",
     route_after_tools,
     {
-        "process_risk_prediction": "process_risk_prediction",
         "process_xray_analysis": "process_xray_analysis",
         "process_interpretation": "process_interpretation",
-        END: END
+        END: END,
     }
 )
 
-workflow.add_edge("process_risk_prediction", "agent")
+workflow.add_edge("process_initial_assessment", "agent")
 workflow.add_edge("process_xray_analysis", "generate_final_report")
 workflow.add_edge("process_interpretation", END)
 workflow.add_edge("reports_agent", END)
+workflow.add_edge("auto_xray", "generate_final_report")
 workflow.add_edge("generate_final_report", END)
 
 # --- COMPILE THE GRAPH WITH CHECKPOINTER ---

@@ -83,6 +83,8 @@ def run_graph(user_input: str, session_id: str, lang: str, image_path: str = Non
         graph_input = {"messages": messages, "lang": lang}
         if file_paths:
             graph_input["report_file_paths"] = file_paths
+        if image_path:
+            graph_input["uploaded_image_path"] = image_path
 
         final_state = app.invoke(graph_input, config)
 

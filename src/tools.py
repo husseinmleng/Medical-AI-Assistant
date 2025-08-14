@@ -3,42 +3,12 @@
 from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
-from openai import OpenAI
 
-from src.ml_model import predict_cancer_risk
 from src.yolo_model import detect_cancer_in_image
 from dotenv import load_dotenv
 import asyncio
 
 load_dotenv()
-
-@tool
-def predict_breast_cancer_risk(relative_diagnosis_age: int, family_history_breast_cancer: str,
-                               recent_weight_loss: str, previous_breast_conditions: str,
-                               symptom_duration_days: int, fatigue: str, breastfeeding_months: int) -> str:
-    """
-    Predicts breast cancer risk based on 7 key patient factors.
-    This is the FIRST step. After this, you MUST ask the user for an X-ray image.
-    Use this tool once you have collected all 7 pieces of information.
-    The user must provide a specific number for age, symptom duration, and breastfeeding months.
-    For yes/no questions, the user must answer with 'yes' or 'no'.
-    """
-    try:
-        inputs = {
-            "relative_diagnosis_age": int(relative_diagnosis_age),
-            "family_history_breast_cancer": 1 if family_history_breast_cancer.lower() in ["yes", "نعم"] else 0,
-            "recent_weight_loss": 1 if recent_weight_loss.lower() in ["yes", "نعم"] else 0,
-            "previous_breast_conditions": 1 if previous_breast_conditions.lower() in ["yes", "نعم"] else 0,
-            "symptom_duration_days": int(symptom_duration_days),
-            "fatigue": 1 if fatigue.lower() in ["yes", "نعم"] else 0,
-            "breastfeeding_months": int(breastfeeding_months)
-        }
-        prediction, confidence = predict_cancer_risk(inputs)
-        result = "Positive" if prediction == 1 else "Negative"
-        return f"INITIAL_ASSESSMENT_RESULT:{result}|CONFIDENCE:{confidence*100:.1f}"
-    except Exception as e:
-        print(f"Error in predict_breast_cancer_risk tool: {e}")
-        return f"Error: There was a problem processing the inputs. Please ensure all numeric values are provided as numbers. Error: {str(e)}"
 
 @tool
 def analyze_xray_image(image_path: str,ml_result: str) -> str:
@@ -48,13 +18,9 @@ def analyze_xray_image(image_path: str,ml_result: str) -> str:
     It returns the analysis result, confidence, and the path to the annotated image.
     """
     print(f"Analyzing X-ray image at path: {image_path} with ml_result: {ml_result}")
-    print(f"DEBUG : ML Result={ml_result.lower()}")
+    if isinstance(ml_result, str):
+        print(f"DEBUG: ML Result (assessment) = {ml_result}")
     try:
-
-        # if ml_result and ml_result.lower() == "negative":
-        image_path = "/media/husseinmleng/New Volume/Jupyter_Notebooks/Freelancing/Breast-Cancer/test2_normal.jpg"
-        # elif ml_result and ml_result.lower() == "positive":
-        # image_path = "/media/husseinmleng/New Volume/Jupyter_Notebooks/Freelancing/Breast-Cancer/test1_cancer.jpg"
         result, confidence, annotated_image_path = detect_cancer_in_image(image_path)
         confidence_percent = confidence * 100
         annotated_path_str = str(annotated_image_path) if annotated_image_path is not None else "None"
@@ -68,7 +34,19 @@ async def interpret_final_results(ml_result: str, ml_confidence: float, xray_res
     def format_questionnaire(inputs: dict) -> str:
         return "\n".join([f"- {key.replace('_', ' ').title()}: {value}" for key, value in inputs.items()])
 
-    questionnaire_summary = format_questionnaire(questionnaire_inputs)
+    # Coalesce None values to safe defaults
+    safe_ml_result = ml_result or "Not available"
+    safe_xray_result = xray_result or "Not available"
+    try:
+        safe_ml_conf = float(ml_confidence) if ml_confidence is not None else 0.0
+    except Exception:
+        safe_ml_conf = 0.0
+    try:
+        safe_xray_conf = float(xray_confidence) if xray_confidence is not None else 0.0
+    except Exception:
+        safe_xray_conf = 0.0
+
+    questionnaire_summary = format_questionnaire(questionnaire_inputs or {})
     prompt_en = f"""You are an empathetic AI medical assistant speaking to a patient in English.
 Your task is to provide a clear, calm, and detailed summary of their two-part breast cancer risk assessment.
 
@@ -77,11 +55,11 @@ Your task is to provide a clear, calm, and detailed summary of their two-part br
 
 **Analysis Results:**
 1.  **Questionnaire-Based Assessment:**
-    -   Result: **{ml_result}**
-    -   Confidence: **{ml_confidence:.1f}%**
+    -   Result: **{safe_ml_result}**
+    -   Confidence: **{safe_ml_conf:.1f}%**
 2.  **X-ray Image Analysis:**
-    -   Result: **{xray_result}**
-    -   Confidence: **{xray_confidence:.1f}%**
+    -   Result: **{safe_xray_result}**
+    -   Confidence: **{safe_xray_conf:.1f}%**
 
 **Your Explanation:**
 1.  Start by gently summarizing the two results, mentioning the confidence level for each.
@@ -102,11 +80,11 @@ Keep your response warm, supportive, and professional.
 
 **نتائج التحليل:**
 ١. **تقييم مبني على الإجابات:**
-   - النتيجة: **{"إيجابية" if ml_result == "Positive" else "سلبية"}**
-   - نسبة الثقة: **{ml_confidence:.1f}%**
+   - النتيجة: **{('إيجابية' if safe_ml_result == 'Positive' else ('سلبية' if safe_ml_result == 'Negative' else 'غير متاح'))}**
+   - نسبة الثقة: **{safe_ml_conf:.1f}%**
 ٢. **تحليل صورة الأشعة:**
-   - النتيجة: **{"إيجابية" if xray_result == "Positive" else "سلبية"}**
-   - نسبة الثقة: **{xray_confidence:.1f}%**
+   - النتيجة: **{('إيجابية' if safe_xray_result == 'Positive' else ('سلبية' if safe_xray_result == 'Negative' else 'غير متاح'))}**
+   - نسبة الثقة: **{safe_xray_conf:.1f}%**
 
 **الشرح المطلوب:**
 ١. ابدأي بتلخيص النتيجتين بلطف مع ذكر نسبة الثقة لكل واحدة.
