@@ -89,16 +89,18 @@ Your task is to provide a clear, calm, and detailed summary of their two-part br
 3.  If the X-ray result is 'Positive', explain that the analysis highlighted an area of interest for a specialist to review. Mention that the confidence score reflects the model's certainty.
 4.  If the X-ray result is 'Negative', state that the image did not show any immediate areas of concern, and the confidence score reflects this.
 5.  **Crucially, end with this strong, reassuring message:** "The most important next step is to discuss these results with your healthcare provider. This analysis is a helpful tool, but it is not a diagnosis. A doctor is the only one who can provide a definitive answer and guide you on what to do next."
-## Speak in Egyptian dialect if the user speaks Arabic. 
+
+Keep your response warm, supportive, and professional.
 """
 
     prompt_ar = f"""
-ديه نتيجة التحليل بتاعك، وهشرحهالك ببساطة خطوة بخطووة 
-    
-**ملخص إجاباتك على الأسئلة:**
+أنت مساعد طبي ذكي ومتفهم تتحدث مع مريض باللغة العربية المصرية.
+مهمتك هي تقديم ملخص واضح وهادئ ومفصل لتقييم خطر سرطان الثدي المكون من جزأين.
+
+**ملخص إجابات المريض على الأسئلة:**
 {questionnaire_summary}
 
-**نتايج التحليل:**
+**نتائج التحليل:**
 ١. **تقييم مبني على الإجابات:**
    - النتيجة: **{"إيجابية" if ml_result == "Positive" else "سلبية"}**
    - نسبة الثقة: **{ml_confidence:.1f}%**
@@ -106,18 +108,19 @@ Your task is to provide a clear, calm, and detailed summary of their two-part br
    - النتيجة: **{"إيجابية" if xray_result == "Positive" else "سلبية"}**
    - نسبة الثقة: **{xray_confidence:.1f}%**
 
-**شرح النتايج:**
-١. ابدأي بتلخيص النتيجتين بهدوء، مع ذكر نسبة الثقة لكل واحدة.
-٢. اشرحي ببساطة إيه ممكن تكون دلالة النتايج دي مع بعض، من غير مصطلحات طبية معقدة.
-٣. لو نتيجة الأشعة "إيجابية"، وضحي إن التحليل أظهر منطقة محتاجة اهتمام ومراجعة من دكتور متخصص. اذكري إن نسبة الثقة بتوضح مدى تأكد النموذج من النتيجة دي.
-٤. لو نتيجة الأشعة "سلبية"، قولي إن الصورة موضحتش أي مناطق تدعو للقلق حاليًا، ونسبة الثقة بتعكس ده.
-٥. **الأهم من كل ده، اختمي بالرسالة دي:** "أهم خطوة جاية هي إنك تتكلمي مع دكتورك وتناقشي معاه النتايج دي بالتفصيل. التحليل ده مجرد أداة مساعدة، لكنه مش تشخيص نهائي. الدكتور هو الوحيد اللي يقدر يديكي إجابة قاطعة ويوجهك للخطوات الجاية."
+**الشرح المطلوب:**
+١. ابدأي بتلخيص النتيجتين بلطف مع ذكر نسبة الثقة لكل واحدة.
+٢. اشرحي ببساطة ما قد تعنيه النتائج المدمجة بمصطلحات بسيطة وغير مثيرة للقلق.
+٣. إذا كانت نتيجة الأشعة "إيجابية"، اشرحي أن التحليل أبرز منطقة تحتاج لمراجعة من متخصص. اذكري أن درجة الثقة تعكس يقين النموذج.
+٤. إذا كانت نتيجة الأشعة "سلبية"، اذكري أن الصورة لم تظهر أي مناطق مثيرة للقلق فورياً، ودرجة الثقة تعكس هذا.
+5. اهم خطوة تعمليها بعد كده هي انك تستيري دكتور عن النتائج دي. التحليل ده أداة مساعدة بس، مش تشخيص. الدكتور هو الوحيد اللي يقدر يديلك إجابة نهائية ويوجهك في الخطوة الجاية.
+حافظي على ردك دافئ ومساند ومهني.
 """
     
     interpretation_prompt = prompt_ar if lang == 'ar' else prompt_en
 
     try:
-        interp_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.4)
+        interp_llm = ChatOpenAI(model="gpt-4.1", temperature=0.4)
         response = await interp_llm.ainvoke([HumanMessage(content=interpretation_prompt)])
         return response.content.strip()
     except Exception as e:

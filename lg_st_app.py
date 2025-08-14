@@ -90,6 +90,20 @@ def handle_chat_submission(user_input, image_path=None):
             print(f"Error removing temporary upload file {image_path}: {e}")
 
 # --- Helper Functions ---
+
+def is_technical_message(content: str) -> bool:
+    """Check if a message contains technical/raw output that shouldn't be displayed to users."""
+    technical_indicators = [
+        "INITIAL_ASSESSMENT_RESULT:",
+        "XRAY_RESULT:",
+        "CONFIDENCE:",
+        "ANNOTATED_IMAGE_PATH:",
+        "|",
+        "Error analyzing image:",
+        "Error: There was a problem processing"
+    ]
+    return any(indicator in content for indicator in technical_indicators)
+
 def create_new_chat():
     """Creates a new chat session."""
     session_id = str(uuid.uuid4())
@@ -151,7 +165,12 @@ if active_conv["lang"] is None:
         st.rerun()
 else:
     # --- Display Chat Messages ---
+   # Display chat messages (excluding technical ones)
     for msg in active_conv["messages"]:
+        # Skip any remaining technical messages that might have slipped through
+        if is_technical_message(msg["content"]):
+            continue
+            
         role = "assistant" if msg["role"] in ["assistant", "ai"] else "user"
         with st.chat_message(role):
             st.write(msg["content"])
