@@ -11,20 +11,21 @@ from langchain_openai import ChatOpenAI
 from langgraph.graph import END, StateGraph
 from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import MemorySaver
+from src.reports_agent import interpret_reports_with_gpt4o
 
 from src.tools import (analyze_xray_image, interpret_final_results,
-                       predict_breast_cancer_risk)
+                       predict_breast_cancer_risk, interpret_medical_reports)
 
 # --- LLM and Tools ---
 llm = ChatOpenAI(model="gpt-4.1", temperature=1, max_tokens=2000)
-tools = [predict_breast_cancer_risk, analyze_xray_image]
+tools = [predict_breast_cancer_risk, analyze_xray_image, interpret_medical_reports]
 tool_node = ToolNode(tools)
 
 # --- Agent Prompt ---
 # FIX #1: Added a clear instruction for the agent to review the history
 # and check if it has all the information needed before asking a new question.
 system_prompt_template = """
-You are a calm, empathetic, and reassuring doctor speaking {language}. Your primary role is to guide a patient through a two-step breast cancer risk assessment.
+You are a calm, empathetic, and reassuring doctor speaking {language}. Your primary role is to guide a patient through a two-step breast cancer risk assessment. You also have a tool to interpret medical reports.
 
 **Your Persona:**
 - **Warm & Welcoming:** Start with a kind greeting.
@@ -53,6 +54,8 @@ You are a calm, empathetic, and reassuring doctor speaking {language}. Your prim
     Add more words to your questions to make them feel more natural and human-like.
 3.  **Step 2: Request & Analyze X-ray:**
     After the first tool call, you **MUST** ask the user to upload their X-ray image. When the user asks you to analyze the image, you **MUST** call the `analyze_xray_image` tool immediately.
+4.  **Medical Report Interpretation:**
+    If the user uploads one or more medical documents (like PDFs, images, or DOCs) and asks for an interpretation, you **MUST** use the `interpret_medical_reports` tool.
 
 **Current State Information:**
 - The result of the initial questionnaire was: **{ml_result}**
@@ -78,6 +81,8 @@ class GraphState(TypedDict):
     xray_result: Optional[str]
     xray_confidence: Optional[float]
     annotated_image_path: Optional[str]
+    interpretation_result: Optional[str]
+    report_file_paths: Optional[List[str]]
     lang: str
 
 # 2. DEFINE THE NODES
@@ -102,6 +107,14 @@ def call_agent(state: GraphState):
     response = agent_runnable.invoke({"messages": state["messages"]})
     
     return {"messages": [response]}
+
+def reports_agent(state: GraphState):
+    """Dedicated multimodal reports interpreter agent (GPT-4o)."""
+    file_paths = state.get("report_file_paths") or []
+    lang = state["lang"]
+    interpretation = interpret_reports_with_gpt4o(file_paths, lang)
+    final_message = AIMessage(content=interpretation)
+    return {"messages": [final_message], "interpretation_result": interpretation}
 
 def process_risk_prediction_result(state: GraphState):
     """Parses the output of the first tool and updates the state."""
@@ -140,6 +153,23 @@ def process_xray_analysis_result(state: GraphState):
     print(f"Updated State with X-ray Result: {xray_result}")
     return {"xray_result": xray_result, "xray_confidence": xray_confidence, "annotated_image_path": annotated_image_path}
 
+def process_interpretation_result(state: GraphState):
+    """Parses the output of the interpretation tool and updates the state."""
+    last_message = state["messages"][-1]
+    assert isinstance(last_message, ToolMessage)
+
+    tool_output = last_message.content
+    if 'INTERPRETATION_RESULT:' in tool_output:
+        interpretation = tool_output.replace("INTERPRETATION_RESULT:", "").strip()
+    else:
+        interpretation = "Error processing interpretation."
+    
+    # Create a new AIMessage with the interpretation to show to the user
+    final_message = AIMessage(content=interpretation)
+    
+    return {"messages": [final_message], "interpretation_result": interpretation}
+
+
 # FIX #2: Converted this node to a synchronous function by wrapping the
 # async call in `asyncio.run()`. This resolves the TypeError.
 def generate_final_report(state: GraphState):
@@ -159,6 +189,16 @@ def route_after_agent(state: GraphState):
         return "tools"
     return END
 
+def entry_node(state: GraphState):
+    """No-op entry node to enable conditional routing based on provided inputs."""
+    return {}
+
+def route_from_entry(state: GraphState):
+    """Route to reports agent immediately when report files are present, otherwise to the conversational agent."""
+    if state.get("report_file_paths"):
+        return "reports_agent"
+    return "agent"
+
 def route_after_tools(state: GraphState):
     """Routes to the correct result processing node based on which tool was called."""
     last_message = state["messages"][-1]
@@ -174,6 +214,8 @@ def route_after_tools(state: GraphState):
         return "process_risk_prediction"
     elif tool_name == "analyze_xray_image":
         return "process_xray_analysis"
+    elif tool_name == "interpret_medical_reports":
+        return "process_interpretation"
     return END
 
 # 4. BUILD THE GRAPH
@@ -181,12 +223,16 @@ workflow = StateGraph(GraphState)
 
 workflow.add_node("agent", call_agent)
 workflow.add_node("tools", tool_node)
+workflow.add_node("reports_agent", reports_agent)
+workflow.add_node("entry", entry_node)
 workflow.add_node("process_risk_prediction", process_risk_prediction_result)
 workflow.add_node("process_xray_analysis", process_xray_analysis_result)
+workflow.add_node("process_interpretation", process_interpretation_result)
 workflow.add_node("generate_final_report", generate_final_report)
 
-workflow.set_entry_point("agent")
+workflow.set_entry_point("entry")
 
+workflow.add_conditional_edges("entry", route_from_entry, {"agent": "agent", "reports_agent": "reports_agent"})
 workflow.add_conditional_edges("agent", route_after_agent, {"tools": "tools", END: END})
 workflow.add_conditional_edges(
     "tools",
@@ -194,12 +240,15 @@ workflow.add_conditional_edges(
     {
         "process_risk_prediction": "process_risk_prediction",
         "process_xray_analysis": "process_xray_analysis",
+        "process_interpretation": "process_interpretation",
         END: END
     }
 )
 
 workflow.add_edge("process_risk_prediction", "agent")
 workflow.add_edge("process_xray_analysis", "generate_final_report")
+workflow.add_edge("process_interpretation", END)
+workflow.add_edge("reports_agent", END)
 workflow.add_edge("generate_final_report", END)
 
 # --- COMPILE THE GRAPH WITH CHECKPOINTER ---

@@ -6,6 +6,7 @@ import os
 import tempfile
 from src.app_logic import run_graph, clear_session_history, generate_chat_title, transcribe_audio, get_history
 from streamlit_mic_recorder import mic_recorder
+from typing import List
 
 # --- Page Configuration ---
 st.set_page_config(
@@ -44,16 +45,21 @@ if "active_session_id" not in st.session_state:
     st.session_state.active_session_id = None
 
 # --- Main Processing Function (Refactored) ---
-def handle_chat_submission(user_input, image_path=None):
+def handle_chat_submission(user_input, image_path=None, file_paths: List[str] = None):
     """
-    Central function to process all user inputs (text, audio, image).
+    Central function to process all user inputs (text, audio, image, files).
     It runs the graph and updates the session state correctly.
     """
     session_id = st.session_state.active_session_id
     active_conv = st.session_state.conversations[session_id]
     
     # Use a display message for image uploads
-    display_message = "Here is the X-ray image for analysis." if image_path else user_input
+    if image_path:
+        display_message = "Here is the X-ray image for analysis."
+    elif file_paths:
+        display_message = f"Here are {len(file_paths)} medical reports for interpretation."
+    else:
+        display_message = user_input
     
     # Add user message to the conversation state
     active_conv["messages"].append({"role": "user", "content": display_message})
@@ -62,7 +68,7 @@ def handle_chat_submission(user_input, image_path=None):
     with st.spinner("AI assistant is thinking..."):
         # Generate a title for new chats on the first user message
         is_new_chat = len(active_conv["messages"]) < 2
-        if is_new_chat and not image_path:
+        if is_new_chat and not image_path and not file_paths:
             try:
                 active_conv['title'] = asyncio.run(generate_chat_title(user_input))
             except Exception as e:
@@ -70,7 +76,7 @@ def handle_chat_submission(user_input, image_path=None):
                 active_conv['title'] = "Medical Chat"
 
         # Run the graph with the actual user input
-        response = run_graph(user_input, session_id, active_conv["lang"], image_path)
+        response = run_graph(user_input, session_id, active_conv["lang"], image_path, file_paths)
         if response.get("tts_audio"):
             st.session_state.audio_to_play = response["tts_audio"]
         # CRITICAL: Replace the entire message history with the final, complete
@@ -88,6 +94,16 @@ def handle_chat_submission(user_input, image_path=None):
             print(f"Removed temporary upload file: {image_path}")
         except OSError as e:
             print(f"Error removing temporary upload file {image_path}: {e}")
+    
+    if file_paths:
+        for fp in file_paths:
+             if "temp_upload" in fp and os.path.exists(fp):
+                try:
+                    os.remove(fp)
+                    print(f"Removed temporary upload file: {fp}")
+                except OSError as e:
+                    print(f"Error removing temporary upload file {fp}: {e}")
+
 
 # --- Helper Functions ---
 
@@ -98,6 +114,7 @@ def is_technical_message(content: str) -> bool:
         "XRAY_RESULT:",
         "CONFIDENCE:",
         "ANNOTATED_IMAGE_PATH:",
+        "INTERPRETATION_RESULT:",
         "|",
         "Error analyzing image:",
         "Error: There was a problem processing"
@@ -187,8 +204,9 @@ else:
     # --- Input Area ---
     st.markdown("---")
 
+    # --- X-ray Uploader ---
+    st.subheader("X-Ray Analysis")
     image_path_key = f'image_path_to_process_{active_session_id}'
-
     col1, col2 = st.columns([0.7, 0.3])
     with col1:
         uploaded_file = st.file_uploader(
@@ -197,7 +215,7 @@ else:
             key=f"uploader_{active_session_id}"
         )
     with col2:
-        analyze_button = st.button(
+        analyze_xray_button = st.button(
             "🔬 Analyze X-ray",
             disabled=uploaded_file is None,
             use_container_width=True
@@ -208,6 +226,35 @@ else:
             tmp_file.write(uploaded_file.getvalue())
             st.session_state[image_path_key] = tmp_file.name
 
+    # --- Medical Report Interpreter ---
+    st.subheader("Medical Report Interpreter")
+    report_paths_key = f'report_paths_to_process_{active_session_id}'
+    col1, col2 = st.columns([0.7, 0.3])
+    with col1:
+        uploaded_reports = st.file_uploader(
+            "Upload medical reports (PDF, DOCX, JPG, etc.)",
+            type=['pdf', 'png', 'jpg', 'jpeg', 'docx'],
+            accept_multiple_files=True,
+            key=f"report_uploader_{active_session_id}"
+        )
+    with col2:
+        interpret_button = st.button(
+            "📄 Interpret Reports",
+            disabled=not uploaded_reports,
+            use_container_width=True
+        )
+
+    if uploaded_reports:
+        report_paths = []
+        for report in uploaded_reports:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(report.name)[1], prefix="temp_upload_") as tmp_file:
+                tmp_file.write(report.getvalue())
+                report_paths.append(tmp_file.name)
+        st.session_state[report_paths_key] = report_paths
+
+
+    st.markdown("---")
+    
     col1, col2 = st.columns([0.9, 0.1])
     with col1:
         text_prompt = st.chat_input("Type your message...", key=f"chat_input_{active_session_id}")
@@ -232,7 +279,7 @@ else:
             else:
                 st.toast("⚠️ Audio could not be transcribed. Please try speaking again.", icon="🎤")
 
-    elif analyze_button:
+    elif analyze_xray_button:
         image_path_to_process = st.session_state.get(image_path_key)
         if image_path_to_process and os.path.exists(image_path_to_process):
             handle_chat_submission(
@@ -244,3 +291,16 @@ else:
             st.rerun()
         else:
             st.error("Could not find the uploaded image. Please upload it again.")
+            
+    elif interpret_button:
+        report_paths_to_process = st.session_state.get(report_paths_key)
+        if report_paths_to_process:
+            handle_chat_submission(
+                user_input="Please interpret these medical reports.",
+                file_paths=report_paths_to_process
+            )
+            if report_paths_key in st.session_state:
+                del st.session_state[report_paths_key]
+            st.rerun()
+        else:
+            st.error("Could not find the uploaded reports. Please upload them again.")

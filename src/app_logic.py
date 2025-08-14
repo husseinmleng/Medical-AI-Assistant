@@ -2,6 +2,7 @@
 
 import asyncio
 import io
+from typing import List
 from openai import OpenAI
 from langchain_core.messages import HumanMessage, AIMessage
 from langchain_openai import ChatOpenAI
@@ -62,23 +63,36 @@ async def generate_chat_title(user_input: str) -> str:
         return "New Chat"
 
 # --- Main Graph Invocation Function ---
-def run_graph(user_input: str, session_id: str, lang: str, image_path: str = None):
+def run_graph(user_input: str, session_id: str, lang: str, image_path: str = None, file_paths: List[str] = None):
     """
     Main function to run the LangGraph-based chat.
     """
     try:
         config = {"configurable": {"thread_id": session_id}}
 
-        current_input = image_path if image_path else user_input
+        if image_path:
+            current_input = image_path
+        elif file_paths:
+            # For report interpretation, keep a simple textual user message; paths go through state
+            current_input = user_input
+        else:
+            current_input = user_input
+
         messages = [HumanMessage(content=current_input)]
 
         graph_input = {"messages": messages, "lang": lang}
+        if file_paths:
+            graph_input["report_file_paths"] = file_paths
+
         final_state = app.invoke(graph_input, config)
 
         ai_messages = [m for m in final_state.get("messages", []) if isinstance(m, AIMessage)]
         tts_audio = None
         if ai_messages:
-            tts_audio = asyncio.run(text_to_speech(ai_messages[-1].content))
+            # Check for technical messages before generating TTS
+            last_ai_message = ai_messages[-1].content
+            if "INTERPRETATION_RESULT:" not in last_ai_message:
+                 tts_audio = asyncio.run(text_to_speech(last_ai_message))
 
         return {
             "messages": final_state.get("messages", []),
@@ -120,6 +134,7 @@ def clear_session_history(session_id: str):
         "xray_result": None,
         "xray_confidence": None,
         "annotated_image_path": None,
+        "interpretation_result": None,
         "lang": 'en' 
     }
     # Use the pre-compiled app to update the state.
