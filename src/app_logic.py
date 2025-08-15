@@ -66,6 +66,7 @@ async def generate_chat_title(user_input: str) -> str:
 def run_graph(user_input: str, session_id: str, lang: str, image_path: str = None, file_paths: List[str] = None):
     """
     Main function to run the LangGraph-based chat.
+    Enhanced to support ongoing conversations with report results.
     """
     try:
         config = {"configurable": {"thread_id": session_id}}
@@ -99,7 +100,9 @@ def run_graph(user_input: str, session_id: str, lang: str, image_path: str = Non
         return {
             "messages": final_state.get("messages", []),
             "annotated_image_path": final_state.get("annotated_image_path"),
-            "tts_audio": tts_audio  # New field for audio
+            "tts_audio": tts_audio,
+            "interpretation_result": final_state.get("interpretation_result"),  # Added this
+            "reports_text_context": final_state.get("reports_text_context")  # Added this
         }
     except Exception as e:
         error_msg = f"An unexpected error occurred in the graph logic: {str(e)}"
@@ -111,7 +114,9 @@ def run_graph(user_input: str, session_id: str, lang: str, image_path: str = Non
                 HumanMessage(content=user_input),
                 AIMessage(content="I'm sorry, a system error occurred. Please try starting a new chat.")
             ],
-            "annotated_image_path": None
+            "annotated_image_path": None,
+            "interpretation_result": None,
+            "reports_text_context": None
         }
 
 def get_history(session_id: str):
@@ -120,6 +125,12 @@ def get_history(session_id: str):
     # The app already has the checkpointer, so we can call get_state directly.
     state_record = app.get_state(config)
     return state_record.values.get('messages', []) if state_record else []
+
+def get_session_state(session_id: str):
+    """Retrieves the full session state for checking report context."""
+    config = {"configurable": {"thread_id": session_id}}
+    state_record = app.get_state(config)
+    return state_record.values if state_record else {}
 
 def clear_session_history(session_id: str):
     """
@@ -137,8 +148,46 @@ def clear_session_history(session_id: str):
         "xray_confidence": None,
         "annotated_image_path": None,
         "interpretation_result": None,
+        "report_file_paths": None,
+        "uploaded_image_path": None,
+        "reports_text_context": None,
         "lang": 'en' 
     }
     # Use the pre-compiled app to update the state.
     app.update_state(config, empty_state)
     print(f"Cleared session history for {session_id}")
+
+def reset_for_new_report(session_id: str, preserve_lang: str | None = None):
+    """
+    Clears prior chat/messages and any previous report interpretation/context while preserving language.
+    Use this before processing a NEW report upload so that follow-up chat ties only to the latest report.
+    """
+    config = {"configurable": {"thread_id": session_id}}
+    # Determine language to keep
+    try:
+        state_record = app.get_state(config)
+        current_lang = preserve_lang or (state_record.values.get('lang') if state_record else None) or 'en'
+    except Exception:
+        current_lang = preserve_lang or 'en'
+
+    reset_state: GraphState = {
+        "messages": [],
+        "questionnaire_inputs": None,
+        "ml_result": None,
+        "ml_confidence": None,
+        "xray_result": None,
+        "xray_confidence": None,
+        "annotated_image_path": None,
+        "interpretation_result": None,
+        "report_file_paths": None,
+        "uploaded_image_path": None,
+        "reports_text_context": None,
+        "lang": current_lang,
+    }
+    app.update_state(config, reset_state)
+    print(f"Reset session for new report in {session_id} (lang={current_lang})")
+
+def has_report_context(session_id: str) -> bool:
+    """Check if the session has report interpretation context available for chat."""
+    state = get_session_state(session_id)
+    return bool(state.get("interpretation_result") or state.get("reports_text_context"))

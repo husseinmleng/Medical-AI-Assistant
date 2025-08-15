@@ -1,10 +1,13 @@
-# st_app.py (Corrected)
+# lg_st_app.py (Enhanced for Report Chat)
 import streamlit as st
 import uuid
 import asyncio
 import os
 import tempfile
-from src.app_logic import run_graph, clear_session_history, generate_chat_title, transcribe_audio, get_history
+from src.app_logic import (
+    run_graph, clear_session_history, generate_chat_title, transcribe_audio, 
+    get_history, reset_for_new_report, has_report_context
+)
 from streamlit_mic_recorder import mic_recorder
 from typing import List
 
@@ -16,27 +19,56 @@ st.set_page_config(
 )
 
 # --- Styling ---
-st.markdown("""
+st.markdown(
+    """
 <style>
-    /* Main container styling */
     .main .block-container {
-        padding-top: 1rem;
+        padding-top: 0.5rem;
         padding-bottom: 1rem;
         max-width: 1200px;
     }
-    /* Sidebar styling */
     .stButton button {
         width: 100%;
         text-align: left;
         margin-bottom: 0.25rem;
+        border-radius: 10px;
     }
+    .stTabs [data-baseweb="tab"] {
+        font-weight: 600;
+    }
+    .ai-card {
+        background: #f7fbff;
+        border: 1px solid #e0eefc;
+        padding: 12px 16px;
+        border-radius: 12px;
+    }
+    .soft-divider { height: 4px; }
     /* Ensure chat messages wrap text */
-    .st-emotion-cache-1c7y2kd {
-        white-space: pre-wrap;
-        word-wrap: break-word;
+    .stChatMessage p { white-space: pre-wrap; }
+    .stChatMessage {
+        border-radius: 12px;
+        padding: 0.25rem 0.25rem;
+    }
+    .annotated-caption { color: #4c4c4c; font-size: 0.9rem; }
+    .chip {
+        display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 0.85rem;
+        border: 1px solid #e5e7eb; background: #f9fafb; margin-right: 6px;
+    }
+    .chip.success { background:#ecfdf5; border-color:#a7f3d0; color:#065f46; }
+    .chip.warn { background:#fffbeb; border-color:#fde68a; color:#92400e; }
+    .chip.info { background:#eff6ff; border-color:#bfdbfe; color:#1e40af; }
+    .muted { color:#6b7280; font-size:0.9rem; }
+    .footer-note { color:#6b7280; font-size:0.8rem; text-align:center; margin-top: 12px; }
+    .uploader-help { color:#6b7280; font-size:0.75rem; margin-top: -6px; }
+    .report-context-indicator {
+        background: #f0f9ff; border: 1px solid #bae6fd; 
+        padding: 8px 12px; border-radius: 8px; margin-bottom: 12px;
+        font-size: 0.9rem; color: #0c4a6e;
     }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # --- Session State Initialization ---
 if "conversations" not in st.session_state:
@@ -44,11 +76,11 @@ if "conversations" not in st.session_state:
 if "active_session_id" not in st.session_state:
     st.session_state.active_session_id = None
 
-# --- Main Processing Function (Refactored) ---
+# --- Main Processing Function (Enhanced) ---
 def handle_chat_submission(user_input, image_path=None, file_paths: List[str] = None):
     """
     Central function to process all user inputs (text, audio, image, files).
-    It runs the graph and updates the session state correctly.
+    Enhanced to handle report-based conversations properly.
     """
     session_id = st.session_state.active_session_id
     active_conv = st.session_state.conversations[session_id]
@@ -79,6 +111,7 @@ def handle_chat_submission(user_input, image_path=None, file_paths: List[str] = 
         response = run_graph(user_input, session_id, active_conv["lang"], image_path, file_paths)
         if response.get("tts_audio"):
             st.session_state.audio_to_play = response["tts_audio"]
+            
         # CRITICAL: Replace the entire message history with the final, complete
         # history from the graph's state. This ensures consistency.
         final_messages = response.get("messages", [])
@@ -86,6 +119,9 @@ def handle_chat_submission(user_input, image_path=None, file_paths: List[str] = 
         
         # Update the path for the annotated image if it exists
         active_conv["annotated_image_path"] = response.get("annotated_image_path")
+        
+        # Store report context for indicating chat capability
+        active_conv["has_report_context"] = bool(response.get("interpretation_result"))
 
     # Clean up the temporary file for the uploaded image
     if image_path and "temp_upload" in image_path and os.path.exists(image_path):
@@ -130,6 +166,7 @@ def create_new_chat():
         "lang": None,
         "messages": [],
         "annotated_image_path": None,
+        "has_report_context": False,
     }
     clear_session_history(session_id)
     return session_id
@@ -140,6 +177,8 @@ def switch_conversation(session_id):
     active_conv = st.session_state.conversations[session_id]
     history_messages = get_history(session_id)
     active_conv['messages'] = [{"role": msg.type, "content": msg.content} for msg in history_messages]
+    # Check if this session has report context
+    active_conv["has_report_context"] = has_report_context(session_id)
 
 # --- Ensure a chat is always active ---
 if not st.session_state.active_session_id or st.session_state.active_session_id not in st.session_state.conversations:
@@ -158,12 +197,19 @@ with st.sidebar:
     
     for session_id, conv_data in sorted_conversations:
         button_type = "primary" if session_id == st.session_state.active_session_id else "secondary"
-        if st.button(conv_data["title"], key=f"conv_{session_id}", use_container_width=True, type=button_type):
+        
+        # Add indicator for report-enabled chats
+        title_display = conv_data["title"]
+        if conv_data.get("has_report_context", False):
+            title_display = f"📄 {title_display}"
+            
+        if st.button(title_display, key=f"conv_{session_id}", use_container_width=True, type=button_type):
             switch_conversation(session_id)
             st.rerun()
 
 # --- Main Chat Interface ---
 st.title("Medical AI Assistant")
+st.caption("Friendly guidance, not a diagnosis. Always consult your doctor for medical decisions.")
 
 active_session_id = st.session_state.active_session_id
 active_conv = st.session_state.conversations[active_session_id]
@@ -181,87 +227,113 @@ if active_conv["lang"] is None:
         active_conv["messages"].append({"role": "assistant", "content": "مرحبًا! أنا مساعدك الطبي الذكي. لبدء التقييم، سأحتاج إلى طرح بعض الأسئلة حول تاريخك الصحي. كيف يمكنني مساعدتك اليوم؟"})
         st.rerun()
 else:
-    # --- Display Chat Messages ---
-   # Display chat messages (excluding technical ones)
+    # --- Show report context indicator ---
+    if active_conv.get("has_report_context", False):
+        st.markdown(
+            '<div class="report-context-indicator">'
+            '📄 <strong>Report Chat Mode:</strong> You can ask questions about your uploaded medical reports.'
+            '</div>', 
+            unsafe_allow_html=True
+        )
+    
+    # --- Chat stream (single view) ---
     for msg in active_conv["messages"]:
-        # Skip any remaining technical messages that might have slipped through
         if is_technical_message(msg["content"]):
             continue
-            
         role = "assistant" if msg["role"] in ["assistant", "ai"] else "user"
-        with st.chat_message(role):
+        avatar = "🩺" if role == "assistant" else "👤"
+        with st.chat_message(role, avatar=avatar):
             st.write(msg["content"])
 
-    # After displaying messages, check if there's an annotated image to show
+    # Show annotated image inline if exists
     if active_conv.get("annotated_image_path") and os.path.exists(active_conv["annotated_image_path"]):
-        with st.chat_message("assistant"):
+        with st.chat_message("assistant", avatar="🩺"):
             st.image(active_conv["annotated_image_path"], caption="Annotated X-ray Image")
+            try:
+                with open(active_conv["annotated_image_path"], "rb") as f:
+                    img_bytes = f.read()
+                st.download_button(
+                    label="Download annotated image",
+                    data=img_bytes,
+                    file_name=os.path.basename(active_conv["annotated_image_path"]),
+                    mime="image/png",
+                    use_container_width=True,
+                )
+            except Exception:
+                pass
 
     if "audio_to_play" in st.session_state and st.session_state.audio_to_play:
         st.audio(st.session_state.audio_to_play, autoplay=True)
         st.session_state.audio_to_play = None
 
-    # --- Input Area ---
     st.markdown("---")
 
-    # --- X-ray Uploader ---
-    st.subheader("X-Ray Analysis")
+    # --- Inline attachments (same view as chat) ---
     image_path_key = f'image_path_to_process_{active_session_id}'
-    col1, col2 = st.columns([0.7, 0.3])
-    with col1:
+    report_paths_key = f'report_paths_to_process_{active_session_id}'
+    up_left, up_right = st.columns([0.5, 0.5])
+
+    with up_left:
+        st.subheader("🩻 X-Ray")
         uploaded_file = st.file_uploader(
-            "Upload your X-ray image here when prompted",
+            "Upload your X-ray image",
             type=['png', 'jpg', 'jpeg'],
             key=f"uploader_{active_session_id}"
         )
-    with col2:
+        st.markdown("<div class='uploader-help'>PNG/JPG up to ~10MB</div>", unsafe_allow_html=True)
         analyze_xray_button = st.button(
             "🔬 Analyze X-ray",
             disabled=uploaded_file is None,
-            use_container_width=True
+            use_container_width=True,
+            key=f"analyze_btn_{active_session_id}"
         )
+        if uploaded_file is not None:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1], prefix="temp_upload_") as tmp_file:
+                tmp_file.write(uploaded_file.getvalue())
+                st.session_state[image_path_key] = tmp_file.name
 
-    if uploaded_file is not None:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1], prefix="temp_upload_") as tmp_file:
-            tmp_file.write(uploaded_file.getvalue())
-            st.session_state[image_path_key] = tmp_file.name
-
-    # --- Medical Report Interpreter ---
-    st.subheader("Medical Report Interpreter")
-    report_paths_key = f'report_paths_to_process_{active_session_id}'
-    col1, col2 = st.columns([0.7, 0.3])
-    with col1:
+    with up_right:
+        st.subheader("📄 Reports")
         uploaded_reports = st.file_uploader(
             "Upload medical reports (PDF, DOCX, JPG, etc.)",
             type=['pdf', 'png', 'jpg', 'jpeg', 'docx'],
             accept_multiple_files=True,
             key=f"report_uploader_{active_session_id}"
         )
-    with col2:
+        if uploaded_reports:
+            st.markdown("<div class='muted'>Files selected:</div>", unsafe_allow_html=True)
+            for r in uploaded_reports:
+                st.markdown(f"<span class='chip info'>{r.name}</span>", unsafe_allow_html=True)
+        
+        # Show different button text based on context
+        has_existing_reports = active_conv.get("has_report_context", False)
+        button_text = "📄 Upload New Reports" if has_existing_reports else "📄 Interpret Reports"
+        
         interpret_button = st.button(
-            "📄 Interpret Reports",
+            button_text,
             disabled=not uploaded_reports,
-            use_container_width=True
+            use_container_width=True,
+            key=f"interpret_btn_{active_session_id}"
         )
+        if uploaded_reports:
+            report_paths = []
+            for report in uploaded_reports:
+                with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(report.name)[1], prefix="temp_upload_") as tmp_file:
+                    tmp_file.write(report.getvalue())
+                    report_paths.append(tmp_file.name)
+            st.session_state[report_paths_key] = report_paths
 
-    if uploaded_reports:
-        report_paths = []
-        for report in uploaded_reports:
-            with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(report.name)[1], prefix="temp_upload_") as tmp_file:
-                tmp_file.write(report.getvalue())
-                report_paths.append(tmp_file.name)
-        st.session_state[report_paths_key] = report_paths
-
-
-    st.markdown("---")
-    
+    # --- Chat input with mic (same view) ---
+    st.markdown("<div class='soft-divider'></div>", unsafe_allow_html=True)
     col1, col2 = st.columns([0.9, 0.1])
     with col1:
-        text_prompt = st.chat_input("Type your message...", key=f"chat_input_{active_session_id}")
+        # Show different placeholder based on context
+        placeholder = "Ask about your reports..." if active_conv.get("has_report_context", False) else "Type your message..."
+        text_prompt = st.chat_input(placeholder, key=f"chat_input_{active_session_id}")
     with col2:
         audio_info = mic_recorder(start_prompt="🎤", stop_prompt="⏹️", key=f'recorder_{active_session_id}', use_container_width=True)
 
-    # --- INPUT HANDLING LOGIC (Simplified) ---
+    # --- INPUT HANDLING LOGIC (Enhanced) ---
 
     if text_prompt:
         handle_chat_submission(text_prompt)
@@ -295,6 +367,12 @@ else:
     elif interpret_button:
         report_paths_to_process = st.session_state.get(report_paths_key)
         if report_paths_to_process:
+            # Reset graph state for a new report while preserving current language
+            reset_for_new_report(active_session_id, preserve_lang=active_conv["lang"]) 
+            # Clear local chat view and any annotated image
+            active_conv["messages"] = []
+            active_conv["annotated_image_path"] = None
+            active_conv["has_report_context"] = False  # Will be set to True after processing
             handle_chat_submission(
                 user_input="Please interpret these medical reports.",
                 file_paths=report_paths_to_process
@@ -304,3 +382,7 @@ else:
             st.rerun()
         else:
             st.error("Could not find the uploaded reports. Please upload them again.")
+
+    st.markdown("""
+    <div class="footer-note">This assistant provides general guidance and is not a substitute for professional medical advice.</div>
+    """, unsafe_allow_html=True)

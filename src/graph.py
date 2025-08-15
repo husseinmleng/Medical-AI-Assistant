@@ -11,7 +11,7 @@ from langchain_openai import ChatOpenAI
 from langgraph.graph import END, StateGraph
 from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import MemorySaver
-from src.reports_agent import interpret_reports_with_gpt4o
+from src.reports_agent import interpret_reports_with_gpt4o, build_reports_text_context
 
 from src.tools import (
     analyze_xray_image,
@@ -25,10 +25,9 @@ tools = [analyze_xray_image, interpret_medical_reports]
 tool_node = ToolNode(tools)
 
 # --- Agent Prompt ---
-# FIX #1: Added a clear instruction for the agent to review the history
-# and check if it has all the information needed before asking a new question.
+# ENHANCED: Added better handling for report-based conversations
 system_prompt_template = """
-You are a calm, empathetic, and reassuring doctor speaking {language}. Your primary role is to guide a patient through a two-step breast cancer risk assessment. You also have a tool to interpret medical reports.
+You are a calm, empathetic, and reassuring doctor speaking {language}. Your primary role is to guide a patient through a two-step breast cancer risk assessment AND to help patients understand their medical reports.
 
 Persona
 - Warm & welcoming, conversational, empathetic, simple explanations
@@ -70,10 +69,21 @@ Critical rules
 - Ask one question at a time; do not force formats
 - Never reveal technical lines to the user
 - Call tools when required inputs are available
-- When calling analyze_xray_image, pass the current ml_result from state
+    - When calling analyze_xray_image, pass the current ml_result from state
+
+Report-based conversations:
+- If there is a previous report interpretation available, you can have ongoing conversations about it
+- Answer follow-up questions about previously uploaded reports using the available context
+- Be conversational and helpful in explaining medical concepts from the reports
+- If the user asks questions that require specific details not in the context, acknowledge the limitation and suggest consulting with their doctor
+- Do NOT call interpret_medical_reports again unless the user uploads NEW files or explicitly asks for a re-interpretation
+- Prefer the following sources, in order:
+  1) [Previous Reports Interpretation] — the earlier summary generated for the user
+  2) [Reports Context for Q&A] — extracted text snippets from the uploaded reports
 
 Current state
 - Initial assessment so far: {ml_result}
+- Report interpretation available: {has_reports}
 """
 
 # 1. DEFINE THE GRAPH STATE
@@ -89,6 +99,7 @@ class GraphState(TypedDict):
     interpretation_result: Optional[str]
     report_file_paths: Optional[List[str]]
     uploaded_image_path: Optional[str]
+    reports_text_context: Optional[str]
     lang: str
 
 # 2. DEFINE THE NODES
@@ -97,11 +108,23 @@ def call_agent(state: GraphState):
     language_map = {"en": "English", "ar": "in an Egyptian dialect"}
     lang = state['lang']
     ml_result = state.get('ml_result', 'Not yet available') # Get ml_result from state
+    has_reports = "Yes" if state.get("interpretation_result") else "No"
 
     formatted_prompt = system_prompt_template.format(
         language=language_map.get(lang, "English"),
-        ml_result=ml_result
+        ml_result=ml_result,
+        has_reports=has_reports
     )
+
+    # Augment prompt with prior reports interpretation and text context, if available,
+    # to enable grounded follow-up Q&A without re-calling the interpretation tool.
+    previous_interpretation = state.get("interpretation_result")
+    if previous_interpretation:
+        formatted_prompt = formatted_prompt + "\n\n[Previous Reports Interpretation]\n" + previous_interpretation
+
+    reports_context = state.get("reports_text_context")
+    if reports_context:
+        formatted_prompt = formatted_prompt + "\n\n[Reports Context for Q&A]\n" + reports_context
 
     prompt = ChatPromptTemplate.from_messages([
         ("system", formatted_prompt),
@@ -173,8 +196,15 @@ def reports_agent(state: GraphState):
     file_paths = state.get("report_file_paths") or []
     lang = state["lang"]
     interpretation = interpret_reports_with_gpt4o(file_paths, lang)
+    text_context = build_reports_text_context(file_paths)
     final_message = AIMessage(content=interpretation)
-    return {"messages": [final_message], "interpretation_result": interpretation}
+    # Save text context for follow-up Q&A rounds and clear file paths
+    return {
+        "messages": [final_message],
+        "interpretation_result": interpretation,
+        "reports_text_context": text_context,
+        "report_file_paths": None,  # Clear the file paths
+    }
 
 def auto_analyze_xray(state: GraphState):
     """Automatically runs X-ray analysis when an uploaded image path is present in state."""
@@ -288,8 +318,9 @@ def entry_node(state: GraphState):
     return {}
 
 def route_from_entry(state: GraphState):
-    """Route to reports agent immediately when report files are present, otherwise to the conversational agent."""
-    if state.get("report_file_paths"):
+    """Route to reports agent immediately when NEW report files are present, otherwise to the conversational agent."""
+    # Only route to reports agent if NEW files are uploaded and there's no prior interpretation
+    if state.get("report_file_paths") and not state.get("interpretation_result"):
         return "reports_agent"
     if state.get("uploaded_image_path"):
         return "auto_xray"
@@ -311,6 +342,10 @@ def route_after_tools(state: GraphState):
     elif tool_name == "interpret_medical_reports":
         return "process_interpretation"
     return END
+
+def route_after_reports_agent(state: GraphState):
+    """After processing reports, continue to conversational agent for follow-up questions."""
+    return "agent"
 
 # 4. BUILD THE GRAPH
 workflow = StateGraph(GraphState)
@@ -341,8 +376,8 @@ workflow.add_conditional_edges(
 
 workflow.add_edge("process_initial_assessment", "agent")
 workflow.add_edge("process_xray_analysis", "generate_final_report")
-workflow.add_edge("process_interpretation", END)
-workflow.add_edge("reports_agent", END)
+workflow.add_edge("process_interpretation", "agent")  # CHANGED: Now routes back to agent for follow-up
+workflow.add_edge("reports_agent", "agent")  # CHANGED: Now routes back to agent for follow-up
 workflow.add_edge("auto_xray", "generate_final_report")
 workflow.add_edge("generate_final_report", END)
 

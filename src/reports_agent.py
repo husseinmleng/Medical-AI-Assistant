@@ -98,7 +98,7 @@ essential_rules_en = (
     "Do not diagnose. Summarize findings, explain simply, and advise follow‑up with a doctor."
 )
 essential_rules_ar = (
-    "لا تقدّم تشخيصًا. لخّص النتائج ببساطة، واشرحها للمريض، وأنهِ دائمًا بالتوصية بمراجعة الطبيب."
+    "قدّم تشخيصًا مبدئي واقترح بعض الأدوية والعلاج . لخّص النتائج ببساطة، واشرحها للمريض، وأنهِ دائمًا بالتوصية بمراجعة الطبيب."
 )
 
 
@@ -143,3 +143,44 @@ def interpret_reports_with_gpt4o(file_paths: List[str], lang: str) -> str:
         note = ("\n\n[Note: Some files could not be read/parsed: " + "; ".join(warnings) + "]")
         output += note
     return output
+
+
+def build_reports_text_context(file_paths: List[str], max_total_chars: int = 16000) -> str:
+    """
+    Builds a textual context from the uploaded reports for follow-up Q&A turns.
+    This avoids repeatedly sending large binary data and is suitable for chat prompts.
+    """
+    parts: List[str] = []
+    total = 0
+    for idx, path in enumerate(file_paths, start=1):
+        if not os.path.exists(path):
+            continue
+        mime_type, _ = mimetypes.guess_type(path)
+        header = f"\n---\n[Report {idx}] {os.path.basename(path)} ({mime_type or 'unknown'})\n"
+        body = ""
+        try:
+            if mime_type and mime_type.startswith("image/"):
+                body = "[Image uploaded. Content referenced during initial interpretation.]"
+            elif mime_type == "application/pdf":
+                body = _extract_pdf_text(path)
+            elif mime_type in ("application/vnd.openxmlformats-officedocument.wordprocessingml.document",):
+                body = _extract_docx_text(path)
+            else:
+                try:
+                    with open(path, "r", encoding="utf-8", errors="replace") as f:
+                        body = f.read()
+                except Exception:
+                    body = "[Unsupported file type for text extraction]"
+        except Exception as e:
+            body = f"[Error reading file: {e}]"
+
+        snippet = header + (body or "[No extractable text]")
+        parts.append(snippet)
+        total += len(snippet)
+        if total >= max_total_chars:
+            break
+
+    context = "\n".join(parts).strip()
+    if not context:
+        context = "[No textual context available from uploaded reports]"
+    return context
