@@ -6,7 +6,7 @@ import os
 import tempfile
 from src.app_logic import (
     run_graph, clear_session_history, generate_chat_title, transcribe_audio, 
-    get_history, reset_for_new_report, has_report_context
+    get_history, reset_for_new_report, has_report_context, reset_for_new_xray
 )
 from streamlit_mic_recorder import mic_recorder
 from typing import List
@@ -350,10 +350,15 @@ else:
                 st.rerun()
             else:
                 st.toast("⚠️ Audio could not be transcribed. Please try speaking again.", icon="🎤")
-
+    
     elif analyze_xray_button:
         image_path_to_process = st.session_state.get(image_path_key)
         if image_path_to_process and os.path.exists(image_path_to_process):
+            reset_for_new_xray(active_session_id, preserve_lang=active_conv["lang"]) 
+            # Clear local chat view and any annotated image
+            active_conv["messages"] = []
+            active_conv["annotated_image_path"] = None
+            active_conv["has_report_context"] = False  # Will be set to True after processing
             handle_chat_submission(
                 user_input="Here is the X-ray image for analysis.",
                 image_path=image_path_to_process

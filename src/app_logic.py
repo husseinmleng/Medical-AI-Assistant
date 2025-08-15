@@ -191,3 +191,33 @@ def has_report_context(session_id: str) -> bool:
     """Check if the session has report interpretation context available for chat."""
     state = get_session_state(session_id)
     return bool(state.get("interpretation_result") or state.get("reports_text_context"))
+
+def reset_for_new_xray(session_id: str, preserve_lang: str | None = None):
+    """
+    Clears prior chat/messages and any previous xray interpretation/context while preserving language.
+    Use this before processing a NEW xray upload so that follow-up chat ties only to the latest xray.
+    """
+    config = {"configurable": {"thread_id": session_id}}
+    # Determine language to keep
+    try:
+        state_record = app.get_state(config)
+        current_lang = preserve_lang or (state_record.values.get('lang') if state_record else None) or 'en'
+    except Exception:
+        current_lang = preserve_lang or 'en'
+
+    reset_state: GraphState = {
+        "messages": [],
+        "questionnaire_inputs": None,
+        "ml_result": None,
+        "ml_confidence": None,
+        "xray_result": None,
+        "xray_confidence": None,
+        "annotated_image_path": None,
+        "interpretation_result": None,
+        "report_file_paths": None,
+        "uploaded_image_path": None,
+        "reports_text_context": None,
+        "lang": current_lang,
+    }
+    app.update_state(config, reset_state)
+    print(f"Reset session for new xray in {session_id} (lang={current_lang})")

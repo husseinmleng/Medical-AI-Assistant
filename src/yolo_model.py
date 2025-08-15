@@ -20,7 +20,7 @@ _device = "cuda" if torch.cuda.is_available() else "cpu"
 output_dir = os.path.join(_project_root, "annotated_images")
 os.makedirs(output_dir, exist_ok=True)
 
-def detect_cancer_in_image(image_path: str, ml_result: str = None) :
+def detect_cancer_in_image(image_path: str) :
     """
     Analyzes a medical image using the YOLO model to detect signs of cancer.
 
@@ -59,13 +59,24 @@ def detect_cancer_in_image(image_path: str, ml_result: str = None) :
                     class_name = model.names[class_id]
                     if class_name.lower() == 'cancer':
                         cancer_detected = True
+                        print('-' * 20)
+                        print(f"Detected cancer with confidence: {box.conf[0]}")
                         if box.conf[0] > max_conf:
                             max_conf = float(box.conf[0])
-                
+                            print('-' * 20)
+                            print(f"New max confidence for cancer detection: {max_conf:.4f}")
+                    else:
+                        print(f"Detected non-cancer class '{class_name}' with confidence: {box.conf[0]}")
+                        max_conf = max(max_conf, float(box.conf[0]))
+
                 if cancer_detected:
                     result_text = "Positive"
                     confidence = max_conf
-
+                else:
+                    result_text = "Negative"
+                    confidence = max_conf if max_conf > 0 else 0.0
+        print('-' * 20)
+        print(f"Final detection result: {result_text} with confidence: {confidence:.4f}")
         # Save the annotated image ONLY if a detection was made
         if has_detection:
             # Generate a unique filename for the annotated image
@@ -78,11 +89,11 @@ def detect_cancer_in_image(image_path: str, ml_result: str = None) :
             annotated_image.save(save_path)
             annotated_image_path = save_path # This is now an absolute path
             
-            print(f"YOLO Analysis Result: {result_text}, Confidence: {confidence:.2f}, Annotated image saved to: {annotated_image_path}")
+            print(f"YOLO Analysis Result: {result_text}, Confidence: {confidence:.4f}, Annotated image saved to: {annotated_image_path}")
         else:
             # If no detections, confidence remains 0 for 'Positive'
             # We can assign a high confidence for 'Negative' if needed, but it's simpler this way.
-            confidence = 1.0 # Confidence in the "Negative" result
+            confidence = 0.0 # Confidence in the "Positive" result is 0
             print("YOLO Analysis Result: Negative (No detections)")
 
         return result_text, confidence, annotated_image_path

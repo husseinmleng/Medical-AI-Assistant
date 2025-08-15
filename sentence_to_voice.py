@@ -19,6 +19,6 @@ def text_to_speech_to_file(text: str, output_path: Path = Path("output.mp3"), mo
     print(f"Saved TTS output to: {output_path}")
 
 if __name__ == "__main__":
-    sample_text = ".  رفعتلك الصورة, حلل الاشاعة   وطمني   على   النتيجة"
-    output_file = Path("x_ray.wav")
+    sample_text =  "ا   ايه   العلاج   في   الحالات    اللي   زي كده   ؟ وايه الاقتراحات  المتاحة  ؟" 
+    output_file = Path("report.wav")
     text_to_speech_to_file(sample_text, output_file)

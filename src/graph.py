@@ -15,8 +15,9 @@ from src.reports_agent import interpret_reports_with_gpt4o, build_reports_text_c
 
 from src.tools import (
     analyze_xray_image,
-    interpret_final_results,
     interpret_medical_reports,
+    interpret_ml_results,
+    interpret_xray_results,
 )
 
 # --- LLM and Tools ---
@@ -36,12 +37,17 @@ Persona
 Process
 1) Review chat history before asking a new question.
 2) Initial assessment (no machine learning):
+    - These two question are optional doesn't affect the result but ask them to the user:
+    - Age : what the age of the patient
+    - Breast feeding months : how many months the patient breast fed
+    ask the age as the first question 
    - Collect exactly these 5 items, one by one:
      • family_history_breast_cancer (yes/no)
      • recent_weight_loss (yes/no)
      • previous_breast_conditions (yes/no)
      • symptom_duration_days (number)
      • fatigue (yes/no)
+     ask about the breast feeding here before concluding the result
    - Decision rule (few-shot guidance below):
      If family_history_breast_cancer=yes AND recent_weight_loss=yes AND previous_breast_conditions=yes AND symptom_duration_days>=7 AND fatigue=yes → assessment = Positive. Otherwise → Negative.
    - Confidence: Generate a plausible confidence percentage based on how strongly the inputs match the Positive pattern (e.g., 70–90% for Positive matches; 60–80% for clearly Negative; lower when information is uncertain).
@@ -49,6 +55,12 @@ Process
    - At the end, add a single separate technical line (for internal use only):
      INITIAL_ASSESSMENT_RESULT:<Positive|Negative>|CONFIDENCE:<0-100>|QUESTIONNAIRE:family_history_breast_cancer=<yes/no>;recent_weight_loss=<yes/no>;previous_breast_conditions=<yes/no>;symptom_duration_days=<number>;fatigue=<yes/no>
    - Do NOT mention this technical line in your visible message.
+   example output :
+   "
+    Result: Positive/Negative
+    Confidence: <0-100>%
+    Explanation: <supportive explanation>
+   "
 3) X-ray analysis: After giving the initial assessment, ask the user to upload an X-ray. When the user provides an image, call analyze_xray_image immediately. If the latest user message contains a local file path to the uploaded image, pass that exact path as image_path when you call the tool.
 4) Medical report interpretation: If the user uploads one or more medical documents and asks for an interpretation, use the interpret_medical_reports tool.
 
@@ -72,14 +84,11 @@ Critical rules
     - When calling analyze_xray_image, pass the current ml_result from state
 
 Report-based conversations:
-- If there is a previous report interpretation available, you can have ongoing conversations about it
-- Answer follow-up questions about previously uploaded reports using the available context
-- Be conversational and helpful in explaining medical concepts from the reports
-- If the user asks questions that require specific details not in the context, acknowledge the limitation and suggest consulting with their doctor
-- Do NOT call interpret_medical_reports again unless the user uploads NEW files or explicitly asks for a re-interpretation
-- Prefer the following sources, in order:
-  1) [Previous Reports Interpretation] — the earlier summary generated for the user
-  2) [Reports Context for Q&A] — extracted text snippets from the uploaded reports
+- If a report has already been analyzed (indicated by the 'Report interpretation available' status being 'Yes'), your ONLY job is to answer the user's follow-up questions about the report using the provided context.
+- DO NOT state that you have already analyzed the report.
+- Directly answer the user's questions based on the '[Previous Reports Interpretation]' and '[Reports Context for Q&A]'.
+- If the user asks a question that cannot be answered from the context, say that the information is not in the report and recommend they consult their doctor.
+- Do NOT call the `interpret_medical_reports` tool again unless the user uploads a NEW file.
 
 Current state
 - Initial assessment so far: {ml_result}
@@ -211,9 +220,8 @@ def auto_analyze_xray(state: GraphState):
     image_path = state.get("uploaded_image_path")
     if not image_path:
         return {}
-    ml_result = state.get("ml_result") or "Not available"
     try:
-        tool_output = analyze_xray_image.invoke({"image_path": image_path, "ml_result": ml_result})
+        tool_output = analyze_xray_image.invoke({"image_path": image_path})
     except Exception as e:
         print(f"Auto X-ray analysis failed: {e}")
         return {"xray_result": "Error", "xray_confidence": 0.0, "annotated_image_path": None}
@@ -233,6 +241,25 @@ def auto_analyze_xray(state: GraphState):
 
     print(f"Auto X-ray State: result={xray_result}, conf={xray_confidence}")
     return {"xray_result": xray_result, "xray_confidence": xray_confidence, "annotated_image_path": annotated_image_path}
+
+
+def generate_ml_report(state: GraphState):
+    """Generates the final summary message after only the ml has been analyzed."""
+    interpretation = asyncio.run(interpret_ml_results(
+        ml_result=state["ml_result"], ml_confidence=state["ml_confidence"],
+        lang=state["lang"],
+    ))
+    final_message = AIMessage(content=interpretation)
+    return {"messages": [final_message]}
+
+def generate_xray_report(state: GraphState):
+    """Generates the final summary message after only the X-ray has been analyzed."""
+    interpretation = asyncio.run(interpret_xray_results(
+        xray_result=state["xray_result"], xray_confidence=state["xray_confidence"],
+        lang=state["lang"],
+    ))
+    final_message = AIMessage(content=interpretation)
+    return {"messages": [final_message]}
 
 def process_risk_prediction_result(state: GraphState):
     """Parses the output of the first tool and updates the state."""
@@ -287,19 +314,6 @@ def process_interpretation_result(state: GraphState):
     
     return {"messages": [final_message], "interpretation_result": interpretation}
 
-
-# FIX #2: Converted this node to a synchronous function by wrapping the
-# async call in `asyncio.run()`. This resolves the TypeError.
-def generate_final_report(state: GraphState):
-    """Generates the final summary message after all tools have run."""
-    interpretation = asyncio.run(interpret_final_results(
-        ml_result=state["ml_result"], ml_confidence=state["ml_confidence"],
-        xray_result=state["xray_result"], xray_confidence=state["xray_confidence"],
-        questionnaire_inputs=state["questionnaire_inputs"], lang=state["lang"],
-    ))
-    final_message = AIMessage(content=interpretation)
-    return {"messages": [final_message]}
-
 # 3. DEFINE THE EDGES (ROUTING LOGIC)
 def route_after_agent(state: GraphState):
     """Routes to tools or ends the turn."""
@@ -310,7 +324,7 @@ def route_after_agent(state: GraphState):
     if isinstance(last, AIMessage):
         content = last.content if isinstance(last.content, str) else str(last.content)
         if "INITIAL_ASSESSMENT_RESULT:" in content:
-            return "process_initial_assessment"
+            return "generate_ml_report"
     return END
 
 def entry_node(state: GraphState):
@@ -358,12 +372,13 @@ workflow.add_node("entry", entry_node)
 workflow.add_node("process_initial_assessment", process_initial_assessment_from_agent)
 workflow.add_node("process_xray_analysis", process_xray_analysis_result)
 workflow.add_node("process_interpretation", process_interpretation_result)
-workflow.add_node("generate_final_report", generate_final_report)
+workflow.add_node("generate_ml_report", generate_ml_report)
+workflow.add_node("generate_xray_report", generate_xray_report)
 
 workflow.set_entry_point("entry")
 
 workflow.add_conditional_edges("entry", route_from_entry, {"agent": "agent", "reports_agent": "reports_agent", "auto_xray": "auto_xray"})
-workflow.add_conditional_edges("agent", route_after_agent, {"tools": "tools", "process_initial_assessment": "process_initial_assessment", END: END})
+workflow.add_conditional_edges("agent", route_after_agent, {"tools": "tools", "generate_ml_report": "generate_ml_report", END: END})
 workflow.add_conditional_edges(
     "tools",
     route_after_tools,
@@ -374,12 +389,13 @@ workflow.add_conditional_edges(
     }
 )
 
-workflow.add_edge("process_initial_assessment", "agent")
-workflow.add_edge("process_xray_analysis", "generate_final_report")
+workflow.add_edge("process_initial_assessment", "generate_ml_report")
+workflow.add_edge("process_xray_analysis", "generate_xray_report")
 workflow.add_edge("process_interpretation", "agent")  # CHANGED: Now routes back to agent for follow-up
 workflow.add_edge("reports_agent", "agent")  # CHANGED: Now routes back to agent for follow-up
-workflow.add_edge("auto_xray", "generate_final_report")
-workflow.add_edge("generate_final_report", END)
+workflow.add_edge("auto_xray", "generate_xray_report")
+workflow.add_edge("generate_ml_report", END)
+workflow.add_edge("generate_xray_report", END)
 
 # --- COMPILE THE GRAPH WITH CHECKPOINTER ---
 checkpointer = MemorySaver()
