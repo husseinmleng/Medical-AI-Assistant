@@ -225,11 +225,37 @@ async def generate_and_download_report(session_id: str):
     # Translate the conversation if the language is Arabic
     if state.get("lang") == "ar":
         print("Translating conversation to English for the report...")
+        print(f"Original conversation has {len(conversation_for_report)} messages")
+        
+        # Show first few messages before translation
+        for i, msg in enumerate(conversation_for_report[:3]):
+            print(f"Before translation - Message {i+1}: {msg.get('content', '')[:100]}...")
+        
         conversation_for_report = await translate_conversation_to_english(conversation_for_report)
+        
+        print(f"After translation, conversation has {len(conversation_for_report)} messages")
+        
+        # Show first few messages after translation
+        for i, msg in enumerate(conversation_for_report[:3]):
+            print(f"After translation - Message {i+1}: {msg.get('content', '')[:100]}...")
+        
+        # Verify that translation actually happened
+        if conversation_for_report and len(conversation_for_report) > 0:
+            first_msg_content = conversation_for_report[0].get('content', '')
+            if first_msg_content and any('\u0600' <= char <= '\u06FF' for char in first_msg_content):
+                print("⚠️ WARNING: Translation may have failed - Arabic characters still present!")
+                print("   This could cause LaTeX compilation issues.")
+            else:
+                print("✓ Translation appears successful - no Arabic characters detected")
+        else:
+            print("⚠️ WARNING: Translation returned empty conversation!")
+    else:
+        print(f"Language is {state.get('lang')}, no translation needed")
 
     questionnaire_data = state.get("questionnaire_inputs") or {}
     patient_name = questionnaire_data.get("patient_name", "Patient Name Not Provided")
     
+    print(f"Final conversation for LaTeX generation has {len(conversation_for_report)} messages")
     print("Generating LaTeX string...")
     try:
         latex_string = generate_latex_report(
@@ -248,6 +274,61 @@ async def generate_and_download_report(session_id: str):
             report_title="Medical Analysis Report"
         )
         print(f"LaTeX string generated successfully (length: {len(latex_string)} characters)")
+        
+        # Save LaTeX string to debug file
+        try:
+            import os
+            from datetime import datetime
+            
+            # Create debug directory if it doesn't exist
+            debug_dir = "debug_outputs/latex"
+            os.makedirs(debug_dir, exist_ok=True)
+            
+            # Generate filename with timestamp
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"latex_report_{timestamp}.tex"
+            filepath = os.path.join(debug_dir, filename)
+            
+            # Save LaTeX content
+            with open(filepath, 'w', encoding='utf-8') as f:
+                f.write(latex_string)
+            
+            print(f"✓ LaTeX debug file saved: {filepath}")
+            
+            # Also save a metadata file
+            meta_filename = f"latex_metadata_{timestamp}.txt"
+            meta_filepath = os.path.join(debug_dir, meta_filename)
+            
+            with open(meta_filepath, 'w', encoding='utf-8') as f:
+                f.write("=== LATEX GENERATION METADATA ===\n\n")
+                f.write(f"Session ID: {session_id}\n")
+                f.write(f"Patient Name: {patient_name}\n")
+                f.write(f"Language: {state.get('lang', 'unknown')}\n")
+                f.write(f"Conversation messages: {len(conversation_for_report)}\n")
+                f.write(f"LaTeX string length: {len(latex_string)} characters\n")
+                f.write(f"Generation timestamp: {datetime.now().isoformat()}\n")
+                f.write(f"Report title: Medical Analysis Report\n\n")
+                
+                f.write("=== CONVERSATION SUMMARY ===\n")
+                for i, msg in enumerate(conversation_for_report):
+                    role = msg.get('role', 'unknown')
+                    content = msg.get('content', '')[:100] + "..." if len(msg.get('content', '')) > 100 else msg.get('content', '')
+                    f.write(f"Message {i+1} ({role}): {content}\n")
+                
+                f.write("\n=== ANALYSIS RESULTS ===\n")
+                f.write(f"ML Result: {state.get('ml_result', 'N/A')}\n")
+                f.write(f"ML Confidence: {state.get('ml_confidence', 'N/A')}\n")
+                f.write(f"X-ray Result: {state.get('xray_result', 'N/A')}\n")
+                f.write(f"X-ray Confidence: {state.get('xray_confidence', 'N/A')}\n")
+                f.write(f"Annotated Image: {state.get('annotated_image_path', 'N/A')}\n")
+                f.write(f"Interpretation: {state.get('interpretation_result', 'N/A')}\n")
+                f.write(f"Reports Context: {state.get('reports_text_context', 'N/A')}\n")
+            
+            print(f"✓ LaTeX metadata file saved: {meta_filepath}")
+            
+        except Exception as e:
+            print(f"Warning: Could not save LaTeX debug files: {e}")
+        
     except Exception as e:
         print(f"Error generating LaTeX string: {e}")
         import traceback
@@ -260,9 +341,63 @@ async def generate_and_download_report(session_id: str):
     
     if not pdf_path or "Error" in pdf_path:
         print(f"PDF generation failed: {pdf_path}")
+        
+        # Save error information to debug file
+        try:
+            import os
+            from datetime import datetime
+            
+            debug_dir = "debug_outputs/reports"
+            os.makedirs(debug_dir, exist_ok=True)
+            
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"pdf_error_{timestamp}.txt"
+            filepath = os.path.join(debug_dir, filename)
+            
+            with open(filepath, 'w', encoding='utf-8') as f:
+                f.write("=== PDF GENERATION ERROR ===\n\n")
+                f.write(f"Session ID: {session_id}\n")
+                f.write(f"Timestamp: {datetime.now().isoformat()}\n")
+                f.write(f"Error: {pdf_path}\n")
+                f.write(f"LaTeX string length: {len(latex_string)} characters\n")
+            
+            print(f"✓ Error debug file saved: {filepath}")
+            
+        except Exception as e:
+            print(f"Warning: Could not save error debug file: {e}")
+        
         return None
     
     print(f"PDF generated successfully at: {pdf_path}")
+    
+    # Save successful PDF generation info
+    try:
+        import os
+        from datetime import datetime
+        
+        debug_dir = "debug_outputs/reports"
+        os.makedirs(debug_dir, exist_ok=True)
+        
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"pdf_success_{timestamp}.txt"
+        filepath = os.path.join(debug_dir, filename)
+        
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write("=== PDF GENERATION SUCCESS ===\n\n")
+            f.write(f"Session ID: {session_id}\n")
+            f.write(f"Timestamp: {datetime.now().isoformat()}\n")
+            f.write(f"PDF Path: {pdf_path}\n")
+            f.write(f"PDF Filename: {output_filename}\n")
+            f.write(f"LaTeX string length: {len(latex_string)} characters\n")
+            f.write(f"Patient Name: {patient_name}\n")
+            f.write(f"Language: {state.get('lang', 'unknown')}\n")
+            f.write(f"Conversation messages: {len(conversation_for_report)}\n")
+        
+        print(f"✓ Success debug file saved: {filepath}")
+        
+    except Exception as e:
+        print(f"Warning: Could not save success debug file: {e}")
+    
     return pdf_path
 
 
@@ -273,13 +408,18 @@ async def translate_conversation_to_english(conversation: List[dict]) -> List[di
     """
     try:
         if not conversation:
+            print("Translation: No conversation to translate")
             return conversation
+        
+        print(f"Translation: Starting with {len(conversation)} messages")
         
         # Check if conversation is already in English
         sample_text = " ".join([msg.get('content', '')[:100] for msg in conversation[:3]])
         if _is_likely_english(sample_text):
-            print("Conversation appears to already be in English, skipping translation.")
+            print("Translation: Conversation appears to already be in English, skipping translation.")
             return conversation
+        
+        print("Translation: Conversation appears to be in Arabic, proceeding with translation")
         
         # Create a structured transcript for translation
         transcript_parts = []
@@ -293,43 +433,62 @@ async def translate_conversation_to_english(conversation: List[dict]) -> List[di
                         content = content.decode('utf-8', errors='replace')
                     content = str(content)
                 except Exception as e:
-                    print(f"Warning: Could not process message content: {e}")
+                    print(f"Translation: Warning - Could not process message content: {e}")
                     content = str(content) if content else ""
                 
                 transcript_parts.append(f"[{role.upper()}_{i+1}]: {content}")
         
         if not transcript_parts:
+            print("Translation: No transcript parts created")
             return conversation
         
         transcript = "\n\n".join(transcript_parts)
+        print(f"Translation: Created transcript with {len(transcript_parts)} parts")
         
-        prompt = f"""You are a professional medical translator specializing in Arabic to English translation.
+        # Simplified prompt to reduce complexity and improve speed
+        prompt = f"""Translate this medical conversation from Arabic to English. Keep the format [USER_X] and [ASSISTANT_X].
 
-Translate the following medical consultation conversation from Arabic to English while:
-1. Preserving all medical terminology accurately
-2. Maintaining the exact conversation structure and role indicators
-3. Keeping the professional medical tone
-4. Ensuring cultural sensitivity in medical contexts
-5. Preserving any technical terms or measurements
-
-IMPORTANT: Return ONLY the translated conversation in the exact same format with role indicators [USER_X] and [ASSISTANT_X].
-
-Original Conversation:
 {transcript}
 
-Translated Conversation:"""
+Translation:"""
         
-        translation_llm = ChatOpenAI(model="gpt-4o", temperature=0, max_tokens=4000)
-        response = await translation_llm.ainvoke([HumanMessage(content=prompt)])
+        print(f"Translation: Starting translation of {len(conversation)} messages...")
+        
+        # Use a faster model and add timeout
+        translation_llm = ChatOpenAI(
+            model="gpt-4o-mini",  # Faster than gpt-4o
+            temperature=0, 
+            max_tokens=2000,  # Reduced from 4000
+            timeout=30  # 30 second timeout
+        )
+        
+        # Add timeout wrapper
+        import asyncio
+        try:
+            response = await asyncio.wait_for(
+                translation_llm.ainvoke([HumanMessage(content=prompt)]),
+                timeout=45  # 45 second total timeout
+            )
+            print("Translation: LLM response received successfully")
+        except asyncio.TimeoutError:
+            print("Translation: Translation timed out, using original conversation")
+            return conversation
+        except Exception as e:
+            print(f"Translation: Translation failed: {e}, using original conversation")
+            return conversation
+        
+        print("Translation: Translation completed, parsing response...")
         
         # Parse the translated response back into the conversation format
         translated_conversation = []
         translated_text = response.content.strip()
+        print(f"Translation: Raw response length: {len(translated_text)} characters")
         
         # Extract translated messages using regex pattern
         import re
         pattern = r'\[(USER|ASSISTANT)_\d+\]:\s*(.*?)(?=\n\n\[(?:USER|ASSISTANT)_\d+\]:|$)'
         matches = re.findall(pattern, translated_text, re.DOTALL)
+        print(f"Translation: Regex found {len(matches)} matches")
         
         if matches:
             for role, content in matches:
@@ -339,7 +498,9 @@ Translated Conversation:"""
                         "role": role.lower(), 
                         "content": clean_content
                     })
+            print(f"Translation: Successfully parsed {len(translated_conversation)} messages from regex")
         else:
+            print("Translation: Regex parsing failed, trying line-by-line parsing")
             # Fallback: try line-by-line parsing
             lines = translated_text.split('\n')
             current_msg = None
@@ -362,17 +523,65 @@ Translated Conversation:"""
             # Don't forget the last message
             if current_msg and current_msg['content']:
                 translated_conversation.append(current_msg)
+            
+            print(f"Translation: Line-by-line parsing found {len(translated_conversation)} messages")
         
         # Validate translation success
         if len(translated_conversation) == 0:
-            print("Translation parsing failed, using original conversation")
+            print("Translation: Translation parsing failed, using original conversation")
             return conversation
         
-        print(f"Successfully translated {len(conversation)} messages to English")
+        print(f"Translation: Successfully translated {len(conversation)} messages to English")
+        
+        # Save translated conversation to debug file
+        try:
+            import os
+            from datetime import datetime
+            
+            # Create debug directory if it doesn't exist
+            debug_dir = "debug_outputs/translations"
+            os.makedirs(debug_dir, exist_ok=True)
+            
+            # Generate filename with timestamp
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"translation_{timestamp}.txt"
+            filepath = os.path.join(debug_dir, filename)
+            
+            # Save original Arabic and translated English for comparison
+            with open(filepath, 'w', encoding='utf-8') as f:
+                f.write("=== ORIGINAL ARABIC CONVERSATION ===\n\n")
+                for i, msg in enumerate(conversation):
+                    role = msg.get('role', 'unknown')
+                    content = msg.get('content', '')
+                    f.write(f"[{role.upper()}_{i+1}]: {content}\n\n")
+                
+                f.write("\n" + "="*50 + "\n\n")
+                f.write("=== TRANSLATED ENGLISH CONVERSATION ===\n\n")
+                for i, msg in enumerate(translated_conversation):
+                    role = msg.get('role', 'unknown')
+                    content = msg.get('content', '')
+                    f.write(f"[{role.upper()}_{i+1}]: {content}\n\n")
+                
+                f.write("\n" + "="*50 + "\n\n")
+                f.write("=== TRANSLATION METADATA ===\n")
+                f.write(f"Original messages: {len(conversation)}\n")
+                f.write(f"Translated messages: {len(translated_conversation)}\n")
+                f.write(f"Translation timestamp: {datetime.now().isoformat()}\n")
+                f.write(f"Model used: gpt-4o-mini\n")
+                f.write(f"Prompt length: {len(prompt)} characters\n")
+                f.write(f"Response length: {len(translated_text)} characters\n")
+                f.write(f"Raw response: {translated_text}\n")
+            
+            print(f"Translation: ✓ Translation debug file saved: {filepath}")
+            
+        except Exception as e:
+            print(f"Translation: Warning - Could not save translation debug file: {e}")
+        
+        print(f"Translation: Returning {len(translated_conversation)} translated messages")
         return translated_conversation
         
     except Exception as e:
-        print(f"Error during translation: {e}")
+        print(f"Translation: Error during translation: {e}")
         import traceback
         traceback.print_exc()
         # Return original conversation on error, but ensure it's properly encoded

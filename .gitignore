@@ -201,6 +201,7 @@ demo_*.out
 screencapture-*.pdf
 temp_uploads/
 annotated_images/
+debug_outputs/
 
 # LaTeX temporary files
 *.aux
@@ -283,3 +284,5 @@ logs/
 *.out
 *.err
 
+debug_viewer.py
+DEBUG_SYSTEM_README.md
