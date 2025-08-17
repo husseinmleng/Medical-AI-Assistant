@@ -1,18 +1,13 @@
-# src/app_logic.py
-
 import asyncio
 import io
 from typing import List
 from openai import OpenAI
 from langchain_core.messages import HumanMessage, AIMessage
 from langchain_openai import ChatOpenAI
-
 # Import the pre-compiled app with checkpointing from graph.py
 from src.graph import app, GraphState
-
 # --- Clients ---
 transcription_client = OpenAI()
-
 # --- App Utility Functions ---
 async def transcribe_audio(audio_bytes: bytes, lang: str) -> str:
     """Transcribes audio to text using OpenAI's Whisper model."""
@@ -50,7 +45,6 @@ async def text_to_speech(text: str, voice: str = "alloy") -> bytes:
     except Exception as e:
         print(f"ERROR: TTS generation failed: {e}")
         return b""
-
 async def generate_chat_title(user_input: str) -> str:
     """Generates a short title for a new chat session."""
     try:
@@ -61,7 +55,6 @@ async def generate_chat_title(user_input: str) -> str:
     except Exception as e:
         print(f"Error generating title: {e}")
         return "New Chat"
-
 # --- Main Graph Invocation Function ---
 def run_graph(user_input: str, session_id: str, lang: str, image_path: str = None, file_paths: List[str] = None):
     """
@@ -70,7 +63,6 @@ def run_graph(user_input: str, session_id: str, lang: str, image_path: str = Non
     """
     try:
         config = {"configurable": {"thread_id": session_id}}
-
         if image_path:
             current_input = image_path
         elif file_paths:
@@ -78,17 +70,13 @@ def run_graph(user_input: str, session_id: str, lang: str, image_path: str = Non
             current_input = user_input
         else:
             current_input = user_input
-
         messages = [HumanMessage(content=current_input)]
-
         graph_input = {"messages": messages, "lang": lang}
         if file_paths:
             graph_input["report_file_paths"] = file_paths
         if image_path:
             graph_input["uploaded_image_path"] = image_path
-
         final_state = app.invoke(graph_input, config)
-
         ai_messages = [m for m in final_state.get("messages", []) if isinstance(m, AIMessage)]
         tts_audio = None
         if ai_messages:
@@ -96,13 +84,12 @@ def run_graph(user_input: str, session_id: str, lang: str, image_path: str = Non
             last_ai_message = ai_messages[-1].content
             if "INTERPRETATION_RESULT:" not in last_ai_message:
                  tts_audio = asyncio.run(text_to_speech(last_ai_message))
-
         return {
             "messages": final_state.get("messages", []),
             "annotated_image_path": final_state.get("annotated_image_path"),
             "tts_audio": tts_audio,
-            "interpretation_result": final_state.get("interpretation_result"),  # Added this
-            "reports_text_context": final_state.get("reports_text_context")  # Added this
+            "interpretation_result": final_state.get("interpretation_result"),
+            "reports_text_context": final_state.get("reports_text_context")
         }
     except Exception as e:
         error_msg = f"An unexpected error occurred in the graph logic: {str(e)}"
@@ -118,27 +105,21 @@ def run_graph(user_input: str, session_id: str, lang: str, image_path: str = Non
             "interpretation_result": None,
             "reports_text_context": None
         }
-
 def get_history(session_id: str):
     """Retrieves conversation history using the high-level app.get_state method."""
     config = {"configurable": {"thread_id": session_id}}
-    # The app already has the checkpointer, so we can call get_state directly.
     state_record = app.get_state(config)
     return state_record.values.get('messages', []) if state_record else []
-
 def get_session_state(session_id: str):
     """Retrieves the full session state for checking report context."""
     config = {"configurable": {"thread_id": session_id}}
     state_record = app.get_state(config)
     return state_record.values if state_record else {}
-
 def clear_session_history(session_id: str):
     """
     Clears the history for a given session ID using the high-level app.update_state.
     """
     config = {"configurable": {"thread_id": session_id}}
-    # Reset the state by providing a full, empty GraphState dictionary.
-    # A default 'lang' is needed to satisfy the type hint.
     empty_state = {
         "messages": [],
         "questionnaire_inputs": None,
@@ -153,23 +134,18 @@ def clear_session_history(session_id: str):
         "reports_text_context": None,
         "lang": 'en' 
     }
-    # Use the pre-compiled app to update the state.
     app.update_state(config, empty_state)
     print(f"Cleared session history for {session_id}")
-
 def reset_for_new_report(session_id: str, preserve_lang: str | None = None):
     """
     Clears prior chat/messages and any previous report interpretation/context while preserving language.
-    Use this before processing a NEW report upload so that follow-up chat ties only to the latest report.
     """
     config = {"configurable": {"thread_id": session_id}}
-    # Determine language to keep
     try:
         state_record = app.get_state(config)
         current_lang = preserve_lang or (state_record.values.get('lang') if state_record else None) or 'en'
     except Exception:
         current_lang = preserve_lang or 'en'
-
     reset_state: GraphState = {
         "messages": [],
         "questionnaire_inputs": None,
@@ -186,25 +162,20 @@ def reset_for_new_report(session_id: str, preserve_lang: str | None = None):
     }
     app.update_state(config, reset_state)
     print(f"Reset session for new report in {session_id} (lang={current_lang})")
-
 def has_report_context(session_id: str) -> bool:
     """Check if the session has report interpretation context available for chat."""
     state = get_session_state(session_id)
     return bool(state.get("interpretation_result") or state.get("reports_text_context"))
-
 def reset_for_new_xray(session_id: str, preserve_lang: str | None = None):
     """
     Clears prior chat/messages and any previous xray interpretation/context while preserving language.
-    Use this before processing a NEW xray upload so that follow-up chat ties only to the latest xray.
     """
     config = {"configurable": {"thread_id": session_id}}
-    # Determine language to keep
     try:
         state_record = app.get_state(config)
         current_lang = preserve_lang or (state_record.values.get('lang') if state_record else None) or 'en'
     except Exception:
         current_lang = preserve_lang or 'en'
-
     reset_state: GraphState = {
         "messages": [],
         "questionnaire_inputs": None,
@@ -221,3 +192,59 @@ def reset_for_new_xray(session_id: str, preserve_lang: str | None = None):
     }
     app.update_state(config, reset_state)
     print(f"Reset session for new xray in {session_id} (lang={current_lang})")
+
+# --- CORRECTED: This function now correctly orchestrates the PDF generation ---
+def generate_and_download_report(session_id: str):
+    """Generates and downloads a PDF report of the conversation."""
+    from src.latex_agent import generate_latex_report
+    from src.tools import convert_latex_to_pdf
+    from langchain_core.messages import AIMessage, HumanMessage
+
+    print(f"Starting PDF report generation for session: {session_id}")
+    state = get_session_state(session_id)
+    if not state:
+        print("Error: Could not retrieve session state.")
+        return None
+
+    conversation_for_report = []
+    for msg in state.get("messages", []):
+        if isinstance(msg, HumanMessage):
+            conversation_for_report.append({"role": "user", "content": msg.content})
+        elif isinstance(msg, AIMessage):
+            conversation_for_report.append({"role": "assistant", "content": msg.content})
+
+    # --- FIX: Safely access questionnaire data ---
+    # This prevents the "'NoneType' object has no attribute 'get'" error
+    # by providing an empty dictionary if 'questionnaire_inputs' is None.
+    questionnaire_data = state.get("questionnaire_inputs") or {}
+    patient_name = questionnaire_data.get("patient_name", "Patient Name Not Provided")
+    
+    print("Generating LaTeX string...")
+    latex_string = generate_latex_report(
+        conversation=conversation_for_report,
+        patient_info=questionnaire_data, # Use the safe dictionary
+        analysis_results={
+            "ml_result": state.get("ml_result"),
+            "ml_confidence": state.get("ml_confidence"),
+            "xray_result": state.get("xray_result"),
+            "xray_confidence": state.get("xray_confidence"),
+            "annotated_image_path": state.get("annotated_image_path"),
+            "interpretation_result": state.get("interpretation_result"),
+            "reports_text_context": state.get("reports_text_context"),
+        },
+        patient_name=patient_name,
+        report_title="Medical Analysis Report"
+    )
+    
+    print("Converting LaTeX string to PDF...")
+    # The output filename includes the session ID to avoid conflicts
+    output_filename = f"report_{session_id}.pdf"
+    pdf_path = convert_latex_to_pdf(latex_string, output_filename)
+    
+    # The tool now returns the path on success, or an error string
+    if not pdf_path or "Error" in pdf_path:
+        print(f"PDF generation failed: {pdf_path}")
+        return None
+    
+    print(f"PDF generated successfully at: {pdf_path}")
+    return pdf_path

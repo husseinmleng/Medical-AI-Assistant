@@ -1,4 +1,3 @@
-# lg_st_app.py (Enhanced for Report Chat)
 import streamlit as st
 import uuid
 import asyncio
@@ -6,7 +5,8 @@ import os
 import tempfile
 from src.app_logic import (
     run_graph, clear_session_history, generate_chat_title, transcribe_audio, 
-    get_history, reset_for_new_report, has_report_context, reset_for_new_xray
+    get_history, reset_for_new_report, has_report_context, reset_for_new_xray,
+    generate_and_download_report # <-- IMPORT THE NEW FUNCTION
 )
 from streamlit_mic_recorder import mic_recorder
 from typing import List
@@ -95,7 +95,6 @@ def handle_chat_submission(user_input, image_path=None, file_paths: List[str] = 
     
     # Add user message to the conversation state
     active_conv["messages"].append({"role": "user", "content": display_message})
-
     # Show a spinner while the backend is working
     with st.spinner("AI assistant is thinking..."):
         # Generate a title for new chats on the first user message
@@ -106,7 +105,6 @@ def handle_chat_submission(user_input, image_path=None, file_paths: List[str] = 
             except Exception as e:
                 print(f"Error generating title: {e}")
                 active_conv['title'] = "Medical Chat"
-
         # Run the graph with the actual user input
         response = run_graph(user_input, session_id, active_conv["lang"], image_path, file_paths)
         if response.get("tts_audio"):
@@ -122,7 +120,6 @@ def handle_chat_submission(user_input, image_path=None, file_paths: List[str] = 
         
         # Store report context for indicating chat capability
         active_conv["has_report_context"] = bool(response.get("interpretation_result"))
-
     # Clean up the temporary file for the uploaded image
     if image_path and "temp_upload" in image_path and os.path.exists(image_path):
         try:
@@ -140,9 +137,7 @@ def handle_chat_submission(user_input, image_path=None, file_paths: List[str] = 
                 except OSError as e:
                     print(f"Error removing temporary upload file {fp}: {e}")
 
-
 # --- Helper Functions ---
-
 def is_technical_message(content: str) -> bool:
     """Check if a message contains technical/raw output that shouldn't be displayed to users."""
     technical_indicators = [
@@ -207,10 +202,52 @@ with st.sidebar:
             switch_conversation(session_id)
             st.rerun()
 
+    # --- NEW: PDF Report Download Section ---
+    st.divider()
+    st.header("📥 Download Report")
+    
+    # This section now handles the PDF generation and download
+    if st.button("Generate PDF Report", key="generate_pdf_btn", use_container_width=True):
+        active_id = st.session_state.active_session_id
+        if active_id:
+            with st.spinner("Generating professional PDF report..."):
+                try:
+                    pdf_path = generate_and_download_report(active_id)
+                    if pdf_path and os.path.exists(pdf_path):
+                        with open(pdf_path, "rb") as pdf_file:
+                            pdf_bytes = pdf_file.read()
+                        
+                        # Use a session state key to store the bytes for the download button
+                        st.session_state[f'pdf_bytes_{active_id}'] = pdf_bytes
+                        st.session_state[f'pdf_filename_{active_id}'] = os.path.basename(pdf_path)
+                        
+                        # Clean up the server-side file after reading it
+                        os.remove(pdf_path)
+                        
+                    else:
+                        st.error("Failed to generate the PDF. Please check the logs.")
+                        st.session_state[f'pdf_bytes_{active_id}'] = None
+
+                except Exception as e:
+                    st.error(f"An error occurred: {e}")
+                    st.session_state[f'pdf_bytes_{active_id}'] = None
+
+    # Display the download button if the PDF bytes are available in session state
+    active_id = st.session_state.active_session_id
+    if st.session_state.get(f'pdf_bytes_{active_id}'):
+        st.download_button(
+            label="⬇️ Download PDF",
+            data=st.session_state[f'pdf_bytes_{active_id}'],
+            file_name=st.session_state[f'pdf_filename_{active_id}'],
+            mime="application/pdf",
+            use_container_width=True,
+            type="primary"
+        )
+
+
 # --- Main Chat Interface ---
 st.title("Medical AI Assistant")
 st.caption("Friendly guidance, not a diagnosis. Always consult your doctor for medical decisions.")
-
 active_session_id = st.session_state.active_session_id
 active_conv = st.session_state.conversations[active_session_id]
 
@@ -244,7 +281,7 @@ else:
         avatar = "🩺" if role == "assistant" else "👤"
         with st.chat_message(role, avatar=avatar):
             st.write(msg["content"])
-
+            
     # Show annotated image inline if exists
     if active_conv.get("annotated_image_path") and os.path.exists(active_conv["annotated_image_path"]):
         with st.chat_message("assistant", avatar="🩺"):
@@ -267,12 +304,10 @@ else:
         st.session_state.audio_to_play = None
 
     st.markdown("---")
-
     # --- Inline attachments (same view as chat) ---
     image_path_key = f'image_path_to_process_{active_session_id}'
     report_paths_key = f'report_paths_to_process_{active_session_id}'
     up_left, up_right = st.columns([0.5, 0.5])
-
     with up_left:
         st.subheader("🩻 X-Ray")
         uploaded_file = st.file_uploader(
@@ -291,7 +326,6 @@ else:
             with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1], prefix="temp_upload_") as tmp_file:
                 tmp_file.write(uploaded_file.getvalue())
                 st.session_state[image_path_key] = tmp_file.name
-
     with up_right:
         st.subheader("📄 Reports")
         uploaded_reports = st.file_uploader(
@@ -334,11 +368,9 @@ else:
         audio_info = mic_recorder(start_prompt="🎤", stop_prompt="⏹️", key=f'recorder_{active_session_id}', use_container_width=True)
 
     # --- INPUT HANDLING LOGIC (Enhanced) ---
-
     if text_prompt:
         handle_chat_submission(text_prompt)
         st.rerun()
-
     elif audio_info and audio_info['id'] is not None:
         last_audio_id_key = f'last_audio_id_{active_session_id}'
         if audio_info['id'] != st.session_state.get(last_audio_id_key):
@@ -358,7 +390,7 @@ else:
             # Clear local chat view and any annotated image
             active_conv["messages"] = []
             active_conv["annotated_image_path"] = None
-            active_conv["has_report_context"] = False  # Will be set to True after processing
+            active_conv["has_report_context"] = False
             handle_chat_submission(
                 user_input="Here is the X-ray image for analysis.",
                 image_path=image_path_to_process
@@ -377,7 +409,7 @@ else:
             # Clear local chat view and any annotated image
             active_conv["messages"] = []
             active_conv["annotated_image_path"] = None
-            active_conv["has_report_context"] = False  # Will be set to True after processing
+            active_conv["has_report_context"] = False
             handle_chat_submission(
                 user_input="Please interpret these medical reports.",
                 file_paths=report_paths_to_process
