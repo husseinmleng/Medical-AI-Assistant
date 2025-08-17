@@ -11,6 +11,16 @@ from src.app_logic import (
 from streamlit_mic_recorder import mic_recorder
 from typing import List
 
+# --- LaTeX Installation Check ---
+def check_latex_for_app():
+    """Check if LaTeX is available for PDF generation."""
+    try:
+        from src.tools import check_latex_installation
+        status = check_latex_installation()
+        return status
+    except Exception:
+        return {"installed": False, "error": "Could not check LaTeX installation"}
+
 # --- Page Configuration ---
 st.set_page_config(
     page_title="Medical AI Assistant",
@@ -206,31 +216,43 @@ with st.sidebar:
     st.divider()
     st.header("📥 Download Report")
     
+    # Check LaTeX installation and show warning if needed
+    latex_status = check_latex_for_app()
+    if not latex_status.get("installed", False):
+        st.warning(
+            f"⚠️ PDF generation requires LaTeX to be installed. "
+            f"{latex_status.get('installation_guide', 'Please install a LaTeX distribution.')}"
+        )
+        if st.button("Check LaTeX Installation", key="check_latex_btn"):
+            st.info(f"LaTeX Status: {latex_status}")
+    
     # This section now handles the PDF generation and download
-    if st.button("Generate PDF Report", key="generate_pdf_btn", use_container_width=True):
+    if st.button("Generate PDF Report", key="generate_pdf_btn", use_container_width=True, disabled=not latex_status.get("installed", False)):
         active_id = st.session_state.active_session_id
         if active_id:
-            with st.spinner("Generating professional PDF report..."):
-                try:
-                    pdf_path = generate_and_download_report(active_id)
-                    if pdf_path and os.path.exists(pdf_path):
-                        with open(pdf_path, "rb") as pdf_file:
-                            pdf_bytes = pdf_file.read()
-                        
-                        # Use a session state key to store the bytes for the download button
-                        st.session_state[f'pdf_bytes_{active_id}'] = pdf_bytes
-                        st.session_state[f'pdf_filename_{active_id}'] = os.path.basename(pdf_path)
-                        
-                        # Clean up the server-side file after reading it
-                        os.remove(pdf_path)
-                        
-                    else:
-                        st.error("Failed to generate the PDF. Please check the logs.")
-                        st.session_state[f'pdf_bytes_{active_id}'] = None
+            async def _generate_pdf_report():
+                with st.spinner("Generating professional PDF report..."):
+                    try:
+                        pdf_path = await generate_and_download_report(active_id)
+                        if pdf_path and os.path.exists(pdf_path):
+                            with open(pdf_path, "rb") as pdf_file:
+                                pdf_bytes = pdf_file.read()
+                            
+                            # Use a session state key to store the bytes for the download button
+                            st.session_state[f'pdf_bytes_{active_id}'] = pdf_bytes
+                            st.session_state[f'pdf_filename_{active_id}'] = os.path.basename(pdf_path)
+                            
+                            # Clean up the server-side file after reading it
+                            os.remove(pdf_path)
+                            
+                        else:
+                            st.error("Failed to generate the PDF. Please check the logs.")
+                            st.session_state[f'pdf_bytes_{active_id}'] = None
 
-                except Exception as e:
-                    st.error(f"An error occurred: {e}")
-                    st.session_state[f'pdf_bytes_{active_id}'] = None
+                    except Exception as e:
+                        st.error(f"An error occurred: {e}")
+                        st.session_state[f'pdf_bytes_{active_id}'] = None
+            asyncio.run(_generate_pdf_report())
 
     # Display the download button if the PDF bytes are available in session state
     active_id = st.session_state.active_session_id
@@ -389,7 +411,6 @@ else:
             reset_for_new_xray(active_session_id, preserve_lang=active_conv["lang"]) 
             # Clear local chat view and any annotated image
             active_conv["messages"] = []
-            active_conv["annotated_image_path"] = None
             active_conv["has_report_context"] = False
             handle_chat_submission(
                 user_input="Here is the X-ray image for analysis.",

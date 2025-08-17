@@ -1,165 +1,530 @@
-from typing import List, Dict, Any
-import datetime
-import os
-import base64
-import mimetypes
+"""
+LaTeX Medical Report Generation Agent
+Generates professional medical reports in LaTeX format from conversation data.
+"""
 
-def _image_to_latex_include(image_path: str, width: str = "0.8\textwidth") -> str:
-    """Converts an image file to a base64 string and includes it in LaTeX."""
-    if not image_path or not os.path.exists(image_path):
-        return ""
-    
-    # For simplicity, we'll assume images are already in a format LaTeX can handle
-    # or that they will be converted externally. Here, we just include the path.
-    # In a real scenario, you might copy the image to a temp dir and reference it.
-    # Or, if using pdflatex, you might need to convert to .eps or .pdf first.
-    # For now, we'll just include the path directly, assuming it's accessible.
-    
-    # If we want to embed base64, it's more complex and usually requires a package like `graphicx`
-    # and potentially a custom LaTeX command or external processing.
-    # For direct LaTeX compilation, it's usually better to reference a file.
-    
-    # Let's assume the image is a PNG/JPG and can be directly included by pdflatex
-    # if it's in the same directory or a known path.
-    # We'll use a relative path from where pdflatex is run, or an absolute path.
-    # Given the Streamlit app, the annotated images are in 'annotated_images' folder
-    # which is at the project root.
-    
-    # To make it robust, we should ensure the image path is relative to the LaTeX compilation directory
-    # or copy it there. For now, let's assume the path is directly usable.
-    
-    # Example: /media/husseinmleng/New Volume/Jupyter_Notebooks/Freelancing/Breast-Cancer/annotated_images/some_image.png
-    # We need to make sure pdflatex can find this. 
-    
-    # For now, let's just return the LaTeX include command.
-    # The user will need to ensure the image is accessible to pdflatex.
-    return f"\\includegraphics[width={width}]{{{image_path}}}"
+from typing import List, Dict, Any, Optional
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage
+from datetime import datetime
+import re
 
 
 def generate_latex_report(
-    conversation: List[Dict[str, Any]],
+    conversation: List[Dict[str, str]],
     patient_info: Dict[str, Any],
     analysis_results: Dict[str, Any],
-    report_datetime: datetime.datetime = None,
     patient_name: str = "Patient Name Not Provided",
     report_title: str = "Medical Analysis Report"
 ) -> str:
     """
-    Generates a LaTeX string for a comprehensive medical report.
-
-    Args:
-        conversation: List of chat messages (role, content).
-        patient_info: Dictionary of questionnaire inputs (e.g., age, family_history_breast_cancer).
-        analysis_results: Dictionary containing ML and X-ray analysis results.
-        report_datetime: Optional datetime object for the report. Defaults to now.
-        patient_name: Optional string for patient's name.
-        report_title: Optional string for the report title.
-    Returns:
-        A string containing the LaTeX code for the report.
-    """
-    if report_datetime is None:
-        report_datetime = datetime.datetime.now()
-
-    latex_content = []
-
-    # Document preamble
-    latex_content.append(r"\documentclass[12pt]{article}")
-    latex_content.append(r"\usepackage[utf8]{inputenc}")
-    latex_content.append(r"\usepackage[T1]{fontenc}")
-    latex_content.append(r"\usepackage{amsmath}")
-    latex_content.append(r"\usepackage{amsfonts}")
-    latex_content.append(r"\usepackage{amssymb}")
-    latex_content.append(r"\usepackage{graphicx}") # For including images
-    latex_content.append(r"\usepackage{caption}") # For \captionof
-    latex_content.append(r"\usepackage[margin=1in]{geometry}")
-    latex_content.append(r"\usepackage{fancyhdr}")
-    latex_content.append(r"\pagestyle{fancy}")
-    latex_content.append(r"\fancyhf{}")
-    latex_content.append(r"\rhead{\thepage}")
-    latex_content.append(r"\lhead{" + report_title + r"}")
-    latex_content.append(r"\renewcommand{\headrulewidth}{0.4pt}")
-    latex_content.append(r"\renewcommand{\footrulewidth}{0pt}")
-    latex_content.append(r"\begin{document}")
-    latex_content.append(r"\begin{center}")
-    latex_content.append(r"\Huge\textbf{" + report_title + r"}\\[10pt]")
-    latex_content.append(r"\large Date: " + report_datetime.strftime("%Y-%m-%d %H:%M:%S") + r"\\[10pt]")
-    latex_content.append(r"\end{center}")
-    latex_content.append(r"\hrule")
-    latex_content.append(r"\section*{Patient Information}")
-    latex_content.append(r"\textbf{Patient Name:} " + patient_name + r"\\")
+    Generates a professional LaTeX medical report from conversation and analysis data.
     
-    # Questionnaire Results
-    if patient_info:
-        latex_content.append(r"\subsection*{Questionnaire Results}")
-        latex_content.append(r"\begin{itemize}")
-        for key, value in patient_info.items():
-            # Format keys for readability
-            formatted_key = key.replace('_', ' ').title()
-            latex_content.append(f"    \item \textbf{{{formatted_key}:}} {value}")
-        latex_content.append(r"\end{itemize}")
+    Args:
+        conversation: List of conversation messages with 'role' and 'content'
+        patient_info: Dictionary containing patient questionnaire data
+        analysis_results: Dictionary containing ML and X-ray analysis results
+        patient_name: Name of the patient
+        report_title: Title of the report
+        
+    Returns:
+        Complete LaTeX document string ready for compilation
+    """
+    
+    # Clean and format conversation content
+    formatted_conversation = _format_conversation_for_latex(conversation)
+    
+    # Extract key findings from conversation using LLM
+    key_findings = _extract_key_findings(conversation)
+    
+    # Format patient information
+    patient_section = _format_patient_info(patient_info)
+    
+    # Format analysis results
+    analysis_section = _format_analysis_results(analysis_results)
+    
+    # Generate recommendations
+    recommendations = _generate_recommendations(conversation, analysis_results)
+    
+    # Current date
+    current_date = datetime.now().strftime("%B %d, %Y")
+    
+    # Build the LaTeX document
+    latex_content = f"""\\documentclass[11pt,a4paper]{{article}}
+\\usepackage[utf8]{{inputenc}}
+\\usepackage[T1]{{fontenc}}
+\\usepackage{{geometry}}
+\\usepackage{{fancyhdr}}
+\\usepackage{{graphicx}}
+\\usepackage{{xcolor}}
+\\usepackage{{tcolorbox}}
+\\usepackage{{enumitem}}
+\\usepackage{{booktabs}}
+\\usepackage{{longtable}}
+\\usepackage{{amsmath}}
+\\usepackage{{amssymb}}
+\\usepackage{{hyperref}}
+\\usepackage{{times}}
 
-    # ML Analysis Results
-    ml_result = analysis_results.get("ml_result")
-    ml_confidence = analysis_results.get("ml_confidence")
+% Page setup
+\\geometry{{margin=2.5cm}}
+\\pagestyle{{fancy}}
+\\fancyhf{{}}
+\\fancyhead[L]{{\\textbf{{{report_title}}}}}
+\\fancyhead[R]{{\\today}}
+\\fancyfoot[C]{{\\thepage}}
+
+% Colors
+\\definecolor{{headerblue}}{{RGB}}{{41, 128, 185}}
+\\definecolor{{lightgray}}{{RGB}}{{248, 249, 250}}
+\\definecolor{{darkgray}}{{RGB}}{{108, 117, 125}}
+
+% Custom boxes
+\\newtcolorbox{{infobox}}{{
+    colback=lightgray,
+    colframe=headerblue,
+    boxrule=1pt,
+    arc=3pt,
+    left=10pt,
+    right=10pt,
+    top=10pt,
+    bottom=10pt
+}}
+
+\\newtcolorbox{{warningbox}}{{
+    colback=red!5,
+    colframe=red!50,
+    boxrule=1pt,
+    arc=3pt,
+    left=10pt,
+    right=10pt,
+    top=10pt,
+    bottom=10pt
+}}
+
+\\begin{{document}}
+
+% Title page
+\\begin{{titlepage}}
+    \\centering
+    \\vspace*{{2cm}}
+    
+    {{\\Huge \\textcolor{{headerblue}}{{\\textbf{{{report_title}}}}}}}
+    
+    \\vspace{{1.5cm}}
+    
+    {{\\Large Medical AI Assistant Analysis Report}}
+    
+    \\vspace{{2cm}}
+    
+    \\begin{{infobox}}
+        \\centering
+        \\textbf{{Patient Information}}
+        
+        \\vspace{{0.5cm}}
+        
+        \\textbf{{Name:}} {_escape_latex(patient_name)} \\\\
+        \\textbf{{Report Date:}} {current_date} \\\\
+        \\textbf{{Generated By:}} Medical AI Assistant
+    \\end{{infobox}}
+    
+    \\vfill
+    
+    \\begin{{warningbox}}
+        \\centering
+        \\textbf{{IMPORTANT DISCLAIMER}}
+        
+        \\vspace{{0.3cm}}
+        
+        This report is generated by an AI assistant and is for informational purposes only. 
+        It does not constitute medical diagnosis or treatment recommendations. 
+        Always consult with a qualified healthcare professional for medical advice.
+    \\end{{warningbox}}
+    
+\\end{{titlepage}}
+
+\\newpage
+
+% Table of Contents
+\\tableofcontents
+\\newpage
+
+% Patient Information Section
+\\section{{Patient Information}}
+
+{patient_section}
+
+% Analysis Results Section  
+\\section{{Analysis Results}}
+
+{analysis_section}
+
+% Key Findings Section
+\\section{{Key Clinical Findings}}
+
+{key_findings}
+
+% Conversation Summary Section
+\\section{{Consultation Summary}}
+
+The following section contains a summary of the patient consultation conducted with the Medical AI Assistant.
+
+\\subsection{{Conversation Transcript}}
+
+{formatted_conversation}
+
+% Recommendations Section
+\\section{{Recommendations}}
+
+{recommendations}
+
+% Footer Section
+\\section{{Report Information}}
+
+\\begin{{infobox}}
+\\textbf{{Report Generation Details:}}
+\\begin{{itemize}}[leftmargin=*]
+    \\item Generated on: {current_date}
+    \\item System: Medical AI Assistant v1.0
+    \\item Language: Translated from Arabic to English
+    \\item Report Type: Automated Analysis Report
+\\end{{itemize}}
+\\end{{infobox}}
+
+\\vspace{{1cm}}
+
+\\begin{{warningbox}}
+\\textbf{{Medical Disclaimer:}} This automated report is based on patient responses and AI analysis. It is not a substitute for professional medical examination, diagnosis, or treatment. The patient should consult with qualified healthcare providers for proper medical evaluation and care decisions.
+\\end{{warningbox}}
+
+\\end{{document}}"""
+
+    return latex_content
+
+
+def _clean_text_for_latex(text: str) -> str:
+    """
+    Clean and validate text to prevent LaTeX compilation errors.
+    This function handles common issues that cause LaTeX to fail.
+    """
+    if not text:
+        return ""
+    
+    # Ensure text is a string
+    try:
+        if isinstance(text, bytes):
+            text = text.decode('utf-8', errors='replace')
+        text = str(text)
+    except Exception:
+        text = str(text)
+    
+    # Remove or replace problematic characters
+    problematic_chars = {
+        '\x00': '',      # Null bytes
+        '\r': ' ',       # Carriage returns
+        '\t': ' ',       # Tabs
+        '\x0b': ' ',     # Vertical tab
+        '\x0c': ' ',     # Form feed
+        '\x1a': '',      # Substitute character
+        '\x1b': '',      # Escape character
+    }
+    
+    for char, replacement in problematic_chars.items():
+        text = text.replace(char, replacement)
+    
+    # Remove any remaining control characters (except newlines)
+    import re
+    text = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', text)
+    
+    # Ensure the text is valid UTF-8
+    try:
+        text.encode('utf-8')
+    except UnicodeEncodeError:
+        text = text.encode('utf-8', errors='replace').decode('utf-8')
+    
+    return text
+
+
+def _escape_latex(text: str) -> str:
+    """Escape special LaTeX characters in text."""
+    if not text:
+        return ""
+    
+    # First clean the text to remove problematic characters
+    text = _clean_text_for_latex(text)
+    
+    # Dictionary of LaTeX special characters and their escaped versions
+    latex_special_chars = {
+        '&': '\\&',
+        '%': '\\%', 
+        '$': '\\$',
+        '#': '\\#',
+        '^': '\\textasciicircum{}',
+        '_': '\\_',
+        '{': '\\{',
+        '}': '\\}',
+        '~': '\\textasciitilde{}',
+        '\\': '\\textbackslash{}'
+    }
+    
+    result = text
+    
+    # First, handle backslashes to avoid double-escaping
+    result = result.replace('\\', '\\textbackslash{}')
+    
+    # Then handle other special characters
+    for char, escaped in latex_special_chars.items():
+        if char != '\\':  # Skip backslash as we already handled it
+            result = result.replace(char, escaped)
+    
+    # Clean up any problematic sequences that might cause LaTeX errors
+    result = result.replace('\\textbackslash{}\\textbackslash{}', '\\textbackslash{}')
+    result = result.replace('\\textbackslash{}\\textbackslash{}', '\\textbackslash{}')
+    
+    return result
+
+
+def _format_conversation_for_latex(conversation: List[Dict[str, str]]) -> str:
+    """Format conversation messages for LaTeX display."""
+    if not conversation:
+        return "No conversation data available."
+    
+    formatted_messages = []
+    
+    for i, msg in enumerate(conversation, 1):
+        role = msg.get('role', 'unknown')
+        content = msg.get('content', '')
+        
+        # Clean and escape content
+        clean_content = _escape_latex(content)
+        
+        # Format based on role
+        if role.lower() in ['user', 'patient']:
+            formatted_messages.append(f"""
+\\textbf{{Patient Message {i}:}}
+
+\\begin{{quote}}
+{clean_content}
+\\end{{quote}}
+""")
+        elif role.lower() in ['assistant', 'ai', 'doctor']:
+            formatted_messages.append(f"""
+\\textbf{{AI Assistant Response {i}:}}
+
+\\begin{{infobox}}
+{clean_content}
+\\end{{infobox}}
+""")
+    
+    return "\n".join(formatted_messages)
+
+
+def _format_patient_info(patient_info: Dict[str, Any]) -> str:
+    """Format patient information section."""
+    if not patient_info:
+        return "No patient information available."
+    
+    info_lines = []
+    
+    # Define field mappings with user-friendly names
+    field_mappings = {
+        'patient_name': 'Patient Name',
+        'age': 'Age',
+        'breast_feeding_months': 'Breastfeeding Duration (months)',
+        'family_history_breast_cancer': 'Family History of Breast Cancer',
+        'recent_weight_loss': 'Recent Weight Loss',
+        'previous_breast_conditions': 'Previous Breast Conditions',
+        'symptom_duration_days': 'Symptom Duration (days)',
+        'fatigue': 'Fatigue Symptoms'
+    }
+    
+    info_lines.append("\\begin{longtable}{p{0.4\\textwidth}p{0.5\\textwidth}}")
+    info_lines.append("\\toprule")
+    info_lines.append("\\textbf{Information} & \\textbf{Value} \\\\")
+    info_lines.append("\\midrule")
+    
+    for field, friendly_name in field_mappings.items():
+        value = patient_info.get(field, 'Not provided')
+        if value in ['yes', 'no']:
+            value = value.capitalize()
+        elif isinstance(value, (int, float)):
+            value = str(value)
+        
+        escaped_value = _escape_latex(str(value))
+        info_lines.append(f"{friendly_name} & {escaped_value} \\\\")
+    
+    info_lines.append("\\bottomrule")
+    info_lines.append("\\end{longtable}")
+    
+    return "\n".join(info_lines)
+
+
+def _format_analysis_results(analysis_results: Dict[str, Any]) -> str:
+    """Format analysis results section."""
+    sections = []
+    
+    # ML/Questionnaire Results
+    ml_result = analysis_results.get('ml_result')
+    ml_confidence = analysis_results.get('ml_confidence')
+    
     if ml_result:
-        latex_content.append(r"\section*{Machine Learning Analysis}")
-        latex_content.append(r"\textbf{Result:} " + str(ml_result) + r"\\")
-        latex_content.append(r"\textbf{Confidence:} " + (f"{ml_confidence:.1f}\%" if ml_confidence is not None else "N/A") + r"\\")
-        # Add a general statement about the nature of ML analysis
-        latex_content.append(r"\textit{This analysis is based on a machine learning model trained on questionnaire data. It provides a risk assessment and is not a definitive diagnosis.}")
-
-    # X-ray Analysis Results
-    xray_result = analysis_results.get("xray_result")
-    xray_confidence = analysis_results.get("xray_confidence")
-    annotated_image_path = analysis_results.get("annotated_image_path")
+        sections.append("\\subsection{Questionnaire-Based Assessment}")
+        
+        if ml_result.lower() == 'positive':
+            box_type = "warningbox"
+        else:
+            box_type = "infobox"
+            
+        confidence_text = f"{ml_confidence:.1f}\\%" if ml_confidence else "Not available"
+        
+        sections.append(f"""
+\\begin{{{box_type}}}
+\\textbf{{Assessment Result:}} {_escape_latex(ml_result)} \\\\
+\\textbf{{Confidence Level:}} {confidence_text}
+\\end{{{box_type}}}
+""")
+    
+    # X-ray Results
+    xray_result = analysis_results.get('xray_result')
+    xray_confidence = analysis_results.get('xray_confidence')
+    
     if xray_result:
-        latex_content.append(r"\section*{X-ray Image Analysis}")
-        latex_content.append(r"\textbf{Result:} " + str(xray_result) + r"\\")
-        latex_content.append(r"\textbf{Confidence:} " + (f"{xray_confidence:.1f}\%" if xray_confidence is not None else "N/A") + r"\\")
-        if annotated_image_path:
-            latex_content.append(r"\subsection*{Annotated X-ray Image}")
-            latex_content.append(r"\begin{center}")
-            latex_content.append(_image_to_latex_include(annotated_image_path))
-            latex_content.append(r"\captionof{figure}{Annotated X-ray Image}")
-            latex_content.append(r"\end{center}")
-        latex_content.append(r"\textit{This analysis is based on an AI model's interpretation of the provided X-ray image. It highlights areas of interest and is not a definitive diagnosis.}")
+        sections.append("\\subsection{X-ray Image Analysis}")
+        
+        if xray_result.lower() == 'positive':
+            box_type = "warningbox"
+        else:
+            box_type = "infobox"
+            
+        xray_confidence_text = f"{xray_confidence:.1f}\\%" if xray_confidence else "Not available"
+        
+        sections.append(f"""
+\\begin{{{box_type}}}
+\\textbf{{X-ray Analysis Result:}} {_escape_latex(xray_result)} \\\\
+\\textbf{{Confidence Level:}} {xray_confidence_text}
+\\end{{{box_type}}}
+""")
+        
+        # Add note about annotated image if available
+        if analysis_results.get('annotated_image_path'):
+            sections.append("""
+\\textbf{Note:} An annotated X-ray image was generated during the analysis showing areas of interest identified by the AI system.
+""")
+    
+    # Report Interpretation
+    if analysis_results.get('interpretation_result'):
+        sections.append("\\subsection{Medical Report Interpretation}")
+        interpretation = _escape_latex(analysis_results['interpretation_result'])
+        sections.append(f"""
+\\begin{{infobox}}
+{interpretation}
+\\end{{infobox}}
+""")
+    
+    return "\n".join(sections) if sections else "No analysis results available."
 
-    # Medical Report Interpretation
-    interpretation_result = analysis_results.get("interpretation_result")
-    reports_text_context = analysis_results.get("reports_text_context")
-    if interpretation_result or reports_text_context:
-        latex_content.append(r"\section*{Medical Report Interpretation}")
-        if interpretation_result:
-            latex_content.append(r"\subsection*{Summary of Reports}")
-            # Escape special LaTeX characters in the interpretation result
-            escaped_interpretation = interpretation_result.replace('&', '\\&').replace('%', '\\%').replace('$', '\\$').replace('#', '\\#').replace('_', '\\_').replace('{', '\\{').replace('}', '\\}').replace('~', '\\textasciitilde{}').replace('^', '\\textasciicircum{}').replace('\\', '\\textbackslash{}')
-            latex_content.append(escaped_interpretation + r"\\")
-        if reports_text_context:
-            latex_content.append(r"\subsection*{Raw Report Context (for reference)}")
-            latex_content.append(r"\begin{verbatim}")
-            latex_content.append(reports_text_context)
-            latex_content.append(r"\end{verbatim}")
-        latex_content.append(r"\textit{This section provides an AI-generated summary and context from uploaded medical documents. Always consult a medical professional for detailed understanding and diagnosis.}")
 
-    # Conversation History
-    if conversation:
-        latex_content.append(r"\section*{Conversation History}")
-        latex_content.append(r"\begin{itemize}")
-        for msg in conversation:
-            role = msg.get("role", "unknown").replace('_', ' ').title()
-            content = msg.get("content", "")
-            # Filter out technical messages
-            if "INITIAL_ASSESSMENT_RESULT:" in content or "XRAY_RESULT:" in content or "INTERPRETATION_RESULT:" in content:
-                continue
-            # Escape special LaTeX characters in conversation content
-            escaped_content = content.replace('&', '\\&').replace('%', '\\%').replace('$', '\\$').replace('#', '\\#').replace('_', '\\_').replace('{', '\\{').replace('}', '\\}').replace('~', '\\textasciitilde{}').replace('^', '\\textasciicircum{}').replace('\\', '\\textbackslash{}')
-            latex_content.append(f"    \item \textbf{{{role}:}} {escaped_content}")
-        latex_content.append(r"\end{itemize}")
+def _extract_key_findings(conversation: List[Dict[str, str]]) -> str:
+    """Extract key clinical findings from conversation using LLM."""
+    if not conversation:
+        return "No conversation data available for analysis."
+    
+    try:
+        # Prepare conversation text for analysis
+        conversation_text = "\n".join([
+            f"{msg['role']}: {msg['content']}" 
+            for msg in conversation 
+            if msg.get('content')
+        ])
+        
+        prompt = f"""
+Analyze the following medical consultation conversation and extract key clinical findings.
+Focus on:
+1. Symptoms mentioned by the patient
+2. Risk factors identified
+3. Concerns raised
+4. Any notable observations
+5. Assessment outcomes
 
-    # Important Disclaimer
-    latex_content.append(r"\section*{Important Disclaimer}")
-    latex_content.append(r"\textit{This report is generated by an AI assistant and is intended for informational purposes only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read in this report.}")
+Format your response as clear, professional medical findings suitable for a medical report.
+Use bullet points and be concise but comprehensive.
 
-    latex_content.append(r"\end{document}")
+Conversation:
+{conversation_text}
+"""
+        
+        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.1, max_tokens=800)
+        response = llm.invoke([HumanMessage(content=prompt)])
+        
+        # Clean and format the response
+        findings = response.content.strip()
+        return _escape_latex(findings)
+        
+    except Exception as e:
+        print(f"Error extracting key findings: {e}")
+        return "Unable to extract key findings from conversation."
 
-    return "\n".join(latex_content)
+
+def _generate_recommendations(
+    conversation: List[Dict[str, str]], 
+    analysis_results: Dict[str, Any]
+) -> str:
+    """Generate medical recommendations based on conversation and results."""
+    try:
+        # Prepare context for recommendation generation
+        ml_result = analysis_results.get('ml_result', 'Not available')
+        xray_result = analysis_results.get('xray_result', 'Not available')
+        
+        # Get last few assistant messages for context
+        recent_advice = []
+        for msg in reversed(conversation):
+            if msg.get('role') in ['assistant', 'ai'] and len(recent_advice) < 3:
+                recent_advice.append(msg.get('content', ''))
+        
+        context = "\n".join(recent_advice) if recent_advice else "No specific advice provided."
+        
+        prompt = f"""
+Based on the following medical AI consultation results, generate professional medical recommendations:
+
+Analysis Results:
+- Questionnaire Assessment: {ml_result}
+- X-ray Analysis: {xray_result}
+
+AI Assistant's Advice:
+{context}
+
+Generate clear, professional recommendations that:
+1. Summarize next steps for the patient
+2. Emphasize the importance of professional medical consultation
+3. Provide practical guidance for follow-up care
+4. Include appropriate disclaimers
+
+Format as a professional medical report recommendations section.
+"""
+        
+        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.2, max_tokens=600)
+        response = llm.invoke([HumanMessage(content=prompt)])
+        
+        recommendations = response.content.strip()
+        return _escape_latex(recommendations)
+        
+    except Exception as e:
+        print(f"Error generating recommendations: {e}")
+        return """
+\\begin{infobox}
+\\textbf{General Recommendations:}
+\\begin{itemize}[leftmargin=*]
+    \\item Consult with a qualified healthcare professional for proper medical evaluation
+    \\item Follow up on any concerning symptoms or findings
+    \\item Maintain regular health check-ups as recommended by your doctor
+    \\item Keep records of all medical consultations and results
+\\end{itemize}
+\\end{infobox}
+"""
+
+
+def enhance_report_with_medical_context(latex_content: str) -> str:
+    """Add additional medical context and formatting to the report."""
+    # This function can be extended to add more sophisticated medical formatting
+    # For now, it returns the content as-is
+    return latex_content

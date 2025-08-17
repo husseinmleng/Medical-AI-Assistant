@@ -4,6 +4,7 @@ from langchain_core.messages import HumanMessage
 from src.yolo_model import detect_cancer_in_image
 from dotenv import load_dotenv
 import asyncio
+
 load_dotenv()
 @tool
 def analyze_xray_image(image_path: str) -> str:
@@ -115,8 +116,131 @@ async def interpret_medical_reports(file_paths: list, lang: str) -> str:
     print(f"Interpreting {len(file_paths)} medical reports.")
     return "INTERPRETATION_RESULT:The medical reports have been interpreted."
 
-# --- CORRECTED: This tool now returns the file path on success ---
-@tool
+import os
+
+def check_latex_installation() -> dict:
+    """
+    Checks if LaTeX is properly installed and returns installation status.
+    
+    Returns:
+        Dictionary with installation status and details
+    """
+    import subprocess
+    import shutil
+    
+    result = {
+        "installed": False,
+        "pdflatex_available": False,
+        "latex_available": False,
+        "version": None,
+        "installation_guide": None,
+        "required_packages": [],
+        "missing_packages": []
+    }
+    
+    # Check if pdflatex is available
+    pdflatex_path = shutil.which("pdflatex")
+    if pdflatex_path:
+        result["pdflatex_available"] = True
+        try:
+            # Get version information
+            version_output = subprocess.run(
+                ["pdflatex", "--version"], 
+                capture_output=True, 
+                text=True, 
+                timeout=10
+            )
+            if version_output.returncode == 0:
+                result["installed"] = True
+                # Extract version from first line
+                first_line = version_output.stdout.split('\n')[0]
+                result["version"] = first_line.strip()
+        except (subprocess.TimeoutExpired, subprocess.SubprocessError):
+            pass
+    
+    # Check if latex is available
+    latex_path = shutil.which("latex")
+    if latex_path:
+        result["latex_available"] = True
+    
+    # Check required packages by testing compilation
+    if result["installed"]:
+        required_packages = [
+            "inputenc", "fontenc", "geometry", "fancyhdr", "graphicx",
+            "xcolor", "tcolorbox", "enumitem", "booktabs", "longtable",
+            "amsmath", "amssymb", "hyperref", "times"
+        ]
+        
+        result["required_packages"] = required_packages
+        import tempfile
+        # Test package availability with a simple document
+        with tempfile.TemporaryDirectory() as temp_dir:
+            test_tex = os.path.join(temp_dir, "package_test.tex")
+            test_content = r"""
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{times}
+\begin{document}
+Test document
+\end{document}
+"""
+            
+            with open(test_tex, 'w', encoding='utf-8') as f:
+                f.write(test_content)
+            
+            try:
+                # Try to compile the test document
+                compile_result = subprocess.run(
+                    ['pdflatex', '-interaction=nonstopmode', '-output-directory', temp_dir, test_tex],
+                    capture_output=True,
+                    text=True,
+                    timeout=30,
+                    cwd=temp_dir
+                )
+                
+                if compile_result.returncode == 0:
+                    result["missing_packages"] = []
+                else:
+                    # Parse error output to find missing packages
+                    error_output = compile_result.stderr.lower()
+                    for package in required_packages:
+                        if f"package {package} not found" in error_output or f"file {package}.sty not found" in error_output:
+                            result["missing_packages"].append(package)
+                            
+            except Exception:
+                result["missing_packages"] = required_packages
+    
+    # Provide installation guide if not installed
+    if not result["installed"]:
+        if os.name == 'nt':  # Windows
+            result["installation_guide"] = """
+            Install MiKTeX from: https://miktex.org/download
+            Or install TeX Live from: https://www.tug.org/texlive/
+            """
+        elif os.name == 'posix':  # Linux/macOS
+            if os.path.exists('/etc/debian_version'):  # Debian/Ubuntu
+                result["installation_guide"] = "sudo apt-get install texlive-full"
+            elif os.path.exists('/etc/redhat-release'):  # RHEL/CentOS
+                result["installation_guide"] = "sudo yum install texlive-scheme-full"
+            elif os.path.exists('/etc/arch-release'):  # Arch
+                result["installation_guide"] = "sudo pacman -S texlive-most"
+            else:
+                result["installation_guide"] = "Install TeX Live distribution for your system"
+    
+    return result
+
 def convert_latex_to_pdf(latex_string: str, output_filename: str) -> str:
     """
     Converts a LaTeX string to a PDF file.
@@ -125,39 +249,76 @@ def convert_latex_to_pdf(latex_string: str, output_filename: str) -> str:
     import subprocess
     import os
     import tempfile
+    import shutil
+    
+    # Check if pdflatex is available
+    try:
+        subprocess.run(['pdflatex', '--version'], capture_output=True, check=True)
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return "Error: pdflatex is not installed or not available in PATH. Please install LaTeX distribution (e.g., TeX Live, MiKTeX)."
+    
+    # Ensure latex_string is properly encoded
+    try:
+        if isinstance(latex_string, bytes):
+            latex_string = latex_string.decode('utf-8', errors='replace')
+        latex_string = str(latex_string)
+    except Exception as e:
+        print(f"Warning: Could not decode LaTeX string: {e}")
+        try:
+            latex_string = latex_string.encode('utf-8', errors='replace').decode('utf-8')
+        except Exception:
+            return f"Error: Could not process LaTeX string due to encoding issues: {e}"
     
     # Use a temporary directory to avoid cluttering the main directory
     with tempfile.TemporaryDirectory() as temp_dir:
         jobname = os.path.splitext(output_filename)[0]
         tex_path = os.path.join(temp_dir, f"{jobname}.tex")
         
-        with open(tex_path, 'w', encoding='utf-8') as f:
-            f.write(latex_string)
+        # Write LaTeX content with UTF-8 encoding
+        try:
+            with open(tex_path, 'w', encoding='utf-8') as f:
+                f.write(latex_string)
+        except Exception as e:
+            return f"Error writing LaTeX file: {e}"
             
         # The -output-directory argument tells pdflatex where to put the output files
+        # Use UTF-8 encoding for better Unicode support
         process = subprocess.run(
             ['pdflatex', '-interaction=nonstopmode', f'-output-directory={temp_dir}', tex_path],
             capture_output=True,
-            text=True
+            encoding='utf-8',  # Changed from latin-1 to utf-8
+            cwd=temp_dir
         )
         
         generated_pdf_path = os.path.join(temp_dir, output_filename)
 
         if process.returncode != 0 or not os.path.exists(generated_pdf_path):
             print("Error generating PDF:")
-            print(process.stdout)
-            print(process.stderr)
+            print("STDOUT:", process.stdout)
+            print("STDERR:", process.stderr)
+            print("Return code:", process.returncode)
+            
             # Provide the LaTeX log for easier debugging
             log_path = os.path.join(temp_dir, f"{jobname}.log")
             log_content = ""
             if os.path.exists(log_path):
-                with open(log_path, 'r') as log_file:
-                    log_content = log_file.read()
-            return f"Error generating PDF. Log: {log_content[:1000]}" # Return first 1000 chars of log
+                try:
+                    with open(log_path, 'r', encoding='utf-8') as log_file:
+                        log_content = log_file.read()
+                except UnicodeDecodeError:
+                    # Fallback to latin-1 if UTF-8 fails
+                    with open(log_path, 'r', encoding='latin-1') as log_file:
+                        log_content = log_file.read()
+            
+            return f"Error generating PDF (return code: {process.returncode}). Log: {log_content[:1000]}"
         else:
             # Copy the final PDF to the project's root directory to be served
-            final_pdf_path = os.path.abspath(output_filename)
-            import shutil
-            shutil.copy(generated_pdf_path, final_pdf_path)
-            print(f"PDF '{final_pdf_path}' created successfully.")
-            return final_pdf_path
+            try:
+                final_pdf_path = os.path.abspath(output_filename)
+                shutil.copy(generated_pdf_path, final_pdf_path)
+                print(f"PDF '{final_pdf_path}' created successfully.")
+                return final_pdf_path
+            except Exception as copy_error:
+                print(f"Error copying PDF to final location: {copy_error}")
+                # Return the temporary path if copying fails
+                return generated_pdf_path
