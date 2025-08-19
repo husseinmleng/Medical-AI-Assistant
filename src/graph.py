@@ -408,20 +408,41 @@ def route_after_agent(state: GraphState):
     return END
 def entry_node(state: GraphState):
     """No-op entry node to enable conditional routing based on provided inputs."""
+    print("--- Entry node ---")
+    print(f"Entry node state keys: {list(state.keys())}")
+    print(f"Entry node messages count: {len(state.get('messages', []))}")
+    print(f"Entry node uploaded_image_path: {state.get('uploaded_image_path')}")
+    print(f"Entry node report_file_paths: {state.get('report_file_paths')}")
+    print(f"Entry node lang: {state.get('lang')}")
     return {}
 def route_from_entry(state: GraphState):
     """Route to reports agent immediately when NEW report files are present, otherwise to the conversational agent."""
-    # Check if the latest message is a human message with an image path
+    print("--- Route from entry ---")
+    print(f"State keys: {list(state.keys())}")
+    print(f"Messages count: {len(state.get('messages', []))}")
+    print(f"Uploaded image path: {state.get('uploaded_image_path')}")
+    print(f"Report file paths: {state.get('report_file_paths')}")
+    
+    # PRIORITY 1: Check for new file uploads (these should take precedence over existing conversations)
+    if state.get("uploaded_image_path"):
+        print("Routing to auto_xray due to uploaded image")
+        return "auto_xray"
+    
+    if state.get("report_file_paths"):
+        print("Routing to reports_agent due to report files")
+        return "reports_agent"
+    
+    # PRIORITY 2: Check if the latest message is a human message with an image path
     if state["messages"] and isinstance(state["messages"][-1], HumanMessage):
         last_message_content = state["messages"][-1].content
+        print(f"Last message content: {last_message_content[:100]}...")
+        
         if isinstance(last_message_content, str) and "temp_uploads" in last_message_content:
+            print("Routing to auto_xray due to image path in message")
             return "auto_xray"
-
-    # Only route to reports agent if NEW files are uploaded and there's no prior interpretation
-    if state.get("report_file_paths") and not state.get("interpretation_result"):
-        return "reports_agent"
-    if state.get("uploaded_image_path"):
-        return "auto_xray"
+    
+    # PRIORITY 3: Default to conversational agent
+    print("Routing to conversational agent")
     return "agent"
 def route_after_tools(state: GraphState):
     """Routes to the correct result processing node based on which tool was called."""

@@ -98,7 +98,7 @@ essential_rules_en = (
     "Do not diagnose. Summarize findings, explain simply, and advise follow‑up with a doctor."
 )
 essential_rules_ar = (
-    "قدّم تشخيصًا مبدئي واقترح بعض الأدوية والعلاج . لخّص النتائج ببساطة، واشرحها للمريض، "
+    "قدّم تشخيصًا مبدئي واقترح بعض الأدوية والعلاج . لخّص النتائج ببساطة، واشرحها للمريض، انت بتشرح تحليل ف قول نتيجة التحليل "
 )
 
 

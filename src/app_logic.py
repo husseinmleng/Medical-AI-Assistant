@@ -64,23 +64,54 @@ def run_graph(user_input: str, session_id: str, lang: str, image_path: str = Non
     Enhanced to support ongoing conversations with report results.
     """
     try:
+        print(f"=== run_graph called ===")
+        print(f"Session ID: {session_id}")
+        print(f"User input: {user_input[:100] if user_input else 'None'}...")
+        print(f"Image path: {image_path}")
+        print(f"File paths: {file_paths}")
+        print(f"Language: {lang}")
+        
         config = {"configurable": {"thread_id": session_id}}
+        
+        # Get current state for debugging
+        try:
+            current_state = app.get_state(config)
+            print(f"Current state keys: {list(current_state.values.keys()) if current_state else 'No state'}")
+            print(f"Current messages count: {len(current_state.values.get('messages', [])) if current_state else 0}")
+        except Exception as e:
+            print(f"Could not get current state: {e}")
+        
         if image_path:
             current_input = image_path
+            print(f"Setting uploaded_image_path: {image_path}")
             # Update the state with the uploaded image path
             app.update_state(config, {"uploaded_image_path": image_path})
         elif file_paths:
             # For report interpretation, keep a simple textual user message; paths go through state
             current_input = user_input
+            print(f"Setting report_file_paths: {file_paths}")
         else:
             current_input = user_input
+            print(f"No file upload, using user input: {current_input[:100]}...")
+        
         messages = [HumanMessage(content=current_input)]
         graph_input = {"messages": messages, "lang": lang}
+        
         if file_paths:
             graph_input["report_file_paths"] = file_paths
+            print(f"Added report_file_paths to graph input: {file_paths}")
+        
         if image_path:
             graph_input["uploaded_image_path"] = image_path
+            print(f"Added uploaded_image_path to graph input: {image_path}")
+        
+        print(f"Final graph input keys: {list(graph_input.keys())}")
+        print(f"Graph input messages count: {len(graph_input['messages'])}")
+        
+        print("Calling app.invoke...")
         final_state = app.invoke(graph_input, config)
+        print(f"App.invoke completed. Final state keys: {list(final_state.keys())}")
+        
         ai_messages = [m for m in final_state.get("messages", []) if isinstance(m, AIMessage)]
         tts_audio = None
         if ai_messages:
@@ -88,13 +119,18 @@ def run_graph(user_input: str, session_id: str, lang: str, image_path: str = Non
             last_ai_message = ai_messages[-1].content
             if "INTERPRETATION_RESULT:" not in last_ai_message:
                  tts_audio = asyncio.run(text_to_speech(last_ai_message))
-        return {
+        
+        result = {
             "messages": final_state.get("messages", []),
             "annotated_image_path": final_state.get("annotated_image_path"),
             "tts_audio": tts_audio,
             "interpretation_result": final_state.get("interpretation_result"),
             "reports_text_context": final_state.get("reports_text_context")
         }
+        
+        print(f"Returning result with {len(result['messages'])} messages")
+        return result
+        
     except Exception as e:
         error_msg = f"An unexpected error occurred in the graph logic: {str(e)}"
         print(f"❌ {error_msg}")

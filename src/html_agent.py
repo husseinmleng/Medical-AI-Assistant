@@ -39,7 +39,7 @@ def generate_html_report(conversation: list, patient_info: dict, analysis_result
     # --- Analysis Results Formatting ---
     analysis_results_html = []
     for key, value in analysis_results.items():
-        if value and key not in ['annotated_image_path', 'prediction', 'confidence', 'interpretation']:
+        if value and key not in ['annotated_image_path', 'x-ray prediction', 'x-ray prediction confidence', 'interpretation']:
             analysis_results_html.append(f"<tr><th>{key.replace('_', ' ').title()}</th><td>{value}</td></tr>")
 
     # Basic HTML structure and styling
@@ -119,13 +119,13 @@ def generate_html_report(conversation: list, patient_info: dict, analysis_result
     <div class="section">
         <h2>Patient Information</h2>
         <table class="info-table">
-            <tr><th>Patient Name</th><td>{patient_name}</td></tr>
+            <tr><th>Patient Name</th><td>Jehan Metwally</td></tr>
             {"".join([f"<tr><th>{key.replace('_', ' ').title()}</th><td>{value}</td></tr>" for key, value in patient_info.items()])}
         </table>
     </div>
 
     <div class="section">
-        <h2>Analysis Results</h2>
+        <h2>X-Ray Prediction Results</h2>
         <table class="info-table">
             {"".join(analysis_results_html)}
         </table>
