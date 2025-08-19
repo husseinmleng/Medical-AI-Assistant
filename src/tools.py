@@ -4,8 +4,45 @@ from langchain_core.messages import HumanMessage
 from src.yolo_model import detect_cancer_in_image
 from dotenv import load_dotenv
 import asyncio
+import re 
 
 load_dotenv()
+def markdown_to_latex(text: str) -> str:
+    """Convert common Markdown syntax to LaTeX syntax."""
+    if not text:
+        return ""
+
+    # Bold: **text** → \textbf{text}
+    text = re.sub(r"\*\*(.+?)\*\*", r"\\textbf{\1}", text)
+
+    # Italic: *text* → \textit{text}
+    text = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"\\textit{\1}", text)
+
+    # Inline code: `code` → \texttt{code}
+    text = re.sub(r"`(.+?)`", r"\\texttt{\1}", text)
+
+    # Code blocks: ```code``` → \begin{verbatim}...\end{verbatim}
+    text = re.sub(r"```(.+?)```", r"\\begin{verbatim}\1\\end{verbatim}", text, flags=re.DOTALL)
+
+    # Links: [text](url) → \href{url}{text}
+    text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r"\\href{\2}{\1}", text)
+
+    # Images: ![alt](url) → \includegraphics{url}
+    text = re.sub(r"!\[.*?\]\(([^)]+)\)", r"\\includegraphics{\1}", text)
+
+    # Headings → LaTeX sections
+    text = re.sub(r"^###### (.+)$", r"\\subsubsubsection{\1}", text, flags=re.MULTILINE)
+    text = re.sub(r"^##### (.+)$", r"\\subsubsection{\1}", text, flags=re.MULTILINE)
+    text = re.sub(r"^#### (.+)$", r"\\paragraph{\1}", text, flags=re.MULTILINE)
+    text = re.sub(r"^### (.+)$", r"\\subsection{\1}", text, flags=re.MULTILINE)
+    text = re.sub(r"^## (.+)$", r"\\section{\1}", text, flags=re.MULTILINE)
+    text = re.sub(r"^# (.+)$", r"\\section*{\1}", text, flags=re.MULTILINE)
+
+    # Lists: - item → \item item
+    text = re.sub(r"^- (.+)", r"\\item \1", text, flags=re.MULTILINE)
+
+    return text
+
 @tool
 def analyze_xray_image(image_path: str) -> str:
     """

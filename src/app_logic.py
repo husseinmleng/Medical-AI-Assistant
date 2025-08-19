@@ -6,6 +6,8 @@ from langchain_core.messages import HumanMessage, AIMessage
 from langchain_openai import ChatOpenAI
 # Import the pre-compiled app with checkpointing from graph.py
 from src.graph import app, GraphState
+from src.tools import markdown_to_latex
+
 # --- Clients ---
 transcription_client = OpenAI()
 # --- App Utility Functions ---
@@ -193,6 +195,60 @@ def reset_for_new_xray(session_id: str, preserve_lang: str | None = None):
     app.update_state(config, reset_state)
     print(f"Reset session for new xray in {session_id} (lang={current_lang})")
 
+async def generate_and_download_html_report(session_id: str):
+    """Generates and downloads an HTML report of the conversation."""
+    from src.html_agent import generate_html_report
+    from langchain_core.messages import AIMessage, HumanMessage
+    import os
+    
+    print(f"Starting HTML report generation for session: {session_id}")
+    
+    state = get_session_state(session_id)
+    if not state:
+        print("Error: Could not retrieve session state.")
+        return None
+
+    conversation_for_report = []
+    for msg in state.get("messages", []):
+        if isinstance(msg, HumanMessage):
+            conversation_for_report.append({"role": "user", "content": msg.content})
+        elif isinstance(msg, AIMessage):
+            conversation_for_report.append({"role": "assistant", "content": msg.content})
+
+    questionnaire_data = state.get("questionnaire_inputs") or {}
+    patient_name = questionnaire_data.get("patient_name", "Patient Name Not Provided")
+    
+    html_string = generate_html_report(
+        conversation=conversation_for_report,
+        patient_info=questionnaire_data,
+        analysis_results={
+            "ml_result": state.get("ml_result"),
+            "ml_confidence": state.get("ml_confidence"),
+            "xray_result": state.get("xray_result"),
+            "xray_confidence": state.get("xray_confidence"),
+            "annotated_image_path": state.get("annotated_image_path"),
+            "interpretation_result": state.get("interpretation_result"),
+            "reports_text_context": state.get("reports_text_context"),
+        },
+        patient_name=patient_name,
+        report_title="Medical Analysis Report",
+        lang=state.get("lang", "en")
+    )
+    
+    # Save HTML to a temporary file
+    try:
+        output_dir = "debug_outputs/reports"
+        os.makedirs(output_dir, exist_ok=True)
+        output_filename = f"report_{session_id}.html"
+        html_path = os.path.join(output_dir, output_filename)
+        with open(html_path, "w", encoding="utf-8") as f:
+            f.write(html_string)
+        print(f"HTML report generated successfully at: {html_path}")
+        return html_path
+    except Exception as e:
+        print(f"Error saving HTML report: {e}")
+        return None
+
 async def generate_and_download_report(session_id: str):
     """Generates and downloads a PDF report of the conversation."""
     from src.latex_agent import generate_latex_report
@@ -215,12 +271,14 @@ async def generate_and_download_report(session_id: str):
         print("Error: Could not retrieve session state.")
         return None
 
+
     conversation_for_report = []
     for msg in state.get("messages", []):
         if isinstance(msg, HumanMessage):
-            conversation_for_report.append({"role": "user", "content": msg.content})
+            conversation_for_report.append({"role": "user", "content": markdown_to_latex(msg.content)})
         elif isinstance(msg, AIMessage):
-            conversation_for_report.append({"role": "assistant", "content": msg.content})
+            conversation_for_report.append({"role": "assistant", "content": markdown_to_latex(msg.content)})
+
 
     # Translate the conversation if the language is Arabic
     if state.get("lang") == "ar":

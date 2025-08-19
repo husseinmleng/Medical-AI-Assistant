@@ -6,7 +6,7 @@ import tempfile
 from src.app_logic import (
     run_graph, clear_session_history, generate_chat_title, transcribe_audio, 
     get_history, reset_for_new_report, has_report_context, reset_for_new_xray,
-    generate_and_download_report # <-- IMPORT THE NEW FUNCTION
+    generate_and_download_report, generate_and_download_html_report # <-- IMPORT THE NEW FUNCTION
 )
 from streamlit_mic_recorder import mic_recorder
 from typing import List
@@ -262,6 +262,39 @@ with st.sidebar:
             data=st.session_state[f'pdf_bytes_{active_id}'],
             file_name=st.session_state[f'pdf_filename_{active_id}'],
             mime="application/pdf",
+            use_container_width=True,
+            type="primary"
+        )
+
+    if st.button("Generate HTML Report", key="generate_html_btn", use_container_width=True):
+        active_id = st.session_state.active_session_id
+        if active_id:
+            async def _generate_html_report():
+                with st.spinner("Generating HTML report..."):
+                    try:
+                        html_path = await generate_and_download_html_report(active_id)
+                        if html_path and os.path.exists(html_path):
+                            with open(html_path, "r", encoding="utf-8") as html_file:
+                                html_bytes = html_file.read()
+                            
+                            st.session_state[f'html_bytes_{active_id}'] = html_bytes
+                            st.session_state[f'html_filename_{active_id}'] = os.path.basename(html_path)
+                            
+                            os.remove(html_path)
+                        else:
+                            st.error("Failed to generate the HTML report. Please check the logs.")
+                            st.session_state[f'html_bytes_{active_id}'] = None
+                    except Exception as e:
+                        st.error(f"An error occurred: {e}")
+                        st.session_state[f'html_bytes_{active_id}'] = None
+            asyncio.run(_generate_html_report())
+
+    if st.session_state.get(f'html_bytes_{active_id}'):
+        st.download_button(
+            label="⬇️ Download HTML",
+            data=st.session_state[f'html_bytes_{active_id}'],
+            file_name=st.session_state[f'html_filename_{active_id}'],
+            mime="text/html",
             use_container_width=True,
             type="primary"
         )
