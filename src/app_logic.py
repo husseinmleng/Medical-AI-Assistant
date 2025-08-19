@@ -67,6 +67,8 @@ def run_graph(user_input: str, session_id: str, lang: str, image_path: str = Non
         config = {"configurable": {"thread_id": session_id}}
         if image_path:
             current_input = image_path
+            # Update the state with the uploaded image path
+            app.update_state(config, {"uploaded_image_path": image_path})
         elif file_paths:
             # For report interpretation, keep a simple textual user message; paths go through state
             current_input = user_input
@@ -222,13 +224,13 @@ async def generate_and_download_html_report(session_id: str):
         conversation=conversation_for_report,
         patient_info=questionnaire_data,
         analysis_results={
-            "ml_result": state.get("ml_result"),
-            "ml_confidence": state.get("ml_confidence"),
-            "xray_result": state.get("xray_result"),
-            "xray_confidence": state.get("xray_confidence"),
-            "annotated_image_path": state.get("annotated_image_path"),
-            "interpretation_result": state.get("interpretation_result"),
-            "reports_text_context": state.get("reports_text_context"),
+            "prediction": state.get("ml_result", "N/A"),
+            "confidence": state.get("ml_confidence", "N/A"),
+            "xray_result": state.get("xray_result", "N/A"),
+            "xray_confidence": state.get("xray_confidence", "N/A"),
+            "annotated_image_path": state.get("annotated_image_path", "N/A"),
+            "interpretation": state.get("interpretation_result", "N/A"),
+            "reports_text_context": state.get("reports_text_context", "N/A"),
         },
         patient_name=patient_name,
         report_title="Medical Analysis Report",

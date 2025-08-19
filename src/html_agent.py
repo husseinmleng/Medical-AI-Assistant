@@ -36,6 +36,12 @@ def generate_html_report(conversation: list, patient_info: dict, analysis_result
         direction = "rtl" if lang == "ar" else "ltr"
         conversation_html.append(f'<div class="chat-bubble {bubble_class}" style="direction: {direction};"><strong>{role}:</strong>{content}</div>')
 
+    # --- Analysis Results Formatting ---
+    analysis_results_html = []
+    for key, value in analysis_results.items():
+        if value and key not in ['annotated_image_path', 'prediction', 'confidence', 'interpretation']:
+            analysis_results_html.append(f"<tr><th>{key.replace('_', ' ').title()}</th><td>{value}</td></tr>")
+
     # Basic HTML structure and styling
     html_template = f"""
 <!DOCTYPE html>
@@ -121,8 +127,21 @@ def generate_html_report(conversation: list, patient_info: dict, analysis_result
     <div class="section">
         <h2>Analysis Results</h2>
         <table class="info-table">
-            {"".join([f"<tr><th>{key.replace('_', ' ').title()}</th><td>{value}</td></tr>" for key, value in analysis_results.items() if value and key != 'annotated_image_path'])}
+            {"".join(analysis_results_html)}
         </table>
+    </div>
+
+    <div class="section">
+        <h2>Breast Cancer ML Prediction</h2>
+        <table class="info-table">
+            <tr><th>Prediction</th><td>{analysis_results.get('prediction', 'N/A')}</td></tr>
+            <tr><th>Confidence</th><td>{analysis_results.get('confidence', 'N/A')}</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Report Interpretation</h2>
+        <p>{analysis_results.get('interpretation', 'N/A')}</p>
     </div>
 
     {annotated_image_html}

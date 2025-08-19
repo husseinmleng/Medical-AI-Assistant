@@ -98,7 +98,7 @@ essential_rules_en = (
     "Do not diagnose. Summarize findings, explain simply, and advise follow‑up with a doctor."
 )
 essential_rules_ar = (
-    "قدّم تشخيصًا مبدئي واقترح بعض الأدوية والعلاج . لخّص النتائج ببساطة، واشرحها للمريض، وأنهِ دائمًا بالتوصية بمراجعة الطبيب."
+    "قدّم تشخيصًا مبدئي واقترح بعض الأدوية والعلاج . لخّص النتائج ببساطة، واشرحها للمريض، "
 )
 
 
@@ -116,7 +116,7 @@ def interpret_reports_with_gpt4o(file_paths: List[str], lang: str) -> str:
     )
     system_prompt_ar = (
         "أنت وكيل ذكي لشرح التقارير الطبية للمريض بأسلوب واضح ومطمئن دون تشخيص. "
-        "لخّص النتائج ونقاط القلق إن وجدت، وأنهِ دائمًا بالتوصية بمراجعة الطبيب. "
+        "لخّص النتائج ونقاط القلق إن وجدت، . "
         + essential_rules_ar
     )
 
@@ -132,7 +132,7 @@ def interpret_reports_with_gpt4o(file_paths: List[str], lang: str) -> str:
     content_parts, warnings = _build_multimodal_content(file_paths)
     content_parts.insert(0, {"type": "text", "text": preface_ar if lang == "ar" else preface_en})
 
-    llm = ChatOpenAI(model="gpt-4.1", temperature=0.2, max_tokens=1500)
+    llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0.2)
     response = llm.invoke([
         ("system", system_prompt_ar if lang == "ar" else system_prompt_en),
         HumanMessage(content=content_parts),

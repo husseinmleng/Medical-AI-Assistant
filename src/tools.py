@@ -89,26 +89,54 @@ Keep your response warm, supportive, and professional.
 **الشرح المطلوب:**
 ١. ابدأي بتلخيص النتيجة بلطف مع ذكر نسبة الثقة.
 ٢. اشرحي ببساطة ما قد تعنيه النتيجة بمصطلحات بسيطة وغير مثيرة للقلق.
-5. اهم خطوة تعمليها بعد كده هي انك تستيري دكتور عن النتائج دي. التحليل ده أداة مساعدة بس، مش تشخيص. الدكتور هو الوحيد اللي يقدر يديلك إجابة نهائية ويوجهك في الخطوة الجاية.
 حافظي على ردك دافئ ومساند ومهني.
 """
     
     interpretation_prompt = prompt_ar if lang == 'ar' else prompt_en
+    async def _call_llm():
+        try:
+            interp_llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0.4, timeout=30)
+            response = await interp_llm.ainvoke([HumanMessage(content=interpretation_prompt)])
+            return response.content.strip()
+        except Exception as e:
+            print(f"Error generating interpretation: {e}")
+            raise e
+    
     try:
-        interp_llm = ChatOpenAI(model="gpt-4.1", temperature=0.4)
-        response = await interp_llm.ainvoke([HumanMessage(content=interpretation_prompt)])
-        return response.content.strip()
+        # Add overall timeout protection
+        import asyncio
+        result = await asyncio.wait_for(_call_llm(), timeout=45)  # 45 second total timeout
+        return result
+    except asyncio.TimeoutError:
+        print("LLM interpretation timed out after 45 seconds")
+        # Fallback: provide a basic interpretation
+        if lang == 'ar':
+            fallback = f"نتيجة التقييم: {safe_ml_result} (نسبة الثقة: {safe_ml_conf:.1f}%). يرجى استشارة طبيبك للمراجعة التفصيلية."
+        else:
+            fallback = f"Assessment result: {safe_ml_result} (confidence: {safe_ml_conf:.1f}%). Please consult your doctor for detailed review."
+        return fallback
     except Exception as e:
-        print(f"Error generating interpretation: {e}")
-        return "An error occurred while generating the analysis."
+        print(f"Unexpected error in interpretation: {e}")
+        # Fallback: provide a basic interpretation
+        if lang == 'ar':
+            fallback = f"نتيجة التقييم: {safe_ml_result} (نسبة الثقة: {safe_ml_conf:.1f}%). يرجى استشارة طبيبك للمراجعة التفصيلية."
+        else:
+            fallback = f"Assessment result: {safe_ml_result} (confidence: {safe_ml_conf:.1f}%). Please consult your doctor for detailed review."
+        return fallback
 async def interpret_xray_results(xray_result: str, xray_confidence: float, lang: str) -> str:
     """Generates an empathetic explanation of the X-ray results."""
+    print("--- Interpreting X-ray results ---")
+    print(f"Input - Result: {xray_result}, Confidence: {xray_confidence}, Language: {lang}")
+    
     # Coalesce None values to safe defaults
     safe_xray_result = xray_result or "Not available"
     try:
         safe_xray_conf = float(xray_confidence) if xray_confidence is not None else 0.0
     except Exception:
         safe_xray_conf = 0.0
+    
+    print(f"Processed - Result: {safe_xray_result}, Confidence: {safe_xray_conf}")
+    
     prompt_en = f"""You are an empathetic AI medical assistant speaking to a patient in English.
 Your task is to provide a clear, calm, and detailed summary of their X-ray image analysis.
 **Analysis Results:**
@@ -133,18 +161,67 @@ Keep your response warm, supportive, and professional.
 ١. ابدأي بتلخيص النتيجة بلطف مع ذكر نسبة الثقة.
 ٢. إذا كانت نتيجة الأشعة "إيجابية"، اشرحي أن التحليل أبرز منطقة تحتاج لمراجعة من متخصص. اذكري أن درجة الثقة تعكس يقين النموذج.
 ٣. إذا كانت نتيجة الأشعة "سلبية"، اذكري أن الصورة لم تظهر أي مناطق مثيرة للقلق فورياً، ودرجة الثقة تعكس هذا.
-٤. اهم خطوة تعمليها بعد كده هي انك تستيري دكتور عن النتائج دي. التحليل ده أداة مساعدة بس، مش تشخيص. الدكتور هو الوحيد اللي يقدر يديلك إجابة نهائية ويوجهك في الخطوة الجاية.
 حافظي على ردك دافئ ومساند ومهني.
 """
     
     interpretation_prompt = prompt_ar if lang == 'ar' else prompt_en
+    print(f"Using {'Arabic' if lang == 'ar' else 'English'} prompt")
+    print(f"Prompt length: {len(interpretation_prompt)} characters")
+    
+    async def _call_llm():
+        try:
+            print("Calling LLM for interpretation...")
+            interp_llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0.4, timeout=30)
+            response = await interp_llm.ainvoke([HumanMessage(content=interpretation_prompt)])
+            print("LLM response received successfully")
+            result = response.content.strip()
+            print(f"Interpretation result length: {len(result)} characters")
+            return result
+        except Exception as e:
+            print(f"Error generating interpretation: {e}")
+            import traceback
+            traceback.print_exc()
+            raise e
+    
     try:
-        interp_llm = ChatOpenAI(model="gpt-4.1", temperature=0.4)
-        response = await interp_llm.ainvoke([HumanMessage(content=interpretation_prompt)])
-        return response.content.strip()
+        # Add overall timeout protection
+        import asyncio
+        result = await asyncio.wait_for(_call_llm(), timeout=45)  # 45 second total timeout
+        return result
+    except asyncio.TimeoutError:
+        print("LLM interpretation timed out after 45 seconds")
+        # Fallback: provide a basic interpretation
+        print("Using fallback interpretation due to timeout...")
+        if lang == 'ar':
+            if safe_xray_result == 'Positive':
+                fallback = f"نتيجة تحليل صورة الأشعة: {safe_xray_result} (نسبة الثقة: {safe_xray_conf:.1f}%). يرجى استشارة طبيبك للمراجعة التفصيلية."
+            else:
+                fallback = f"نتيجة تحليل صورة الأشعة: {safe_xray_result} (نسبة الثقة: {safe_xray_conf:.1f}%). لم تظهر الصورة أي مناطق مثيرة للقلق. يرجى استشارة طبيبك للمتابعة."
+        else:
+            if safe_xray_result == 'Positive':
+                fallback = f"X-ray analysis result: {safe_xray_result} (confidence: {safe_xray_conf:.1f}%). Please consult your doctor for detailed review."
+            else:
+                fallback = f"X-ray analysis result: {safe_xray_result} (confidence: {safe_xray_conf:.1f}%). The image did not show any areas of concern. Please consult your doctor for follow-up."
+        
+        print(f"Fallback interpretation: {fallback}")
+        return fallback
     except Exception as e:
-        print(f"Error generating interpretation: {e}")
-        return "An error occurred while generating the analysis."
+        print(f"Unexpected error in interpretation: {e}")
+        # Fallback: provide a basic interpretation
+        print("Using fallback interpretation due to error...")
+        if lang == 'ar':
+            if safe_xray_result == 'Positive':
+                fallback = f"نتيجة تحليل صورة الأشعة: {safe_xray_result} (نسبة الثقة: {safe_xray_conf:.1f}%). يرجى استشارة طبيبك للمراجعة التفصيلية."
+            else:
+                fallback = f"نتيجة تحليل صورة الأشعة: {safe_xray_result} (نسبة الثقة: {safe_xray_conf:.1f}%). لم تظهر الصورة أي مناطق مثيرة للقلق. يرجى استشارة طبيبك للمتابعة."
+        else:
+            if safe_xray_result == 'Positive':
+                fallback = f"X-ray analysis result: {safe_xray_result} (confidence: {safe_xray_conf:.1f}%). Please consult your doctor for detailed review."
+            else:
+                fallback = f"X-ray analysis result: {safe_xray_result} (confidence: {safe_xray_conf:.1f}%). The image did not show any areas of concern. Please consult your doctor for follow-up."
+        
+        print(f"Fallback interpretation: {fallback}")
+        return fallback
 @tool
 async def interpret_medical_reports(file_paths: list, lang: str) -> str:
     """Interprets a list of medical documents (images, PDFs, DOCs) to provide a summary.

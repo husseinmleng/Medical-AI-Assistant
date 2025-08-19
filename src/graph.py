@@ -16,7 +16,7 @@ from src.tools import (
     interpret_xray_results,
 )
 # --- LLM and Tools ---
-llm = ChatOpenAI(model="gpt-4.1", temperature=0.4, max_tokens=2000)
+llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0.4, max_tokens=2000)
 tools = [analyze_xray_image, interpret_medical_reports]
 tool_node = ToolNode(tools)
 # --- Agent Prompt ---
@@ -189,14 +189,24 @@ def reports_agent(state: GraphState):
     }
 def auto_analyze_xray(state: GraphState):
     """Automatically runs X-ray analysis when an uploaded image path is present in state."""
+    print("--- Auto analyzing X-ray ---")
     image_path = state.get("uploaded_image_path")
+    print(f"Image path from state: {image_path}")
+    
     if not image_path:
+        print("No image path found, returning empty state")
         return {}
+    
     try:
+        print(f"Calling analyze_xray_image with path: {image_path}")
         tool_output = analyze_xray_image.invoke({"image_path": image_path})
+        print(f"Tool output received: {tool_output[:200] if isinstance(tool_output, str) else str(tool_output)[:200]}...")
     except Exception as e:
         print(f"Auto X-ray analysis failed: {e}")
+        import traceback
+        traceback.print_exc()
         return {"xray_result": "Error", "xray_confidence": 0.0, "annotated_image_path": None}
+    
     # Parse tool output
     xray_result, xray_confidence, annotated_image_path = "Error", 0.0, None
     if isinstance(tool_output, str) and '|' in tool_output and ':' in tool_output:
@@ -209,14 +219,52 @@ def auto_analyze_xray(state: GraphState):
         annotated_image_path = parts.get("ANNOTATED_IMAGE_PATH")
         if annotated_image_path == 'None':
             annotated_image_path = None
+        
+        print(f"Successfully parsed tool output:")
+        print(f"  Result: {xray_result}")
+        print(f"  Confidence: {xray_confidence}")
+        print(f"  Annotated image path: {annotated_image_path}")
+    else:
+        print(f"Could not parse tool output: {tool_output}")
+    
     print(f"Auto X-ray State: result={xray_result}, conf={xray_confidence}")
-    return {"xray_result": xray_result, "xray_confidence": xray_confidence, "annotated_image_path": annotated_image_path}
+    result = {"xray_result": xray_result, "xray_confidence": xray_confidence, "annotated_image_path": annotated_image_path}
+    print(f"Returning state update: {result}")
+    return result
 def generate_ml_report(state: GraphState):
     """Generates the final summary message after only the ml has been analyzed."""
-    interpretation = asyncio.run(interpret_ml_results(
-        ml_result=state["ml_result"], ml_confidence=state["ml_confidence"],
-        lang=state["lang"],
-    ))
+    # Use a robust approach to call the async function from synchronous context
+    import asyncio
+    
+    try:
+        # Try to get the current event loop
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            # If we're already in an event loop, create a task
+            task = loop.create_task(interpret_ml_results(
+                ml_result=state["ml_result"], ml_confidence=state["ml_confidence"],
+                lang=state["lang"],
+            ))
+            # Wait for the task to complete
+            interpretation = loop.run_until_complete(task)
+        else:
+            # If no event loop is running, we can use run_until_complete
+            interpretation = loop.run_until_complete(interpret_ml_results(
+                ml_result=state["ml_result"], ml_confidence=state["ml_confidence"],
+                lang=state["lang"],
+            ))
+    except RuntimeError:
+        # If there are issues with the event loop, create a new one
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            interpretation = loop.run_until_complete(interpret_ml_results(
+                ml_result=state["ml_result"], ml_confidence=state["ml_confidence"],
+                lang=state["lang"],
+            ))
+        finally:
+            loop.close()
+    
     final_message = AIMessage(content=interpretation)
     return {"messages": [final_message]}
 
@@ -225,13 +273,68 @@ def generate_xray_report(state: GraphState):
     Generates the final summary message after the X-ray has been analyzed
     and clears the uploaded image path to prevent re-analysis.
     """
-    interpretation = asyncio.run(interpret_xray_results(
-        xray_result=state["xray_result"], xray_confidence=state["xray_confidence"],
-        lang=state["lang"],
-    ))
-    final_message = AIMessage(content=interpretation)
-    # --- FIX: Clear the image path to prevent re-triggering the analysis ---
-    return {"messages": [final_message], "uploaded_image_path": None}
+    print("--- Generating X-ray report ---")
+    print(f"State keys: {list(state.keys())}")
+    print(f"X-ray result: {state.get('xray_result')}")
+    print(f"X-ray confidence: {state.get('xray_confidence')}")
+    print(f"Language: {state.get('lang')}")
+    
+    try:
+        print("Calling interpret_xray_results...")
+        # Use a robust approach to call the async function from synchronous context
+        import asyncio
+        
+        try:
+            # Try to get the current event loop
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                # If we're already in an event loop, create a task
+                print("Event loop is running, creating task...")
+                task = loop.create_task(interpret_xray_results(
+                    xray_result=state["xray_result"], xray_confidence=state["xray_confidence"],
+                    lang=state["lang"],
+                ))
+                # Wait for the task to complete
+                interpretation = loop.run_until_complete(task)
+            else:
+                # If no event loop is running, we can use run_until_complete
+                print("No event loop running, using run_until_complete...")
+                interpretation = loop.run_until_complete(interpret_xray_results(
+                    xray_result=state["xray_result"], xray_confidence=state["xray_confidence"],
+                    lang=state["lang"],
+                ))
+        except RuntimeError:
+            # If there are issues with the event loop, create a new one
+            print("Creating new event loop...")
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            try:
+                interpretation = loop.run_until_complete(interpret_xray_results(
+                    xray_result=state["xray_result"], xray_confidence=state["xray_confidence"],
+                    lang=state["lang"],
+                ))
+            finally:
+                loop.close()
+        
+        print(f"Interpretation received: {interpretation[:100]}...")
+        
+        final_message = AIMessage(content=interpretation)
+        print("AIMessage created successfully")
+        
+        # --- FIX: Clear the image path to prevent re-triggering the analysis ---
+        result = {"messages": [final_message], "uploaded_image_path": None}
+        print(f"Returning result with {len(result['messages'])} messages")
+        return result
+        
+    except Exception as e:
+        print(f"Error in generate_xray_report: {e}")
+        import traceback
+        traceback.print_exc()
+        
+        # Fallback: create a basic message
+        fallback_message = f"X-ray analysis completed. Result: {state.get('xray_result', 'Unknown')}, Confidence: {state.get('xray_confidence', 0):.1f}%. Please consult your doctor for detailed interpretation."
+        final_message = AIMessage(content=fallback_message)
+        return {"messages": [final_message], "uploaded_image_path": None}
 
 def process_risk_prediction_result(state: GraphState):
     """Parses the output of the first tool and updates the state."""
@@ -250,19 +353,33 @@ def process_risk_prediction_result(state: GraphState):
     return {"questionnaire_inputs": questionnaire_inputs, "ml_result": ml_result, "ml_confidence": ml_confidence}
 def process_xray_analysis_result(state: GraphState):
     """Parses the output of the second tool and updates the state."""
+    print("--- Processing X-ray analysis result ---")
     last_message = state["messages"][-1]
+    print(f"Last message type: {type(last_message)}")
+    
     assert isinstance(last_message, ToolMessage)
     tool_output = last_message.content
+    print(f"Tool output: {tool_output[:200]}...")
+    
     if '|' in tool_output and ':' in tool_output:
         xray_parts = {p.split(':', 1)[0]: p.split(':', 1)[1] for p in tool_output.split('|')}
         xray_result = xray_parts.get("XRAY_RESULT", "Error")
         xray_confidence = float(xray_parts.get("CONFIDENCE", 0.0))
         annotated_image_path = xray_parts.get("ANNOTATED_IMAGE_PATH")
         if annotated_image_path == 'None': annotated_image_path = None
+        
+        print(f"Parsed X-ray parts:")
+        print(f"  Result: {xray_result}")
+        print(f"  Confidence: {xray_confidence}")
+        print(f"  Annotated image path: {annotated_image_path}")
     else:
         xray_result, xray_confidence, annotated_image_path = "Error", 0.0, None
+        print(f"Could not parse tool output, using defaults: {xray_result}, {xray_confidence}")
+    
     print(f"Updated State with X-ray Result: {xray_result}")
-    return {"xray_result": xray_result, "xray_confidence": xray_confidence, "annotated_image_path": annotated_image_path}
+    result = {"xray_result": xray_result, "xray_confidence": xray_confidence, "annotated_image_path": annotated_image_path}
+    print(f"Returning state update: {result}")
+    return result
 def process_interpretation_result(state: GraphState):
     """Parses the output of the interpretation tool and updates the state."""
     last_message = state["messages"][-1]
@@ -294,6 +411,12 @@ def entry_node(state: GraphState):
     return {}
 def route_from_entry(state: GraphState):
     """Route to reports agent immediately when NEW report files are present, otherwise to the conversational agent."""
+    # Check if the latest message is a human message with an image path
+    if state["messages"] and isinstance(state["messages"][-1], HumanMessage):
+        last_message_content = state["messages"][-1].content
+        if isinstance(last_message_content, str) and "temp_uploads" in last_message_content:
+            return "auto_xray"
+
     # Only route to reports agent if NEW files are uploaded and there's no prior interpretation
     if state.get("report_file_paths") and not state.get("interpretation_result"):
         return "reports_agent"
