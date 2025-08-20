@@ -3,23 +3,14 @@ import uuid
 import asyncio
 import os
 import tempfile
+from datetime import datetime
 from src.app_logic import (
     run_graph, clear_session_history, generate_chat_title, transcribe_audio, 
-    get_history, reset_for_new_report, has_report_context, reset_for_new_xray,
-    generate_and_download_report, generate_and_download_html_report # <-- IMPORT THE NEW FUNCTION
+    get_history, reset_for_new_report, has_report_context, reset_for_new_xray
 )
+from src.html_agent import generate_html_report
 from streamlit_mic_recorder import mic_recorder
 from typing import List
-
-# --- LaTeX Installation Check ---
-def check_latex_for_app():
-    """Check if LaTeX is available for PDF generation."""
-    try:
-        from src.tools import check_latex_installation
-        status = check_latex_installation()
-        return status
-    except Exception:
-        return {"installed": False, "error": "Could not check LaTeX installation"}
 
 # --- Page Configuration ---
 st.set_page_config(
@@ -75,6 +66,14 @@ st.markdown(
         padding: 8px 12px; border-radius: 8px; margin-bottom: 12px;
         font-size: 0.9rem; color: #0c4a6e;
     }
+    .sidebar-section {
+        background: #f8fafc; border: 1px solid #e2e8f0;
+        padding: 12px; border-radius: 8px; margin-bottom: 8px;
+    }
+    .sidebar-section h3 {
+        margin-top: 0; margin-bottom: 8px; color: #374151;
+        font-size: 0.9rem; font-weight: 600;
+    }
 </style>
 """,
     unsafe_allow_html=True,
@@ -90,10 +89,16 @@ if "active_session_id" not in st.session_state:
 def handle_chat_submission(user_input, image_path=None, file_paths: List[str] = None):
     """
     Central function to process all user inputs (text, audio, image, files).
-    Enhanced to handle report-based conversations properly.
+    Enhanced to handle report-based conversations properly and maintain state consistency.
     """
     session_id = st.session_state.active_session_id
     active_conv = st.session_state.conversations[session_id]
+    
+    print(f"\n🚀 CHAT SUBMISSION for session {session_id}:")
+    print(f"  - User input: {user_input[:50] if user_input else 'None'}...")
+    print(f"  - Image path: {image_path is not None}")
+    print(f"  - File paths: {len(file_paths) if file_paths else 0} files")
+    print(f"  - Current messages: {len(active_conv.get('messages', []))}")
     
     # Use a display message for image uploads
     if image_path:
@@ -105,6 +110,7 @@ def handle_chat_submission(user_input, image_path=None, file_paths: List[str] = 
     
     # Add user message to the conversation state
     active_conv["messages"].append({"role": "user", "content": display_message})
+    
     # Show a spinner while the backend is working
     with st.spinner("AI assistant is thinking..."):
         # Generate a title for new chats on the first user message
@@ -115,8 +121,10 @@ def handle_chat_submission(user_input, image_path=None, file_paths: List[str] = 
             except Exception as e:
                 print(f"Error generating title: {e}")
                 active_conv['title'] = "Medical Chat"
+        
         # Run the graph with the actual user input
         response = run_graph(user_input, session_id, active_conv["lang"], image_path, file_paths)
+        
         if response.get("tts_audio"):
             st.session_state.audio_to_play = response["tts_audio"]
             
@@ -130,6 +138,13 @@ def handle_chat_submission(user_input, image_path=None, file_paths: List[str] = 
         
         # Store report context for indicating chat capability
         active_conv["has_report_context"] = bool(response.get("interpretation_result"))
+        
+        # Update the conversation title to reflect the type of analysis
+        if image_path and not active_conv.get("title", "").startswith("X-Ray"):
+            active_conv["title"] = f"X-Ray Analysis - {active_conv.get('title', 'Medical Chat')}"
+        elif file_paths and not active_conv.get("title", "").startswith("Report"):
+            active_conv["title"] = f"Report Analysis - {active_conv.get('title', 'Medical Chat')}"
+    
     # Clean up the temporary file for the uploaded image
     if image_path and "temp_upload" in image_path and os.path.exists(image_path):
         try:
@@ -146,6 +161,33 @@ def handle_chat_submission(user_input, image_path=None, file_paths: List[str] = 
                     print(f"Removed temporary upload file: {fp}")
                 except OSError as e:
                     print(f"Error removing temporary upload file {fp}: {e}")
+
+def sync_ui_state_with_backend(session_id: str):
+    """Syncs the UI state with the backend state to ensure consistency."""
+    try:
+        from src.app_logic import get_session_state
+        backend_state = get_session_state(session_id)
+        
+        if backend_state:
+            # Update the conversation state to reflect backend state
+            conv = st.session_state.conversations[session_id]
+            
+            # Update report context
+            conv["has_report_context"] = bool(backend_state.get("interpretation_result"))
+            
+            # Update annotated image path
+            if backend_state.get("annotated_image_path"):
+                conv["annotated_image_path"] = backend_state.get("annotated_image_path")
+            
+            # Update conversation title based on analysis type
+            if backend_state.get("interpretation_result") and not conv.get("title", "").startswith("Report"):
+                conv["title"] = f"Report Analysis - {conv.get('title', 'Medical Chat')}"
+            elif backend_state.get("xray_result") and not conv.get("title", "").startswith("X-Ray"):
+                conv["title"] = f"X-Ray Analysis - {conv.get('title', 'Medical Chat')}"
+                
+            print(f"Synced UI state for session {session_id}")
+    except Exception as e:
+        print(f"Error syncing UI state: {e}")
 
 # --- Helper Functions ---
 def is_technical_message(content: str) -> bool:
@@ -173,6 +215,7 @@ def create_new_chat():
         "annotated_image_path": None,
         "has_report_context": False,
     }
+    # Clear the backend session history for the new chat
     clear_session_history(session_id)
     return session_id
 
@@ -184,6 +227,206 @@ def switch_conversation(session_id):
     active_conv['messages'] = [{"role": msg.type, "content": msg.content} for msg in history_messages]
     # Check if this session has report context
     active_conv["has_report_context"] = has_report_context(session_id)
+    # Sync UI state with backend state
+    sync_ui_state_with_backend(session_id)
+
+def handle_analysis_type_switch(session_id: str, analysis_type: str, preserve_lang: str):
+    """Handles switching between different analysis types while preserving conversation context."""
+    # Get current conversation to preserve messages
+    active_conv = st.session_state.conversations[session_id]
+    current_messages = active_conv.get("messages", [])
+    
+    if analysis_type == "xray":
+        # For X-ray analysis, only clear X-ray-specific results, preserve conversation and reports
+        reset_for_new_xray(session_id, preserve_lang=preserve_lang)
+        # Update UI state to reflect the change but PRESERVE messages
+        active_conv["annotated_image_path"] = None
+        active_conv["messages"] = current_messages  # Preserve conversation history
+        print(f"Switched to X-ray analysis for session {session_id} (preserving {len(current_messages)} messages)")
+    elif analysis_type == "report":
+        # For report analysis, only clear report-specific results, preserve conversation and X-ray
+        reset_for_new_report(session_id, preserve_lang=preserve_lang)
+        # Update UI state to reflect the change but PRESERVE messages
+        active_conv["has_report_context"] = False
+        active_conv["messages"] = current_messages  # Preserve conversation history
+        print(f"Switched to report analysis for session {session_id} (preserving {len(current_messages)} messages)")
+
+def ensure_state_consistency():
+    """Ensures consistency between frontend and backend state."""
+    if st.session_state.active_session_id:
+        try:
+            # Sync the current session state
+            sync_ui_state_with_backend(st.session_state.active_session_id)
+        except Exception as e:
+            print(f"Error ensuring state consistency: {e}")
+
+def debug_state_info(session_id: str):
+    """Debug function to display current state information."""
+    if st.checkbox("🔍 Debug State Info", key=f"debug_{session_id}"):
+        try:
+            from src.app_logic import get_session_state
+            backend_state = get_session_state(session_id)
+            frontend_conv = st.session_state.conversations[session_id]
+            
+            st.write("**Backend State:**")
+            st.json(backend_state)
+            
+            st.write("**Frontend Conversation State:**")
+            st.json(frontend_conv)
+            
+        except Exception as e:
+            st.error(f"Error getting debug info: {e}")
+
+def generate_and_download_html_report(session_id: str, active_conv: dict):
+    """Generates HTML report for the current conversation and analysis."""
+    try:
+        from src.app_logic import get_session_state
+        backend_state = get_session_state(session_id) or {}
+        
+        # Prepare conversation data (filter out technical messages)
+        conversation = []
+        for msg in active_conv.get("messages", []):
+            if not is_technical_message(msg["content"]):
+                conversation.append(msg)
+        
+        # Prepare patient info
+        patient_info = {
+            "session_id": session_id,
+            "language": active_conv.get("lang", "en"),
+            "date_generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "conversation_length": len(conversation)
+        }
+        
+        # Extract ML results from backend state or conversation if available
+        ml_result = backend_state.get("ml_result", "N/A")
+        ml_confidence = backend_state.get('ml_confidence', 0)
+        
+        # Extract report interpretation from backend state or conversation
+        interpretation_result = backend_state.get("interpretation_result", "N/A")
+        reports_context = backend_state.get("reports_text_context", "N/A")
+        
+        # If not in backend state, try to extract from conversation history
+        if ml_result == "N/A" or ml_result is None:
+            for msg in conversation:
+                if msg["role"] == "assistant" and "INITIAL_ASSESSMENT_RESULT:" in msg["content"]:
+                    # Extract from technical line
+                    content = msg["content"]
+                    if "INITIAL_ASSESSMENT_RESULT:" in content:
+                        try:
+                            tech_start = content.find("INITIAL_ASSESSMENT_RESULT:")
+                            tech_segment = content[tech_start:].splitlines()[0]
+                            parts = {p.split(':', 1)[0]: p.split(':', 1)[1] for p in tech_segment.split('|') if ':' in p}
+                            ml_result = parts.get("INITIAL_ASSESSMENT_RESULT", "N/A")
+                            conf_str = parts.get("CONFIDENCE")
+                            if conf_str:
+                                ml_confidence = float(conf_str)
+                        except Exception:
+                            pass
+                    break
+        
+        # If interpretation not in backend, look for it in conversation
+        if interpretation_result == "N/A" or interpretation_result is None:
+            for msg in conversation:
+                if msg["role"] == "assistant":
+                    content = msg["content"]
+                    # Look for report interpretation patterns
+                    if ("report" in content.lower() and 
+                        ("interpretation" in content.lower() or "analysis" in content.lower() or 
+                         "findings" in content.lower() or "results" in content.lower()) and
+                        len(content) > 100):  # Substantial content
+                        # Skip technical messages
+                        if not is_technical_message(content):
+                            interpretation_result = content
+                            break
+        
+        # Prepare analysis results from backend state
+        analysis_results = {
+            "ml_result": ml_result,
+            "ml_confidence": f"{ml_confidence:.1f}%" if ml_confidence > 0 else "N/A",
+            "xray_result": backend_state.get("xray_result", "N/A"),
+            "xray_confidence": f"{backend_state.get('xray_confidence', 0):.1f}%" if backend_state.get('xray_confidence') else "N/A",
+            "annotated_image_path": backend_state.get("annotated_image_path"),
+            "interpretation_result": interpretation_result,
+            "reports_context": reports_context
+        }
+        
+        # Generate report title based on language
+        lang = active_conv.get("lang", "en")
+        if lang == "ar":
+            report_title = "تقرير التحليل الطبي"
+            patient_name = "المريض"
+        else:
+            report_title = "Medical Analysis Report"
+            patient_name = "Patient"
+        
+        # Debug: Print analysis results for troubleshooting
+        print(f"🔍 Analysis results for HTML report:")
+        for key, value in analysis_results.items():
+            if key == "interpretation_result" and value != "N/A":
+                print(f"  {key}: {value[:100]}..." if len(str(value)) > 100 else f"  {key}: {value}")
+            elif key == "reports_context" and value != "N/A":
+                print(f"  {key}: {len(str(value))} characters" if value else "  {key}: No context")
+            else:
+                print(f"  {key}: {value}")
+        
+        # Debug: Check if we have any report-related content
+        has_reports = any("report" in msg["content"].lower() for msg in conversation if msg["role"] == "assistant")
+        print(f"📄 Report content detected in conversation: {has_reports}")
+        
+        # Generate HTML report
+        html_content = generate_html_report(
+            conversation=conversation,
+            patient_info=patient_info,
+            analysis_results=analysis_results,
+            patient_name=patient_name,
+            report_title=report_title,
+            lang=lang
+        )
+        
+        return html_content
+        
+    except Exception as e:
+        st.error(f"Error generating HTML report: {str(e)}")
+        return None
+
+def display_analysis_status(active_conv):
+    """Displays the current analysis status to help users understand what's available."""
+    status_indicators = []
+    
+    # Get backend state for accurate status
+    try:
+        from src.app_logic import get_session_state
+        backend_state = get_session_state(st.session_state.active_session_id)
+        
+        # Check for ML assessment results from backend
+        if backend_state and backend_state.get("ml_result"):
+            status_indicators.append(f"📊 ML Assessment: {backend_state.get('ml_result')}")
+        
+        # Check for X-ray results from backend
+        if backend_state and backend_state.get("annotated_image_path"):
+            status_indicators.append("🩻 X-Ray Analysis Available")
+        
+        # Check for report interpretation from backend
+        if backend_state and (backend_state.get("interpretation_result") or backend_state.get("reports_text_context")):
+            status_indicators.append("📄 Report Interpretation Available")
+    except:
+        # Fallback to frontend state if backend check fails
+        if active_conv.get("ml_result"):
+            status_indicators.append(f"📊 ML Assessment: {active_conv.get('ml_result')}")
+        
+        if active_conv.get("annotated_image_path"):
+            status_indicators.append("🩻 X-Ray Analysis Available")
+        
+        if active_conv.get("has_report_context"):
+            status_indicators.append("📄 Report Interpretation Available")
+    
+    if status_indicators:
+        status_display = (
+            '<div class="report-context-indicator">'
+            '🔍 <strong>Available Analysis:</strong> ' + ' | '.join(status_indicators) +
+            '</div>'
+        )
+        st.markdown(status_display, unsafe_allow_html=True)
 
 # --- Ensure a chat is always active ---
 if not st.session_state.active_session_id or st.session_state.active_session_id not in st.session_state.conversations:
@@ -211,98 +454,73 @@ with st.sidebar:
         if st.button(title_display, key=f"conv_{session_id}", use_container_width=True, type=button_type):
             switch_conversation(session_id)
             st.rerun()
-
-    # --- NEW: PDF Report Download Section ---
+    
+    # --- HTML Report Generation Section ---
     st.divider()
-    st.header("📥 Download Report")
+    st.markdown(
+        '<div class="sidebar-section">'
+        '<h3>📄 Medical Report</h3>'
+        '</div>',
+        unsafe_allow_html=True
+    )
     
-    # Check LaTeX installation and show warning if needed
-    latex_status = check_latex_for_app()
-    if not latex_status.get("installed", False):
-        st.warning(
-            f"⚠️ PDF generation requires LaTeX to be installed. "
-            f"{latex_status.get('installation_guide', 'Please install a LaTeX distribution.')}"
-        )
-        if st.button("Check LaTeX Installation", key="check_latex_btn"):
-            st.info(f"LaTeX Status: {latex_status}")
+    # Check if there's any content to generate a report from
+    active_conv = st.session_state.conversations[st.session_state.active_session_id]
+    has_conversation = len(active_conv.get("messages", [])) > 1
     
-    # This section now handles the PDF generation and download
-    if st.button("Generate PDF Report", key="generate_pdf_btn", use_container_width=True, disabled=not latex_status.get("installed", False)):
-        active_id = st.session_state.active_session_id
-        if active_id:
-            async def _generate_pdf_report():
-                with st.spinner("Generating professional PDF report..."):
-                    try:
-                        pdf_path = await generate_and_download_report(active_id)
-                        if pdf_path and os.path.exists(pdf_path):
-                            with open(pdf_path, "rb") as pdf_file:
-                                pdf_bytes = pdf_file.read()
-                            
-                            # Use a session state key to store the bytes for the download button
-                            st.session_state[f'pdf_bytes_{active_id}'] = pdf_bytes
-                            st.session_state[f'pdf_filename_{active_id}'] = os.path.basename(pdf_path)
-                            
-                            # Clean up the server-side file after reading it
-                            os.remove(pdf_path)
-                            
-                        else:
-                            st.error("Failed to generate the PDF. Please check the logs.")
-                            st.session_state[f'pdf_bytes_{active_id}'] = None
-
-                    except Exception as e:
-                        st.error(f"An error occurred: {e}")
-                        st.session_state[f'pdf_bytes_{active_id}'] = None
-            asyncio.run(_generate_pdf_report())
-
-    # Display the download button if the PDF bytes are available in session state
-    active_id = st.session_state.active_session_id
-    if st.session_state.get(f'pdf_bytes_{active_id}'):
-        st.download_button(
-            label="⬇️ Download PDF",
-            data=st.session_state[f'pdf_bytes_{active_id}'],
-            file_name=st.session_state[f'pdf_filename_{active_id}'],
-            mime="application/pdf",
-            use_container_width=True,
-            type="primary"
-        )
-
-    if st.button("Generate HTML Report", key="generate_html_btn", use_container_width=True):
-        active_id = st.session_state.active_session_id
-        if active_id:
-            async def _generate_html_report():
-                with st.spinner("Generating HTML report..."):
-                    try:
-                        html_path = await generate_and_download_html_report(active_id)
-                        if html_path and os.path.exists(html_path):
-                            with open(html_path, "r", encoding="utf-8") as html_file:
-                                html_bytes = html_file.read()
-                            
-                            st.session_state[f'html_bytes_{active_id}'] = html_bytes
-                            st.session_state[f'html_filename_{active_id}'] = os.path.basename(html_path)
-                            
-                            os.remove(html_path)
-                        else:
-                            st.error("Failed to generate the HTML report. Please check the logs.")
-                            st.session_state[f'html_bytes_{active_id}'] = None
-                    except Exception as e:
-                        st.error(f"An error occurred: {e}")
-                        st.session_state[f'html_bytes_{active_id}'] = None
-            asyncio.run(_generate_html_report())
-
-    if st.session_state.get(f'html_bytes_{active_id}'):
-        st.download_button(
-            label="⬇️ Download HTML",
-            data=st.session_state[f'html_bytes_{active_id}'],
-            file_name=st.session_state[f'html_filename_{active_id}'],
-            mime="text/html",
-            use_container_width=True,
-            type="primary"
-        )
-
+    if has_conversation:
+        if st.button("📄 Generate HTML Report", use_container_width=True, type="secondary"):
+            with st.spinner("Generating HTML report..."):
+                html_content = generate_and_download_html_report(st.session_state.active_session_id, active_conv)
+                
+                if html_content:
+                    # Generate filename with timestamp
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    lang = active_conv.get("lang", "en")
+                    filename = f"medical_report_{timestamp}.html"
+                    
+                    # Provide download button
+                    st.download_button(
+                        label="📥 Download Report",
+                        data=html_content,
+                        file_name=filename,
+                        mime="text/html",
+                        use_container_width=True
+                    )
+                    
+                    st.success("✅ Report generated!")
+                    
+                    # Optional: Show preview link
+                    with st.expander("📖 Preview", expanded=False):
+                        st.components.v1.html(html_content, height=400, scrolling=True)
+                        
+        # Show status of what will be included in the report
+        from src.app_logic import get_session_state
+        backend_state = get_session_state(st.session_state.active_session_id) or {}
+        report_items = []
+        
+        if backend_state.get("ml_result"):
+            report_items.append("🧠 ML Assessment")
+        if backend_state.get("xray_result"):
+            report_items.append("🩻 X-Ray Analysis")
+        if backend_state.get("interpretation_result"):
+            report_items.append("📄 Report Interpretation")
+        
+        if report_items:
+            st.caption(f"Will include: {', '.join(report_items)}")
+        else:
+            st.caption("📝 Conversation transcript will be included")
+    else:
+        st.button("📄 Generate HTML Report", use_container_width=True, disabled=True, type="secondary")
+        st.caption("💬 Start a conversation first")
 
 # --- Main Chat Interface ---
 st.title("Medical AI Assistant")
 st.caption("Friendly guidance, not a diagnosis. Always consult your doctor for medical decisions.")
+
+# Ensure state consistency
+ensure_state_consistency()
+
 active_session_id = st.session_state.active_session_id
 active_conv = st.session_state.conversations[active_session_id]
 
@@ -319,7 +537,10 @@ if active_conv["lang"] is None:
         active_conv["messages"].append({"role": "assistant", "content": "مرحبًا! أنا مساعدك الطبي الذكي. لبدء التقييم، سأحتاج إلى طرح بعض الأسئلة حول تاريخك الصحي. كيف يمكنني مساعدتك اليوم؟"})
         st.rerun()
 else:
-    # --- Show report context indicator ---
+    # --- Show analysis status and report context indicators ---
+    display_analysis_status(active_conv)
+    
+    # Show report context indicator if available
     if active_conv.get("has_report_context", False):
         st.markdown(
             '<div class="report-context-indicator">'
@@ -327,6 +548,10 @@ else:
             '</div>', 
             unsafe_allow_html=True
         )
+    
+    # Debug state information (only show in development)  
+    # Commented out for production
+    # debug_state_info(active_session_id)
     
     # --- Chat stream (single view) ---
     for msg in active_conv["messages"]:
@@ -414,6 +639,7 @@ else:
 
     # --- Chat input with mic (same view) ---
     st.markdown("<div class='soft-divider'></div>", unsafe_allow_html=True)
+    
     col1, col2 = st.columns([0.9, 0.1])
     with col1:
         # Show different placeholder based on context
@@ -431,48 +657,55 @@ else:
         if audio_info['id'] != st.session_state.get(last_audio_id_key):
             st.session_state[last_audio_id_key] = audio_info['id']
             with st.spinner("🎙️ Transcribing audio..."):
-                transcribed_text = asyncio.run(transcribe_audio(audio_info['bytes'], lang=active_conv["lang"]))
-            if transcribed_text and transcribed_text.strip():
-                handle_chat_submission(transcribed_text)
-                st.rerun()
-            else:
-                st.toast("⚠️ Audio could not be transcribed. Please try speaking again.", icon="🎤")
+                try:
+                    transcribed_text = asyncio.run(transcribe_audio(audio_info['bytes'], lang=active_conv["lang"]))
+                    if transcribed_text and transcribed_text.strip():
+                        handle_chat_submission(transcribed_text)
+                        st.rerun()
+                    else:
+                        st.error("🎤 Audio transcription failed. Please try speaking again with a clear voice.")
+                except Exception as e:
+                    st.error(f"🎤 Audio transcription error: {str(e)}")
     
     elif analyze_xray_button:
         image_path_to_process = st.session_state.get(image_path_key)
         if image_path_to_process and os.path.exists(image_path_to_process):
-            reset_for_new_xray(active_session_id, preserve_lang=active_conv["lang"]) 
-            # Clear local chat view and any annotated image
-            active_conv["messages"] = []
-            active_conv["has_report_context"] = False
+            # Handle the switch to X-ray analysis (preserve conversation)
+            handle_analysis_type_switch(active_session_id, "xray", active_conv["lang"])
+            
+            # Submit the X-ray for analysis while preserving conversation context
             handle_chat_submission(
                 user_input="Here is the X-ray image for analysis.",
                 image_path=image_path_to_process
             )
+            
+            # Clean up temporary files
             if image_path_key in st.session_state:
                 del st.session_state[image_path_key]
+            print(f"🖼️ X-ray analysis initiated for session {active_session_id}")
             st.rerun()
         else:
-            st.error("Could not find the uploaded image. Please upload it again.")
+            st.error("🚨 Could not find the uploaded image. Please upload it again.")
             
     elif interpret_button:
         report_paths_to_process = st.session_state.get(report_paths_key)
         if report_paths_to_process:
-            # Reset graph state for a new report while preserving current language
-            reset_for_new_report(active_session_id, preserve_lang=active_conv["lang"]) 
-            # Clear local chat view and any annotated image
-            active_conv["messages"] = []
-            active_conv["annotated_image_path"] = None
-            active_conv["has_report_context"] = False
+            # Handle the switch to report analysis (preserve conversation)
+            handle_analysis_type_switch(active_session_id, "report", active_conv["lang"])
+            
+            # Submit the reports for analysis while preserving conversation context
             handle_chat_submission(
                 user_input="Please interpret these medical reports.",
                 file_paths=report_paths_to_process
             )
+            
+            # Clean up temporary files
             if report_paths_key in st.session_state:
                 del st.session_state[report_paths_key]
+            print(f"🗂️ Report analysis initiated for session {active_session_id} with {len(report_paths_to_process)} files")
             st.rerun()
         else:
-            st.error("Could not find the uploaded reports. Please upload them again.")
+            st.error("🚨 Could not find the uploaded reports. Please upload them again.")
 
     st.markdown("""
     <div class="footer-note">This assistant provides general guidance and is not a substitute for professional medical advice.</div>

@@ -119,32 +119,45 @@ def generate_html_report(conversation: list, patient_info: dict, analysis_result
     <div class="section">
         <h2>Patient Information</h2>
         <table class="info-table">
-            <tr><th>Patient Name</th><td>Jehan Metwally</td></tr>
+            <tr><th>Patient Name</th><td>{patient_name}</td></tr>
             {"".join([f"<tr><th>{key.replace('_', ' ').title()}</th><td>{value}</td></tr>" for key, value in patient_info.items()])}
         </table>
     </div>
 
     <div class="section">
-        <h2>X-Ray Prediction Results</h2>
+        <h2>X-Ray Analysis Results</h2>
         <table class="info-table">
-            {"".join(analysis_results_html)}
+            <tr><th>X-Ray Result</th><td>{analysis_results.get('xray_result', 'N/A')}</td></tr>
+            <tr><th>X-Ray Confidence</th><td>{analysis_results.get('xray_confidence', 'N/A')}</td></tr>
         </table>
     </div>
 
     <div class="section">
-        <h2>Breast Cancer ML Prediction</h2>
+        <h2>Breast Cancer ML Assessment</h2>
         <table class="info-table">
-            <tr><th>Prediction</th><td>{analysis_results.get('prediction', 'N/A')}</td></tr>
-            <tr><th>Confidence</th><td>{analysis_results.get('confidence', 'N/A')}</td></tr>
+            <tr><th>Assessment Result</th><td>{analysis_results.get('ml_result', 'N/A')}</td></tr>
+            <tr><th>Confidence</th><td>{analysis_results.get('ml_confidence', 'N/A')}</td></tr>
         </table>
-    </div>
-
-    <div class="section">
-        <h2>Report Interpretation</h2>
-        <p>{analysis_results.get('interpretation', 'N/A')}</p>
     </div>
 
     {annotated_image_html}
+
+    <div class="section">
+        <h2>📄 Medical Reports Interpretation</h2>
+        <div style="background-color: #f0f8ff; padding: 20px; border-radius: 8px; border-left: 5px solid #007bff; margin-bottom: 15px;">
+            <h3 style="color: #0056b3; margin-top: 0;">AI Analysis Results:</h3>
+            <div style="background-color: white; padding: 15px; border-radius: 5px; border: 1px solid #e3f2fd;">
+                {markdown.markdown(str(analysis_results.get('interpretation_result', 'No medical reports have been uploaded and analyzed yet.')))}
+            </div>
+        </div>
+        
+        <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; border-left: 4px solid #28a745; margin-top: 15px;">
+            <h4 style="color: #2e7d32; margin-top: 0;">Uploaded Reports Summary:</h4>
+            <div style="background-color: white; padding: 10px; border-radius: 3px; font-family: 'Courier New', monospace; font-size: 0.85em; max-height: 300px; overflow-y: auto; border: 1px solid #c8e6c9;">
+                {analysis_results.get('reports_context', 'No medical reports have been uploaded.')}
+            </div>
+        </div>
+    </div>
 
     <div class="section">
         <h2>Conversation Transcript</h2>

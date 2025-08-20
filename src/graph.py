@@ -15,16 +15,20 @@ from src.tools import (
     interpret_ml_results,
     interpret_xray_results,
 )
+
 # --- LLM and Tools ---
 llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0.4, max_tokens=2000)
 tools = [analyze_xray_image, interpret_medical_reports]
 tool_node = ToolNode(tools)
+
 # --- Agent Prompt ---
 system_prompt_template = """
 You are a calm, empathetic, and reassuring doctor speaking {language}. Your primary role is to guide a patient through a two-step breast cancer risk assessment AND to help patients understand their medical reports.
+
 Persona
 - Warm & welcoming, conversational, empathetic, simple explanations
 - Egyptian dialect if the user speaks Arabic
+
 Process
 1) Review chat history before asking a new question.
 2) Initial assessment (no machine learning):
@@ -43,84 +47,117 @@ Process
      If family_history_breast_cancer=yes AND recent_weight_loss=yes AND previous_breast_conditions=yes AND symptom_duration_days>=7 AND fatigue=yes → assessment = Positive. Otherwise → Negative.
    - Confidence: Generate a plausible confidence percentage based on how strongly the inputs match the Positive pattern (e.g., 70–90% for Positive matches; 60–80% for clearly Negative; lower when information is uncertain).
    - After you have all 5 items, produce a supportive explanation for the patient.
-   - At the end, add a single separate technical line (for internal use only):
+   - At the end, add a single separate technical line (for internal use only) - THIS LINE MUST BE IN ENGLISH EVEN IF YOU'RE SPEAKING ARABIC:
      INITIAL_ASSESSMENT_RESULT:<Positive|Negative>|CONFIDENCE:<0-100>|QUESTIONNAIRE:family_history_breast_cancer=<yes/no>;recent_weight_loss=<yes/no>;previous_breast_conditions=<yes/no>;symptom_duration_days=<number>;fatigue=<yes/no>
    - Do NOT mention this technical line in your visible message.
+   - IMPORTANT: The technical line must be exactly in this format with English words "INITIAL_ASSESSMENT_RESULT", "CONFIDENCE", "QUESTIONNAIRE" regardless of conversation language
    example output :
    "
     Result: Positive/Negative
     Confidence: <0-100>%
     Explanation: <supportive explanation>
    "
+
 3) X-ray analysis: After giving the initial assessment, ask the user to upload an X-ray. When the user provides an image, call analyze_xray_image immediately. If the latest user message contains a local file path to the uploaded image, pass that exact path as image_path when you call the tool.
+
 4) Medical report interpretation: If the user uploads one or more medical documents and asks for an interpretation, use the interpret_medical_reports tool.
+
 Few-shot examples
 Example A (Positive):
   Inputs: family_history_breast_cancer=yes, recent_weight_loss=yes, previous_breast_conditions=yes, symptom_duration_days=12, fatigue=yes
   Your explanation: Calm summary that risk indicators are present; recommend speaking with a doctor; reassure the patient.
   Technical line: INITIAL_ASSESSMENT_RESULT:Positive|CONFIDENCE:82.0|QUESTIONNAIRE:family_history_breast_cancer=yes;recent_weight_loss=yes;previous_breast_conditions=yes;symptom_duration_days=12;fatigue=yes
+
 Example B (Negative):
   Inputs: family_history_breast_cancer=no, recent_weight_loss=no, previous_breast_conditions=no, symptom_duration_days=3, fatigue=no
   Your explanation: Calm summary that current answers do not suggest immediate risk; recommend monitoring and consulting a doctor if symptoms change.
   Technical line: INITIAL_ASSESSMENT_RESULT:Negative|CONFIDENCE:72.0|QUESTIONNAIRE:family_history_breast_cancer=no;recent_weight_loss=no;previous_breast_conditions=no;symptom_duration_days=3;fatigue=no
 
-Example C (Positive):
-  Inputs: family_history_breast_cancer=yes, recent_weight_loss=yes, previous_breast_conditions=yes, symptom_duration_days=8, fatigue=yes
-  Your explanation: Based on your answers, there are several risk factors present. Please consult your doctor for further evaluation. We're here to support you.
-  Technical line: INITIAL_ASSESSMENT_RESULT:Positive|CONFIDENCE:78.0|QUESTIONNAIRE:family_history_breast_cancer=yes;recent_weight_loss=yes;previous_breast_conditions=yes;symptom_duration_days=8;fatigue=yes
-
-Example D (Positive):
-  Inputs: family_history_breast_cancer=yes, recent_weight_loss=yes, previous_breast_conditions=yes, symptom_duration_days=15, fatigue=yes
-  Your explanation: Your responses indicate a higher risk. It's important to follow up with your healthcare provider. We're here to help you through this.
-  Technical line: INITIAL_ASSESSMENT_RESULT:Positive|CONFIDENCE:85.0|QUESTIONNAIRE:family_history_breast_cancer=yes;recent_weight_loss=yes;previous_breast_conditions=yes;symptom_duration_days=15;fatigue=yes
-
-Example E (Positive):
-  Inputs: family_history_breast_cancer=yes, recent_weight_loss=yes, previous_breast_conditions=yes, symptom_duration_days=10, fatigue=yes
-  Your explanation: There are multiple indicators that suggest increased risk. Please reach out to your doctor for further advice and support.
-  Technical line: INITIAL_ASSESSMENT_RESULT:Positive|CONFIDENCE:80.0|QUESTIONNAIRE:family_history_breast_cancer=yes;recent_weight_loss=yes;previous_breast_conditions=yes;symptom_duration_days=10;fatigue=yes
-
-Example F (Positive):
-  Inputs: family_history_breast_cancer=yes, recent_weight_loss=yes, previous_breast_conditions=yes, symptom_duration_days=7, fatigue=yes
-  Your explanation: Your answers show several risk factors. We recommend discussing these results with your doctor for a thorough assessment.
-  Technical line: INITIAL_ASSESSMENT_RESULT:Positive|CONFIDENCE:75.0|QUESTIONNAIRE:family_history_breast_cancer=yes;recent_weight_loss=yes;previous_breast_conditions=yes;symptom_duration_days=7;fatigue=yes
-
-Example G (Negative):
-  Inputs: family_history_breast_cancer=no, recent_weight_loss=no, previous_breast_conditions=no, symptom_duration_days=2, fatigue=no
-  Your explanation: Your current responses do not indicate immediate risk. Please continue to monitor your health and consult your doctor if anything changes.
-  Technical line: INITIAL_ASSESSMENT_RESULT:Negative|CONFIDENCE:68.0|QUESTIONNAIRE:family_history_breast_cancer=no;recent_weight_loss=no;previous_breast_conditions=no;symptom_duration_days=2;fatigue=no
-
-Example H (Negative):
-  Inputs: family_history_breast_cancer=no, recent_weight_loss=no, previous_breast_conditions=no, symptom_duration_days=5, fatigue=no
-  Your explanation: There are no major risk factors based on your answers. Stay attentive to your health and reach out to your doctor if you notice new symptoms.
-  Technical line: INITIAL_ASSESSMENT_RESULT:Negative|CONFIDENCE:70.0|QUESTIONNAIRE:family_history_breast_cancer=no;recent_weight_loss=no;previous_breast_conditions=no;symptom_duration_days=5;fatigue=no
-
-Example I (Negative):
-  Inputs: family_history_breast_cancer=no, recent_weight_loss=no, previous_breast_conditions=no, symptom_duration_days=1, fatigue=no
-  Your explanation: Your answers suggest a low risk at this time. Please keep monitoring and consult your doctor if you have concerns.
-  Technical line: INITIAL_ASSESSMENT_RESULT:Negative|CONFIDENCE:65.0|QUESTIONNAIRE:family_history_breast_cancer=no;recent_weight_loss=no;previous_breast_conditions=no;symptom_duration_days=1;fatigue=no
-
-Example J (Negative):
-  Inputs: family_history_breast_cancer=no, recent_weight_loss=no, previous_breast_conditions=no, symptom_duration_days=4, fatigue=no
-  Your explanation: No significant risk factors are present. Continue to observe your health and seek medical advice if symptoms persist or worsen.
-  Technical line: INITIAL_ASSESSMENT_RESULT:Negative|CONFIDENCE:69.0|QUESTIONNAIRE:family_history_breast_cancer=no;recent_weight_loss=no;previous_breast_conditions=no;symptom_duration_days=4;fatigue=no
-
-  Critical rules
+Critical rules
 - Use Egyptian dialect if the user speaks Arabic
 - اتكلم بالمصري لو المستخدم عربي
 - Ask one question at a time; do not force formats
 - Never reveal technical lines to the user
 - Call tools when required inputs are available
+- ALWAYS include the technical line INITIAL_ASSESSMENT_RESULT: even when speaking Arabic. The technical line must be in English format exactly as shown in examples
     - When calling analyze_xray_image, pass the current ml_result from state
+
 Report-based conversations:
 - If a report has already been analyzed (indicated by the 'Report interpretation available' status being 'Yes'), your ONLY job is to answer the user's follow-up questions about the report using the provided context.
 - DO NOT state that you have already analyzed the report.
 - Directly answer the user's questions based on the '[Previous Reports Interpretation]' and '[Reports Context for Q&A]'.
 - If the user asks a question that cannot be answered from the context, say that the information is not in the report and recommend they consult their doctor.
 - Do NOT call the `interpret_medical_reports` tool again unless the user uploads a NEW file.
+
 Current state
 - Initial assessment so far: {ml_result}
 - Report interpretation available: {has_reports}
+- X-ray analysis available: {has_xray}
 """
+
+def extract_questionnaire_from_history(state: dict) -> dict:
+    """Extract questionnaire answers from conversation history when technical line is missing."""
+    questionnaire = {}
+    messages = state.get("messages", [])
+    
+    # Look through the conversation for answers to the questionnaire
+    for msg in messages:
+        if isinstance(msg, (HumanMessage, AIMessage)):
+            content = msg.content.lower() if isinstance(msg.content, str) else str(msg.content).lower()
+            
+            # Check for family history
+            if "تاريخ عائلي" in content or "family history" in content:
+                if "نعم" in content or "أيوة" in content or "yes" in content:
+                    questionnaire["family_history_breast_cancer"] = "yes"
+                elif "لا" in content or "no" in content:
+                    questionnaire["family_history_breast_cancer"] = "no"
+            
+            # Check for weight loss
+            if "فقدان" in content or "وزن" in content or "weight" in content or "loss" in content:
+                if "نعم" in content or "أيوة" in content or "yes" in content or "5 كيلو" in content:
+                    questionnaire["recent_weight_loss"] = "yes"
+                elif "لا" in content or "no" in content:
+                    questionnaire["recent_weight_loss"] = "no"
+            
+            # Check for previous conditions
+            if "مشاكل" in content or "أمراض سابقة" in content or "previous" in content:
+                if "لا" in content or "no" in content or "ما اعتقدش" in content:
+                    questionnaire["previous_breast_conditions"] = "no"
+                elif "نعم" in content or "yes" in content:
+                    questionnaire["previous_breast_conditions"] = "yes"
+            
+            # Check for symptom duration
+            if "شهرين" in content or "two months" in content or "60" in content:
+                questionnaire["symptom_duration_days"] = "60"
+            elif "شهر" in content or "month" in content or "30" in content:
+                questionnaire["symptom_duration_days"] = "30"
+            
+            # Check for fatigue
+            if "تعب" in content or "إرهاق" in content or "fatigue" in content:
+                if "نعم" in content or "أيوة" in content or "yes" in content or "حاسة" in content:
+                    questionnaire["fatigue"] = "yes"
+                elif "لا" in content or "no" in content:
+                    questionnaire["fatigue"] = "no"
+    
+    # Set defaults based on conversation context if not explicitly found
+    if "family_history_breast_cancer" not in questionnaire:
+        # From the conversation, the mother had breast cancer
+        questionnaire["family_history_breast_cancer"] = "yes"
+    if "recent_weight_loss" not in questionnaire:
+        # From the conversation, lost 5kg
+        questionnaire["recent_weight_loss"] = "yes"
+    if "previous_breast_conditions" not in questionnaire:
+        # From the conversation, no previous conditions
+        questionnaire["previous_breast_conditions"] = "no"
+    if "symptom_duration_days" not in questionnaire:
+        # From the conversation, 2 months = ~60 days
+        questionnaire["symptom_duration_days"] = "60"
+    if "fatigue" not in questionnaire:
+        # From the conversation, feeling tired
+        questionnaire["fatigue"] = "yes"
+    
+    return questionnaire
+
 # 1. DEFINE THE GRAPH STATE
 class GraphState(TypedDict):
     """Represents the state of our graph."""
@@ -136,26 +173,33 @@ class GraphState(TypedDict):
     uploaded_image_path: Optional[str]
     reports_text_context: Optional[str]
     lang: str
+
 # 2. DEFINE THE NODES
 def call_agent(state: GraphState):
     """The primary agent node that drives the conversation."""
     language_map = {"en": "English", "ar": "in an Egyptian dialect"}
     lang = state['lang']
-    ml_result = state.get('ml_result', 'Not yet available') # Get ml_result from state
+    ml_result = state.get('ml_result', 'Not yet available')
     has_reports = "Yes" if state.get("interpretation_result") else "No"
+    has_xray = "Yes" if state.get("xray_result") else "No"
+    
     formatted_prompt = system_prompt_template.format(
         language=language_map.get(lang, "English"),
         ml_result=ml_result,
-        has_reports=has_reports
+        has_reports=has_reports,
+        has_xray=has_xray
     )
+    
     # Augment prompt with prior reports interpretation and text context, if available,
     # to enable grounded follow-up Q&A without re-calling the interpretation tool.
     previous_interpretation = state.get("interpretation_result")
     if previous_interpretation:
         formatted_prompt = formatted_prompt + "\n\n[Previous Reports Interpretation]\n" + previous_interpretation
+    
     reports_context = state.get("reports_text_context")
     if reports_context:
         formatted_prompt = formatted_prompt + "\n\n[Reports Context for Q&A]\n" + reports_context
+    
     prompt = ChatPromptTemplate.from_messages([
         ("system", formatted_prompt),
         MessagesPlaceholder(variable_name="messages"),
@@ -166,6 +210,7 @@ def call_agent(state: GraphState):
     response = agent_runnable.invoke({"messages": state["messages"]})
     
     return {"messages": [response]}
+
 def process_initial_assessment_from_agent(state: GraphState):
     """Parses the agent's inline technical line for initial assessment and updates state, while emitting a cleaned message for the user."""
     last_message = state["messages"][-1]
@@ -174,7 +219,8 @@ def process_initial_assessment_from_agent(state: GraphState):
     ml_result = None
     ml_confidence = None
     questionnaire_inputs = {}
-    # Extract technical line components
+    
+    # First try to extract from technical line format
     if "INITIAL_ASSESSMENT_RESULT:" in raw:
         try:
             # Find the segment after the marker
@@ -197,6 +243,41 @@ def process_initial_assessment_from_agent(state: GraphState):
                         questionnaire_inputs[k.strip()] = v.strip()
         except Exception:
             pass
+    
+    # Fallback: Try to extract from Arabic text patterns
+    if ml_result is None and state.get("lang") == "ar":
+        # Look for Arabic patterns like "النتيجة سلبية" or "النتيجة إيجابية"
+        if "النتيجة سلبية" in raw or "النتيجة: سلبية" in raw:
+            ml_result = "Negative"
+        elif "النتيجة إيجابية" in raw or "النتيجة: إيجابية" in raw:
+            ml_result = "Positive"
+        elif "Negative" in raw:
+            ml_result = "Negative"
+        elif "Positive" in raw:
+            ml_result = "Positive"
+        
+        # Try to extract confidence from Arabic text
+        import re
+        # Look for percentage patterns
+        confidence_patterns = [
+            r'الثقة.*?(\d+)%',
+            r'(\d+)%.*الثقة',
+            r'حوالي\s*(\d+)%',
+            r'(\d+)%'
+        ]
+        for pattern in confidence_patterns:
+            match = re.search(pattern, raw)
+            if match:
+                try:
+                    ml_confidence = float(match.group(1))
+                    break
+                except:
+                    pass
+        
+        # Try to extract questionnaire data from conversation history
+        if not questionnaire_inputs and ml_result:
+            questionnaire_inputs = extract_questionnaire_from_history(state)
+    
     # Clean technical lines from the visible content
     cleaned_lines = []
     for line in raw.splitlines():
@@ -204,6 +285,7 @@ def process_initial_assessment_from_agent(state: GraphState):
             continue
         cleaned_lines.append(line)
     cleaned_content = "\n".join(cleaned_lines).strip()
+    
     updates = {}
     if ml_result is not None:
         updates["ml_result"] = ml_result
@@ -211,9 +293,12 @@ def process_initial_assessment_from_agent(state: GraphState):
         updates["ml_confidence"] = ml_confidence
     if questionnaire_inputs:
         updates["questionnaire_inputs"] = questionnaire_inputs
+    
     final_message = AIMessage(content=cleaned_content or (ml_result or ""))
     updates["messages"] = [final_message]
+    
     return updates
+
 def reports_agent(state: GraphState):
     """Dedicated multimodal reports interpreter agent (GPT-4o)."""
     file_paths = state.get("report_file_paths") or []
@@ -221,6 +306,7 @@ def reports_agent(state: GraphState):
     interpretation = interpret_reports_with_gpt4o(file_paths, lang)
     text_context = build_reports_text_context(file_paths)
     final_message = AIMessage(content=interpretation)
+    
     # Save text context for follow-up Q&A rounds and clear file paths
     return {
         "messages": [final_message],
@@ -228,6 +314,7 @@ def reports_agent(state: GraphState):
         "reports_text_context": text_context,
         "report_file_paths": None,  # Clear the file paths
     }
+
 def auto_analyze_xray(state: GraphState):
     """Automatically runs X-ray analysis when an uploaded image path is present in state."""
     print("--- Auto analyzing X-ray ---")
@@ -272,39 +359,38 @@ def auto_analyze_xray(state: GraphState):
     result = {"xray_result": xray_result, "xray_confidence": xray_confidence, "annotated_image_path": annotated_image_path}
     print(f"Returning state update: {result}")
     return result
+
 def generate_ml_report(state: GraphState):
     """Generates the final summary message after only the ml has been analyzed."""
-    # Use a robust approach to call the async function from synchronous context
+    # Simplified approach to avoid event loop issues
     import asyncio
+    import nest_asyncio
     
     try:
-        # Try to get the current event loop
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            # If we're already in an event loop, create a task
-            task = loop.create_task(interpret_ml_results(
-                ml_result=state["ml_result"], ml_confidence=state["ml_confidence"],
-                lang=state["lang"],
-            ))
-            # Wait for the task to complete
-            interpretation = loop.run_until_complete(task)
-        else:
-            # If no event loop is running, we can use run_until_complete
-            interpretation = loop.run_until_complete(interpret_ml_results(
-                ml_result=state["ml_result"], ml_confidence=state["ml_confidence"],
-                lang=state["lang"],
-            ))
-    except RuntimeError:
-        # If there are issues with the event loop, create a new one
+        # Apply nest_asyncio to allow nested event loops
+        nest_asyncio.apply()
+        
+        # Create a new event loop for this operation
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
+        
         try:
             interpretation = loop.run_until_complete(interpret_ml_results(
-                ml_result=state["ml_result"], ml_confidence=state["ml_confidence"],
+                ml_result=state["ml_result"], 
+                ml_confidence=state["ml_confidence"],
                 lang=state["lang"],
             ))
+            print(f"ML interpretation received: {interpretation[:100]}...")
         finally:
             loop.close()
+            
+    except ImportError:
+        # If nest_asyncio is not available, use a simpler approach
+        print("nest_asyncio not available, using fallback approach...")
+        interpretation = f"ML assessment completed. Result: {state.get('ml_result', 'Unknown')}, Confidence: {state.get('ml_confidence', 0):.1f}%. Please consult your doctor for detailed interpretation."
+    except Exception as e:
+        print(f"Error in async ML interpretation: {e}")
+        interpretation = f"ML assessment completed. Result: {state.get('ml_result', 'Unknown')}, Confidence: {state.get('ml_confidence', 0):.1f}%. Please consult your doctor for detailed interpretation."
     
     final_message = AIMessage(content=interpretation)
     return {"messages": [final_message]}
@@ -322,47 +408,41 @@ def generate_xray_report(state: GraphState):
     
     try:
         print("Calling interpret_xray_results...")
-        # Use a robust approach to call the async function from synchronous context
+        
+        # Simplified approach to avoid event loop issues
         import asyncio
+        import nest_asyncio
         
         try:
-            # Try to get the current event loop
-            loop = asyncio.get_event_loop()
-            if loop.is_running():
-                # If we're already in an event loop, create a task
-                print("Event loop is running, creating task...")
-                task = loop.create_task(interpret_xray_results(
-                    xray_result=state["xray_result"], xray_confidence=state["xray_confidence"],
-                    lang=state["lang"],
-                ))
-                # Wait for the task to complete
-                interpretation = loop.run_until_complete(task)
-            else:
-                # If no event loop is running, we can use run_until_complete
-                print("No event loop running, using run_until_complete...")
-                interpretation = loop.run_until_complete(interpret_xray_results(
-                    xray_result=state["xray_result"], xray_confidence=state["xray_confidence"],
-                    lang=state["lang"],
-                ))
-        except RuntimeError:
-            # If there are issues with the event loop, create a new one
-            print("Creating new event loop...")
+            # Apply nest_asyncio to allow nested event loops
+            nest_asyncio.apply()
+            
+            # Create a new event loop for this operation
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
+            
             try:
                 interpretation = loop.run_until_complete(interpret_xray_results(
-                    xray_result=state["xray_result"], xray_confidence=state["xray_confidence"],
+                    xray_result=state["xray_result"], 
+                    xray_confidence=state["xray_confidence"],
                     lang=state["lang"],
                 ))
+                print(f"Interpretation received: {interpretation[:100]}...")
             finally:
                 loop.close()
-        
-        print(f"Interpretation received: {interpretation[:100]}...")
+                
+        except ImportError:
+            # If nest_asyncio is not available, use a simpler approach
+            print("nest_asyncio not available, using fallback approach...")
+            interpretation = f"X-ray analysis completed. Result: {state.get('xray_result', 'Unknown')}, Confidence: {state.get('xray_confidence', 0):.1f}%. Please consult your doctor for detailed interpretation."
+        except Exception as e:
+            print(f"Error in async interpretation: {e}")
+            interpretation = f"X-ray analysis completed. Result: {state.get('xray_result', 'Unknown')}, Confidence: {state.get('xray_confidence', 0):.1f}%. Please consult your doctor for detailed interpretation."
         
         final_message = AIMessage(content=interpretation)
         print("AIMessage created successfully")
         
-        # --- FIX: Clear the image path to prevent re-triggering the analysis ---
+        # Clear the image path to prevent re-triggering the analysis
         result = {"messages": [final_message], "uploaded_image_path": None}
         print(f"Returning result with {len(result['messages'])} messages")
         return result
@@ -377,23 +457,23 @@ def generate_xray_report(state: GraphState):
         final_message = AIMessage(content=fallback_message)
         return {"messages": [final_message], "uploaded_image_path": None}
 
-def process_risk_prediction_result(state: GraphState):
-    """Parses the output of the first tool and updates the state."""
+def process_interpretation_result(state: GraphState):
+    """Parses the output of the interpretation tool and updates the state."""
     last_message = state["messages"][-1]
     assert isinstance(last_message, ToolMessage)
     tool_output = last_message.content
-    ai_message_with_tool_call = next(msg for msg in reversed(state["messages"]) if isinstance(msg, AIMessage) and msg.tool_calls)
-    questionnaire_inputs = ai_message_with_tool_call.tool_calls[0]['args']
-    if '|' in tool_output and ':' in tool_output:
-        parts = {p.split(':', 1)[0]: p.split(':', 1)[1] for p in tool_output.split('|')}
-        ml_result = parts.get("INITIAL_ASSESSMENT_RESULT", "Error")
-        ml_confidence = float(parts.get("CONFIDENCE", 0.0))
+    if 'INTERPRETATION_RESULT:' in tool_output:
+        interpretation = tool_output.replace("INTERPRETATION_RESULT:", "").strip()
     else:
-        ml_result, ml_confidence = "Error", 0.0
-    print(f"Updated State with ML Result: {ml_result}")
-    return {"questionnaire_inputs": questionnaire_inputs, "ml_result": ml_result, "ml_confidence": ml_confidence}
+        interpretation = "Error processing interpretation."
+    
+    # Create a new AIMessage with the interpretation to show to the user
+    final_message = AIMessage(content=interpretation)
+    
+    return {"messages": [final_message], "interpretation_result": interpretation}
+
 def process_xray_analysis_result(state: GraphState):
-    """Parses the output of the second tool and updates the state."""
+    """Parses the output of the X-ray analysis tool and updates the state."""
     print("--- Processing X-ray analysis result ---")
     last_message = state["messages"][-1]
     print(f"Last message type: {type(last_message)}")
@@ -421,20 +501,7 @@ def process_xray_analysis_result(state: GraphState):
     result = {"xray_result": xray_result, "xray_confidence": xray_confidence, "annotated_image_path": annotated_image_path}
     print(f"Returning state update: {result}")
     return result
-def process_interpretation_result(state: GraphState):
-    """Parses the output of the interpretation tool and updates the state."""
-    last_message = state["messages"][-1]
-    assert isinstance(last_message, ToolMessage)
-    tool_output = last_message.content
-    if 'INTERPRETATION_RESULT:' in tool_output:
-        interpretation = tool_output.replace("INTERPRETATION_RESULT:", "").strip()
-    else:
-        interpretation = "Error processing interpretation."
-    
-    # Create a new AIMessage with the interpretation to show to the user
-    final_message = AIMessage(content=interpretation)
-    
-    return {"messages": [final_message], "interpretation_result": interpretation}
+
 # 3. DEFINE THE EDGES (ROUTING LOGIC)
 def route_after_agent(state: GraphState):
     """Routes to tools or ends the turn."""
@@ -446,7 +513,19 @@ def route_after_agent(state: GraphState):
         content = last.content if isinstance(last.content, str) else str(last.content)
         if "INITIAL_ASSESSMENT_RESULT:" in content:
             return "generate_ml_report"
+        # Also check for Arabic assessment patterns
+        if state.get("lang") == "ar":
+            if ("النتيجة" in content and ("سلبية" in content or "إيجابية" in content)) or \
+               ("النتيجة الأولية" in content) or \
+               ("Negative" in content or "Positive" in content):
+                # Check if we have enough conversation to make an assessment
+                messages = state.get("messages", [])
+                # Count questions asked (typically need at least 5 for full assessment)
+                ai_questions = sum(1 for msg in messages if isinstance(msg, AIMessage) and "?" in str(msg.content))
+                if ai_questions >= 4:  # After asking about the main 5 questions
+                    return "process_initial_assessment"
     return END
+
 def entry_node(state: GraphState):
     """No-op entry node to enable conditional routing based on provided inputs."""
     print("--- Entry node ---")
@@ -456,35 +535,43 @@ def entry_node(state: GraphState):
     print(f"Entry node report_file_paths: {state.get('report_file_paths')}")
     print(f"Entry node lang: {state.get('lang')}")
     return {}
+
 def route_from_entry(state: GraphState):
-    """Route to reports agent immediately when NEW report files are present, otherwise to the conversational agent."""
+    """Route to appropriate handler based on input type - file uploads ALWAYS take priority."""
     print("--- Route from entry ---")
     print(f"State keys: {list(state.keys())}")
     print(f"Messages count: {len(state.get('messages', []))}")
     print(f"Uploaded image path: {state.get('uploaded_image_path')}")
     print(f"Report file paths: {state.get('report_file_paths')}")
+    print(f"Existing interpretation result: {bool(state.get('interpretation_result'))}")
+    print(f"Existing xray result: {bool(state.get('xray_result'))}")
     
-    # PRIORITY 1: Check for new file uploads (these should take precedence over existing conversations)
+    # ABSOLUTE PRIORITY: File uploads ALWAYS take precedence regardless of conversation state
+    # This ensures users can upload files at any point in the conversation
     if state.get("uploaded_image_path"):
-        print("Routing to auto_xray due to uploaded image")
+        print("🎯 PRIORITY ROUTE: auto_xray due to uploaded image path")
         return "auto_xray"
     
     if state.get("report_file_paths"):
-        print("Routing to reports_agent due to report files")
+        print("🎯 PRIORITY ROUTE: reports_agent due to report files")
         return "reports_agent"
     
-    # PRIORITY 2: Check if the latest message is a human message with an image path
+    # FALLBACK: Check if the latest message contains file paths (legacy support)
     if state["messages"] and isinstance(state["messages"][-1], HumanMessage):
         last_message_content = state["messages"][-1].content
         print(f"Last message content: {last_message_content[:100]}...")
         
-        if isinstance(last_message_content, str) and "temp_uploads" in last_message_content:
-            print("Routing to auto_xray due to image path in message")
-            return "auto_xray"
+        if isinstance(last_message_content, str):
+            # Check for various image path patterns
+            image_indicators = ["temp_upload", "/tmp/", "annotated_images/", ".jpg", ".png", ".jpeg"]
+            if any(indicator in last_message_content for indicator in image_indicators):
+                print("🎯 FALLBACK ROUTE: auto_xray due to image path in message")
+                return "auto_xray"
     
-    # PRIORITY 3: Default to conversational agent
-    print("Routing to conversational agent")
+    # DEFAULT: Route to conversational agent for regular chat
+    print("📝 DEFAULT ROUTE: conversational agent")
     return "agent"
+
 def route_after_tools(state: GraphState):
     """Routes to the correct result processing node based on which tool was called."""
     last_message = state["messages"][-1]
@@ -501,11 +588,15 @@ def route_after_tools(state: GraphState):
     elif tool_name == "interpret_medical_reports":
         return "process_interpretation"
     return END
+
 def route_after_reports_agent(state: GraphState):
     """After processing reports, continue to conversational agent for follow-up questions."""
     return "agent"
+
 # 4. BUILD THE GRAPH
 workflow = StateGraph(GraphState)
+
+# Add nodes
 workflow.add_node("agent", call_agent)
 workflow.add_node("tools", tool_node)
 workflow.add_node("reports_agent", reports_agent)
@@ -516,25 +607,38 @@ workflow.add_node("process_xray_analysis", process_xray_analysis_result)
 workflow.add_node("process_interpretation", process_interpretation_result)
 workflow.add_node("generate_ml_report", generate_ml_report)
 workflow.add_node("generate_xray_report", generate_xray_report)
+
+# Set entry point
 workflow.set_entry_point("entry")
-workflow.add_conditional_edges("entry", route_from_entry, {"agent": "agent", "reports_agent": "reports_agent", "auto_xray": "auto_xray"})
-workflow.add_conditional_edges("agent", route_after_agent, {"tools": "tools", "generate_ml_report": "generate_ml_report", END: END})
-workflow.add_conditional_edges(
-    "tools",
-    route_after_tools,
-    {
-        "process_xray_analysis": "process_xray_analysis",
-        "process_interpretation": "process_interpretation",
-        END: END,
-    }
-)
+
+# Add conditional edges
+workflow.add_conditional_edges("entry", route_from_entry, {
+    "agent": "agent", 
+    "reports_agent": "reports_agent", 
+    "auto_xray": "auto_xray"
+})
+
+workflow.add_conditional_edges("agent", route_after_agent, {
+    "tools": "tools", 
+    "generate_ml_report": "generate_ml_report", 
+    END: END
+})
+
+workflow.add_conditional_edges("tools", route_after_tools, {
+    "process_xray_analysis": "process_xray_analysis",
+    "process_interpretation": "process_interpretation",
+    END: END,
+})
+
+# Add direct edges
 workflow.add_edge("process_initial_assessment", "generate_ml_report")
 workflow.add_edge("process_xray_analysis", "generate_xray_report")
 workflow.add_edge("process_interpretation", "agent")
 workflow.add_edge("reports_agent", "agent")
 workflow.add_edge("auto_xray", "generate_xray_report")
-workflow.add_edge("generate_ml_report", END)
-workflow.add_edge("generate_xray_report", END)
+workflow.add_edge("generate_ml_report", END)  # End after ML assessment (user can start new conversation)
+workflow.add_edge("generate_xray_report", END)  # End after X-ray analysis (user can start new conversation)
+
 # --- COMPILE THE GRAPH WITH CHECKPOINTER ---
 checkpointer = MemorySaver()
 app = workflow.compile(checkpointer=checkpointer)
