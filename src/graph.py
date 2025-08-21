@@ -387,10 +387,14 @@ def generate_ml_report(state: GraphState):
     except ImportError:
         # If nest_asyncio is not available, use a simpler approach
         print("nest_asyncio not available, using fallback approach...")
-        interpretation = f"ML assessment completed. Result: {state.get('ml_result', 'Unknown')}, Confidence: {state.get('ml_confidence', 0):.1f}%. Please consult your doctor for detailed interpretation."
+        ml_conf = state.get('ml_confidence')
+        conf_str = f"{ml_conf:.1f}%" if ml_conf is not None else "N/A"
+        interpretation = f"ML assessment completed. Result: {state.get('ml_result', 'Unknown')}, Confidence: {conf_str}. Please consult your doctor for detailed interpretation."
     except Exception as e:
         print(f"Error in async ML interpretation: {e}")
-        interpretation = f"ML assessment completed. Result: {state.get('ml_result', 'Unknown')}, Confidence: {state.get('ml_confidence', 0):.1f}%. Please consult your doctor for detailed interpretation."
+        ml_conf = state.get('ml_confidence')
+        conf_str = f"{ml_conf:.1f}%" if ml_conf is not None else "N/A"
+        interpretation = f"ML assessment completed. Result: {state.get('ml_result', 'Unknown')}, Confidence: {conf_str}. Please consult your doctor for detailed interpretation."
     
     final_message = AIMessage(content=interpretation)
     return {"messages": [final_message]}
@@ -434,10 +438,14 @@ def generate_xray_report(state: GraphState):
         except ImportError:
             # If nest_asyncio is not available, use a simpler approach
             print("nest_asyncio not available, using fallback approach...")
-            interpretation = f"X-ray analysis completed. Result: {state.get('xray_result', 'Unknown')}, Confidence: {state.get('xray_confidence', 0):.1f}%. Please consult your doctor for detailed interpretation."
+            xray_conf = state.get('xray_confidence')
+            conf_str = f"{xray_conf:.1f}%" if xray_conf is not None else "N/A"
+            interpretation = f"X-ray analysis completed. Result: {state.get('xray_result', 'Unknown')}, Confidence: {conf_str}. Please consult your doctor for detailed interpretation."
         except Exception as e:
             print(f"Error in async interpretation: {e}")
-            interpretation = f"X-ray analysis completed. Result: {state.get('xray_result', 'Unknown')}, Confidence: {state.get('xray_confidence', 0):.1f}%. Please consult your doctor for detailed interpretation."
+            xray_conf = state.get('xray_confidence')
+            conf_str = f"{xray_conf:.1f}%" if xray_conf is not None else "N/A"
+            interpretation = f"X-ray analysis completed. Result: {state.get('xray_result', 'Unknown')}, Confidence: {conf_str}. Please consult your doctor for detailed interpretation."
         
         final_message = AIMessage(content=interpretation)
         print("AIMessage created successfully")
@@ -453,7 +461,9 @@ def generate_xray_report(state: GraphState):
         traceback.print_exc()
         
         # Fallback: create a basic message
-        fallback_message = f"X-ray analysis completed. Result: {state.get('xray_result', 'Unknown')}, Confidence: {state.get('xray_confidence', 0):.1f}%. Please consult your doctor for detailed interpretation."
+        xray_conf = state.get('xray_confidence')
+        conf_str = f"{xray_conf:.1f}%" if xray_conf is not None else "N/A"
+        fallback_message = f"X-ray analysis completed. Result: {state.get('xray_result', 'Unknown')}, Confidence: {conf_str}. Please consult your doctor for detailed interpretation."
         final_message = AIMessage(content=fallback_message)
         return {"messages": [final_message], "uploaded_image_path": None}
 

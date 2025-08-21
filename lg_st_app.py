@@ -192,17 +192,34 @@ def sync_ui_state_with_backend(session_id: str):
 # --- Helper Functions ---
 def is_technical_message(content: str) -> bool:
     """Check if a message contains technical/raw output that shouldn't be displayed to users."""
+    content_str = str(content)
+    
+    # If the message contains substantial user-friendly content, don't filter it out
+    # even if it has technical elements
+    user_friendly_indicators = [
+        "النتيجة:", "النتيجة", "الثقة:", "الثقة", "الشرح:", "الشرح",
+        "Result:", "Result", "Confidence:", "Confidence", "Explanation:", "Explanation",
+        "بناءً على", "Based on", "مهم", "important", "يرجى", "Please"
+    ]
+    
+    has_user_friendly_content = any(indicator in content_str for indicator in user_friendly_indicators)
+    
+    # Only filter out if it's purely technical
+    if has_user_friendly_content:
+        return False
+    
+    # Check for purely technical indicators
     technical_indicators = [
         "INITIAL_ASSESSMENT_RESULT:",
         "XRAY_RESULT:",
-        "CONFIDENCE:",
         "ANNOTATED_IMAGE_PATH:",
         "INTERPRETATION_RESULT:",
-        "|",
         "Error analyzing image:",
         "Error: There was a problem processing"
     ]
-    return any(indicator in content for indicator in technical_indicators)
+    
+    # Only filter out if it contains technical indicators AND no user-friendly content
+    return any(indicator in content_str for indicator in technical_indicators)
 
 def create_new_chat():
     """Creates a new chat session."""
@@ -285,9 +302,17 @@ def generate_and_download_html_report(session_id: str, active_conv: dict):
         
         # Prepare conversation data (filter out technical messages)
         conversation = []
-        for msg in active_conv.get("messages", []):
-            if not is_technical_message(msg["content"]):
+        print(f"🔍 Processing {len(active_conv.get('messages', []))} messages for HTML report")
+        for i, msg in enumerate(active_conv.get("messages", [])):
+            is_technical = is_technical_message(msg["content"])
+            print(f"🔍 Message {i}: role='{msg.get('role')}', technical={is_technical}, content_preview='{str(msg.get('content', ''))[:100]}...'")
+            if not is_technical:
                 conversation.append(msg)
+                print(f"✅ Added message {i} to conversation")
+            else:
+                print(f"❌ Filtered out message {i} (technical)")
+        
+        print(f"🔍 Final conversation has {len(conversation)} messages")
         
         # Prepare patient info
         patient_info = {
@@ -342,9 +367,9 @@ def generate_and_download_html_report(session_id: str, active_conv: dict):
         # Prepare analysis results from backend state
         analysis_results = {
             "ml_result": ml_result,
-            "ml_confidence": f"{ml_confidence:.1f}%" if ml_confidence > 0 else "N/A",
+            "ml_confidence": f"{ml_confidence:.1f}%" if ml_confidence is not None else "N/A",
             "xray_result": backend_state.get("xray_result", "N/A"),
-            "xray_confidence": f"{backend_state.get('xray_confidence', 0):.1f}%" if backend_state.get('xray_confidence') else "N/A",
+            "xray_confidence": f"{backend_state.get('xray_confidence', 0):.1f}%" if backend_state.get('xray_confidence') is not None else "N/A",
             "annotated_image_path": backend_state.get("annotated_image_path"),
             "interpretation_result": interpretation_result,
             "reports_context": reports_context

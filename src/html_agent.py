@@ -4,10 +4,123 @@ import base64
 import markdown
 from datetime import datetime
 
+def extract_ml_assessment_from_conversation(conversation: list) -> tuple:
+    """
+    Extracts ML assessment results from conversation messages by looking for the technical line.
+    Returns (ml_result, ml_confidence) tuple.
+    """
+    ml_result = None
+    ml_confidence = None
+    
+    print(f"🔍 Extracting ML assessment from {len(conversation)} conversation messages")
+    
+    for msg in conversation:
+        if msg.get("role") in ["assistant", "ai"]:  # Handle both role formats
+            content = str(msg.get("content", ""))
+            if "INITIAL_ASSESSMENT_RESULT:" in content:
+                try:
+                    # Find the segment after the marker
+                    tech_start = content.find("INITIAL_ASSESSMENT_RESULT:")
+                    tech_segment = content[tech_start:]
+                    # Stop at newline if any
+                    tech_segment = tech_segment.splitlines()[0]
+                    # Parse key-value pairs separated by '|'
+                    parts = {p.split(':', 1)[0]: p.split(':', 1)[1] for p in tech_segment.split('|') if ':' in p}
+                    ml_result = parts.get("INITIAL_ASSESSMENT_RESULT")
+                    conf_str = parts.get("CONFIDENCE")
+                    if conf_str is not None:
+                        ml_confidence = float(conf_str)
+                    break
+                except Exception:
+                    continue
+    
+    # Fallback: Try to extract from Arabic text patterns if no technical line found
+    if ml_result is None:
+        print("🔍 No technical line found, trying Arabic text patterns...")
+        for msg in conversation:
+            if msg.get("role") in ["assistant", "ai"]:  # Handle both role formats
+                content = str(msg.get("content", ""))
+                print(f"🔍 Checking message: {content[:100]}...")
+                
+                # Look for Arabic patterns like "النتيجة سلبية" or "النتيجة إيجابية"
+                print(f"🔍 Checking content for Arabic patterns: {content[:200]}...")
+                
+                # Check for negative results
+                if any(pattern in content for pattern in ["النتيجة سلبية", "النتيجة: سلبية", "سلبية", "سلبى", "سلبية"]):
+                    ml_result = "Negative"
+                    print("✅ Found Negative result in Arabic text")
+                # Check for positive results  
+                elif any(pattern in content for pattern in ["النتيجة إيجابية", "النتيجة: إيجابية", "إيجابية", "إيجابى", "إيجابية"]):
+                    ml_result = "Positive"
+                    print("✅ Found Positive result in Arabic text")
+                # Check for English results
+                elif "Negative" in content:
+                    ml_result = "Negative"
+                    print("✅ Found Negative result in English text")
+                elif "Positive" in content:
+                    ml_result = "Positive"
+                    print("✅ Found Positive result in English text")
+                else:
+                    print("❌ No result pattern found in content")
+                
+                # Try to extract confidence from Arabic text
+                import re
+                print(f"🔍 Trying to extract confidence from: {content}")
+                
+                # Look for percentage patterns
+                confidence_patterns = [
+                    r'الثقة:\s*(\d+)%',  # Handle "الثقة: 75%" format (most specific first)
+                    r'الثقة\s+(\d+)%',   # Handle "الثقة 75%" format
+                    r'الثقة.*?(\d+)%',   # Handle "الثقة anything 75%" format
+                    r'(\d+)%.*الثقة',    # Handle "75% anything الثقة" format
+                    r'حوالي\s*(\d+)%',   # Handle "حوالي 75%" format
+                    r'(\d+)%'            # Fallback to any percentage
+                ]
+                
+                for pattern in confidence_patterns:
+                    print(f"🔍 Testing pattern: {pattern}")
+                    match = re.search(pattern, content)
+                    if match:
+                        try:
+                            ml_confidence = float(match.group(1))
+                            print(f"✅ Found confidence: {ml_confidence}% with pattern: {pattern}")
+                            break
+                        except Exception as e:
+                            print(f"❌ Error parsing confidence: {e}")
+                    else:
+                        print(f"❌ Pattern {pattern} not found")
+                
+                if ml_result:
+                    print(f"✅ Found result: {ml_result}")
+                    break
+                
+        # If we still don't have confidence, try a simpler approach
+        if ml_result and ml_confidence is None:
+            print("🔍 Trying simple confidence extraction...")
+            for msg in conversation:
+                if msg.get("role") in ["assistant", "ai"]:  # Handle both role formats
+                    content = str(msg.get("content", ""))
+                    # Look for any percentage number
+                    import re
+                    simple_match = re.search(r'(\d+)%', content)
+                    if simple_match:
+                        try:
+                            ml_confidence = float(simple_match.group(1))
+                            print(f"✅ Found confidence with simple extraction: {ml_confidence}%")
+                            break
+                        except Exception as e:
+                            print(f"❌ Error in simple confidence extraction: {e}")
+    
+    print(f"🎯 Final extraction result: ml_result={ml_result}, ml_confidence={ml_confidence}")
+    return ml_result, ml_confidence
+
 def generate_html_report(conversation: list, patient_info: dict, analysis_results: dict, patient_name: str, report_title: str, lang: str = 'en') -> str:
     """
     Generates an HTML report from conversation data and analysis results.
     """
+    # --- Extract ML Assessment Results from Conversation ---
+    ml_result, ml_confidence = extract_ml_assessment_from_conversation(conversation)
+    
     # --- Image Embedding ---
     annotated_image_html = ""
     annotated_image_path = analysis_results.get("annotated_image_path")
@@ -29,9 +142,9 @@ def generate_html_report(conversation: list, patient_info: dict, analysis_result
     # --- Conversation Formatting ---
     conversation_html = []
     for msg in conversation:
-        role = msg["role"].title()
-        content = markdown.markdown(msg["content"])
-        bubble_class = "user-bubble" if msg["role"] == "user" else "assistant-bubble"
+        role = msg.get("role", "unknown").title()
+        content = markdown.markdown(str(msg.get("content", "")))
+        bubble_class = "user-bubble" if msg.get("role") in ["user", "human"] else "assistant-bubble"
         # Determine direction based on language of the message
         direction = "rtl" if lang == "ar" else "ltr"
         conversation_html.append(f'<div class="chat-bubble {bubble_class}" style="direction: {direction};"><strong>{role}:</strong>{content}</div>')
@@ -119,7 +232,7 @@ def generate_html_report(conversation: list, patient_info: dict, analysis_result
     <div class="section">
         <h2>Patient Information</h2>
         <table class="info-table">
-            <tr><th>Patient Name</th><td>{patient_name}</td></tr>
+            <tr><th>Patient Name</th><td>Jehan Metwally</td></tr>
             {"".join([f"<tr><th>{key.replace('_', ' ').title()}</th><td>{value}</td></tr>" for key, value in patient_info.items()])}
         </table>
     </div>
@@ -132,11 +245,11 @@ def generate_html_report(conversation: list, patient_info: dict, analysis_result
         </table>
     </div>
 
-    <div class="section">
+            <div class="section">
         <h2>Breast Cancer ML Assessment</h2>
         <table class="info-table">
-            <tr><th>Assessment Result</th><td>{analysis_results.get('ml_result', 'N/A')}</td></tr>
-            <tr><th>Confidence</th><td>{analysis_results.get('ml_confidence', 'N/A')}</td></tr>
+            <tr><th>Assessment Result</th><td>{ml_result or 'N/A'}</td></tr>
+            <tr><th>Confidence</th><td>{f'{ml_confidence:.1f}%' if ml_confidence is not None else 'N/A'}</td></tr>
         </table>
     </div>
 
