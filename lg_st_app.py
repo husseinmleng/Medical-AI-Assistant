@@ -557,9 +557,9 @@ if active_conv["lang"] is None:
         active_conv["lang"] = "en"
         active_conv["messages"].append({"role": "assistant", "content": "Hello! I'm your AI Medical Assistant. To start, I'll need to ask you a few questions about your health history. How can I assist you today?"})
         st.rerun()
-    if col2.button("🇸🇦 العربية", use_container_width=True, type="primary"):
+    if col2.button("🇪🇬 العربي",  use_container_width=True, type="primary"):
         active_conv["lang"] = "ar"
-        active_conv["messages"].append({"role": "assistant", "content": "مرحبًا! أنا مساعدك الطبي الذكي. لبدء التقييم، سأحتاج إلى طرح بعض الأسئلة حول تاريخك الصحي. كيف يمكنني مساعدتك اليوم؟"})
+        active_conv["messages"].append({"role": "assistant", "content": "أهلا بيكي انا مساعدك الطبي الذكي. هبدأ أسألك شوية أسئلة عن تاريخك الصحي. إزاي ممكن أساعدك النهاردة؟"})
         st.rerun()
 else:
     # --- Show analysis status and report context indicators ---

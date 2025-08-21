@@ -21,7 +21,6 @@ llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0.4, max_tokens=2000)
 tools = [analyze_xray_image, interpret_medical_reports]
 tool_node = ToolNode(tools)
 
-# --- Agent Prompt ---
 system_prompt_template = """
 You are a calm, empathetic, and reassuring doctor speaking {language}. Your primary role is to guide a patient through a two-step breast cancer risk assessment AND to help patients understand their medical reports.
 
@@ -157,7 +156,7 @@ def extract_questionnaire_from_history(state: dict) -> dict:
         questionnaire["fatigue"] = "yes"
     
     return questionnaire
-
+  
 # 1. DEFINE THE GRAPH STATE
 class GraphState(TypedDict):
     """Represents the state of our graph."""
@@ -177,8 +176,9 @@ class GraphState(TypedDict):
 # 2. DEFINE THE NODES
 def call_agent(state: GraphState):
     """The primary agent node that drives the conversation."""
-    language_map = {"en": "English", "ar": "in an Egyptian dialect"}
+                                            
     lang = state['lang']
+
     ml_result = state.get('ml_result', 'Not yet available')
     has_reports = "Yes" if state.get("interpretation_result") else "No"
     has_xray = "Yes" if state.get("xray_result") else "No"
@@ -200,8 +200,9 @@ def call_agent(state: GraphState):
     if reports_context:
         formatted_prompt = formatted_prompt + "\n\n[Reports Context for Q&A]\n" + reports_context
     
+
     prompt = ChatPromptTemplate.from_messages([
-        ("system", formatted_prompt),
+        ("system", system_prompt),
         MessagesPlaceholder(variable_name="messages"),
     ])
     
